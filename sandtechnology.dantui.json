@@ -1,0 +1,78 @@
+{
+  "ret": 1,
+  "apiver": 9,
+  "name": "dantui",
+  "version": "1.0.0",
+  "version_id": 1,
+  "author": "sandtechnology",
+  "description": "单推星沙插件",
+  "event": [
+    {
+      "id": 1,
+      "type": 21,
+      "name": "私聊消息处理",
+      "function": "privateMsg",
+      "priority": 30000
+    },
+    {
+      "id": 2,
+      "type": 2,
+      "name": "群消息处理",
+      "function": "groupMsg",
+      "priority": 30000
+    },
+    {
+      "id": 1001,
+      "type": 1001,
+      "name": "酷Q启动事件",
+      "priority": 30000,
+      "function": "startup"
+    },
+    {
+      "id": 1002,
+      "type": 1002,
+      "name": "酷Q关闭事件",
+      "priority": 30000,
+      "function": "exit"
+    },
+    {
+      "id": 1003,
+      "type": 1003,
+      "name": "应用已被启用",
+      "priority": 30000,
+      "function": "enable"
+    },
+    {
+      "id": 1004,
+      "type": 1004,
+      "name": "应用将被停用",
+      "priority": 30000,
+      "function": "disable"
+    }
+  ],
+  "status": [
+
+  ],
+  "auth": [
+    101,
+    103,
+    106,
+    110,
+    120,
+    121,
+    122,
+    123,
+    124,
+    125,
+    126,
+    128,
+    130,
+    131,
+    140,
+    150,
+    151,
+    160,
+    161,
+    180
+  ]
+}
