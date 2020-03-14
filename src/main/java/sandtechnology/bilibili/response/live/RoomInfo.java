@@ -1,6 +1,7 @@
-package sandtechnology.bilibili.response.liveinfo;
+package sandtechnology.bilibili.response.live;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.utils.ImageManager;
 
 public class RoomInfo {
 
@@ -14,6 +15,11 @@ public class RoomInfo {
     private
     String coverURL;
 
+    @SerializedName("room_id")
+    long roomID;
+
+    @SerializedName("live_start_time")
+    long startTime;
     @SerializedName("live_status")
     private
     short status;
@@ -24,7 +30,23 @@ public class RoomInfo {
     private
     String title;
 
-    enum Status {
+    public long getRoomID() {
+        return roomID;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public ImageManager.CacheImage getImage() {
+        return coverURL.isEmpty() ? (keyframeURL.isEmpty() ? null : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
+    }
+
+    public String getRoomURL() {
+        return "https://live.bilibili.com/" + roomID;
+    }
+
+    public enum Status {
         NoStreaming("闲置"),
         Streaming("直播"),
         PlayingVideo("轮播"),

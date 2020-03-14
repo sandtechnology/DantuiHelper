@@ -4,6 +4,7 @@ import sandtechnology.bilibili.POJOResponse;
 import sandtechnology.bilibili.dynamic.POJODynamic;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.MessageHelper;
+import sandtechnology.utils.ThreadHelper;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -20,8 +21,6 @@ public class BiliBiliDynamicChecker implements IChecker {
 
     public static void main(String[] args) {
         //System.out.println(new POJODynamic.Dynamic.DynamicPicture("https://i0.hdslb.com/bfs/album/3412a766bbe175fb1d74c2c7bd41a396cc05f63a.jpg").getImgCQName());
-        new BiliBiliDynamicChecker(453690235).check();
-        new BiliBiliDynamicChecker(420249427).check();
     }
 
     public BiliBiliDynamicChecker(long uid) {
@@ -46,7 +45,10 @@ public class BiliBiliDynamicChecker implements IChecker {
             }).collect(Collectors.toList());
             if (!list.isEmpty()) {
                 lastTimestamp = list.get(0).getTimestamp();
-                list.forEach(d -> MessageHelper.sendingGroupMessage(groups, d.getInfo()));
+                list.forEach(d -> {
+                    MessageHelper.sendingGroupMessage(groups, d.getInfo());
+                    ThreadHelper.sleep(1000);
+                });
             }
         };
         httpHelper = new HTTPHelper(apiUrl, handler);
@@ -65,6 +67,10 @@ public class BiliBiliDynamicChecker implements IChecker {
     public BiliBiliDynamicChecker setLastTimestamp(long lastTimestamp) {
         this.lastTimestamp = lastTimestamp;
         return this;
+    }
+
+    public void parse(POJOResponse response) {
+        httpHelper.getHandler().accept(response);
     }
 
     public void check() {

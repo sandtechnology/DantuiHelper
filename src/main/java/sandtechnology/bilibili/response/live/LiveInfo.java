@@ -1,4 +1,4 @@
-package sandtechnology.bilibili.response.liveinfo;
+package sandtechnology.bilibili.response.live;
 
 
 import com.google.gson.annotations.SerializedName;

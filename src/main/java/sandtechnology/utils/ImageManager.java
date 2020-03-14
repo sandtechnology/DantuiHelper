@@ -8,6 +8,7 @@ import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +30,6 @@ public class ImageManager {
     }
 
     public static CacheImage getImageData(String imgURL) {
-
         try {
             URL url = new URL(imgURL);
             Path path = Paths.get("data", "image", url.getFile()).toAbsolutePath();
@@ -39,7 +39,9 @@ public class ImageManager {
                 }
                 return cacheImageMap.get(imgURL).markAccessed();
             } else {
-                download(url, path);
+                if (!Files.exists(path)) {
+                    download(url, path);
+                }
                 CacheImage cacheImage = new CacheImage(path.toFile(), url.getFile());
                 cacheImageMap.put(imgURL, cacheImage);
                 return cacheImage.markAccessed();
@@ -51,6 +53,14 @@ public class ImageManager {
         }
     }
 
+    public static void deleteCacheImage() {
+        Iterator<Map.Entry<String, CacheImage>> iterator = cacheImageMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            iterator.next().getValue().getFile().delete();
+            iterator.remove();
+        }
+    }
+
     public static class CacheImage {
         private final File path;
         private final String CQCode;
@@ -58,7 +68,6 @@ public class ImageManager {
 
         public CacheImage(File absolutePath, String relativePath) {
             this.path = absolutePath;
-            path.deleteOnExit();
             CQCode = "[CQ:image,file=" + relativePath.substring(1).replace('/', '\\') + "]";
         }
 

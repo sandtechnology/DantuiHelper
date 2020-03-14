@@ -56,7 +56,7 @@ public class Dynamic {
     //article
     @SerializedName("image_urls")
     private
-    String articleImageURL;
+    List<String> articleImageURL;
     @SerializedName("words")
     private
     int totalWords;
@@ -103,7 +103,7 @@ public class Dynamic {
             }
         },Article {
             public String getInfo(Dynamic json) {
-                return "发了一篇文章（累计共" + json.totalWords + "字）：\n" + json.title + "\n" + ImageManager.getImageData(json.articleImageURL).toCQCode();
+                return "发了一篇文章（累计共" + json.totalWords + "字）：\n" + json.title + "\n" + json.articleImageURL.stream().map(url -> ImageManager.getImageData(url).toCQCode()).collect(Collectors.joining());
             }
         },Video {
             public String getInfo(Dynamic json) {

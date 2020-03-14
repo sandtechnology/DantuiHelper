@@ -1,10 +1,10 @@
 package sandtechnology.bilibili.dynamic;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
+import sandtechnology.utils.JsonHelper;
 
 import java.util.List;
 
@@ -84,7 +84,7 @@ public class POJODynamic {
                 init();
             }
             String result="动态链接："+getURL()+"\n"+desc.getAsJsonObject("user_profile").getAsJsonObject("info").get("uname").getAsString()+
-                    Dynamic.DynamicItem.getType(type).getInfo(new Gson().fromJson(info,Dynamic.class).init());
+                    Dynamic.DynamicItem.getType(type).getInfo(JsonHelper.fromJson(info, Dynamic.class).init());
             if(EmojiManager.containsEmoji(result)){
                 result=EmojiParser.parseToHtmlDecimal(result).replaceAll("&#(?<id>[0-9]*);","[CQ:emoji,id=${id}]");
             }

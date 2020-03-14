@@ -37,9 +37,13 @@ public class HTTPHelper{
         return state;
     }
 
+    public Consumer<POJOResponse> getHandler() {
+        return handler;
+    }
+
     public void execute(){
+        String result = "";
           try {
-              String result;
               URLConnection urlConnection = new URL(url).openConnection();
               urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
               try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
@@ -51,16 +55,16 @@ public class HTTPHelper{
                       MessageHelper.sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error:"+pojoResponse.getCode()),"content"+result);
                   }
                   state=State.BiliBiliError;
-                  Thread.sleep(random.nextInt(10000) + 5000);
+                  ThreadHelper.sleep(random.nextInt(10000) + 5000);
               }
               handler.accept(pojoResponse);
               state= State.Success;
           } catch (IOException e) {
               state=State.NetworkError;
-              MessageHelper.sendingErrorMessage(e,"Network Error:");
+              MessageHelper.sendingErrorMessage(e, "Network Error:\n");
           } catch (Exception e){
               state=State.Error;
-              MessageHelper.sendingErrorMessage(e,"Unknown Error:");
+              MessageHelper.sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
           }
       }
 

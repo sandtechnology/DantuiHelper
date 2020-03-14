@@ -5,14 +5,15 @@ import com.sobte.cqp.jcq.entity.ICQVer;
 import com.sobte.cqp.jcq.entity.IMsg;
 import com.sobte.cqp.jcq.entity.IRequest;
 import com.sobte.cqp.jcq.event.JcqAppAbstract;
-import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.MessageHelper;
-import sandtechnology.utils.Pair;
+import sandtechnology.bilibili.response.live.RoomInfo;
+import sandtechnology.utils.*;
 
 import javax.swing.*;
 import java.util.Timer;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static sandtechnology.utils.ImageManager.deleteCacheImage;
 
 
 /**
@@ -35,21 +36,21 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      *
      * @param args 系统参数
      */
+    private static Dantui demo;
     public static void main(String[] args) {
         // CQ此变量为特殊变量，在JCQ启动时实例化赋值给每个插件，而在测试中可以用CQDebug类来代替他
         CQ = new CQDebug();//new CQDebug("应用目录","应用名称") 可以用此构造器初始化应用的目录
         CQ.logInfo("[JCQ] TEST Demo", "测试启动");// 现在就可以用CQ变量来执行任何想要的操作了
         // 要测试主类就先实例化一个主类对象
-        Dantui demo = new Dantui();
+        demo = new Dantui();
         // 下面对主类进行各方法测试,按照JCQ运行过程，模拟实际情况
         demo.startup();// 程序运行开始 调用应用初始化方法
         demo.enable();// 程序初始化完成后，启用应用，让应用正常工作
-        BiliBiliDynamicChecker.main(args);
         // 开始模拟发送消息
         // 模拟私聊消息
         // 开始模拟QQ用户发送消息，以下QQ全部编造，请勿添加
         //demo.privateMsg(0, 10001, owner, "/fetch 420249427 1581712691", 0);
-        //demo.groupMsg(0,1001,group,233,"","2333",0);
+        demo.groupMsg(0, 1001, DataContainer.getTargetGroup().get(0), 3351265297L, "", "Ruki 开播啦啦啦！！！ 【Ruki】啊我要更新游戏所以先聊天", 0);
         //demo.groupMsg(0,1001,group,233,"","2333",0);
         //demo.groupMsg(0,1001,group,233,"","你好",0);
         //demo.groupMsg(0,1001,group,233,"","233311",0);
@@ -80,7 +81,10 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      *
      * @return 请固定返回0。
      */
-    private static final BiliBiliDynamicChecker checker = new BiliBiliDynamicChecker(452785178).addGroups(532589427L);
+
+    public static Dantui getDemo() {
+        return demo;
+    }
 
     /**
      * 酷Q启动 (Type=1001)<br>
@@ -106,8 +110,8 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * @return 请固定返回0，返回后酷Q将很快关闭，请不要再通过线程等方式执行其他代码。
      */
     public int exit() {
+        deleteCacheImage();
         timer.cancel();
-        System.exit(0);
         return 0;
     }
     /**
@@ -125,14 +129,54 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      */
     private final Map<Long, Pair<AtomicInteger, String>> repatingMap = new HashMap<>();
     private Timer timer;
+
+    public Timer getTimer() {
+        return timer;
+    }
+
     public int enable() {
         enable = true;
         timer=new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
+            private long time;
+            private int index = 0;
+            private List<IChecker> runnables = new ArrayList<>();
+
+            {
+                runnables.add(new BiliBiliDynamicChecker(452785178).addGroups(532589427L));
+                runnables.add(new IChecker() {
+                    private long lastLive;
+                    HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
+                        RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
+                        if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
+                            lastLive = roomInfo.getStartTime();
+                            ImageManager.CacheImage image = roomInfo.getImage();
+                            MessageHelper.sendingGroupMessage(532589427L, "星沙姐播了！！！！她播了她播了她播了！！！！！", roomInfo.getRoomURL(), "直播标题：" + roomInfo.getTitle(), "直播封面", image == null ? "无" : image.toCQCode());
+                        }
+                    });
+
+                    @Override
+                    public void check() {
+                        httpHelper.execute();
+                    }
+                });
+            }
+
+            private IChecker next() {
+                index = index == runnables.size() - 1 ? 0 : index + 1;
+                return runnables.get(index);
+            }
+
             @Override
             public void run() {
                 try {
-                    checker.check();
+                    if (time == 3 * 60 * 12) {
+                        time = 0;
+                        ImageManager.deleteCacheImage();
+                    } else {
+                        time++;
+                    }
+                    next().check();
                 }catch (Throwable e){
                     MessageHelper.sendingErrorMessage(e);
                 }
@@ -218,6 +262,14 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
                         int font) {
         //群号
         if(DataContainer.getTargetGroup().contains(fromGroup)){
+            if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
+                new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
+                    RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
+                    if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
+                        MessageHelper.sendingGroupMessage(532589427L, "这个小助手还是不太聪明的样子，我来补上：", roomInfo.getRoomURL(), ImageManager.getImageData(roomInfo.getCoverURL()).toCQCode());
+                    }
+                }).execute();
+            }
             Pair<AtomicInteger,String> pairData;
             if(repatingMap.containsKey(fromGroup)){
                pairData=repatingMap.get(fromGroup);
