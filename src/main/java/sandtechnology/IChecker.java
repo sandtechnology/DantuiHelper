@@ -1,6 +1,6 @@
 package sandtechnology;
 
-public interface IChecker {
+interface IChecker {
 
     void check();
 }

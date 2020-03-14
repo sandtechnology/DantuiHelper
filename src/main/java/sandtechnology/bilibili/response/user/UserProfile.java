@@ -2,7 +2,7 @@ package sandtechnology.bilibili.response.user;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserProfile {
+class UserProfile {
 
     @SerializedName("info")
     Info info;

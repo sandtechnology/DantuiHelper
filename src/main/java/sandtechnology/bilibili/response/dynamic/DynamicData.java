@@ -5,8 +5,10 @@ import com.google.gson.annotations.SerializedName;
 
 public class DynamicData {
     @SerializedName("desc")
+    private
     DynamicDesc desc;
     @SerializedName("card")
+    private
     JsonObject card;
 
     public JsonObject getCard() {

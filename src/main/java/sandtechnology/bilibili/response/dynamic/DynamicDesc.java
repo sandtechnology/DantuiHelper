@@ -5,14 +5,16 @@ import com.google.gson.annotations.SerializedName;
 public class DynamicDesc {
 
 
-    int type;
+    private int type;
 
-    long timestamp;
+    private long timestamp;
 
     @SerializedName("dynamic_id_str")
+    private
     String dynamicID;
 
     @SerializedName("origin")
+    private
     DynamicDesc originDynamicDesc;
 
     public long getTimestamp() {

@@ -51,7 +51,7 @@ public class POJODynamic {
         String info;
 
 
-        public POJOCard init(){
+        POJOCard init() {
             if(desc!=null) {
                 dynamicID = desc.get("dynamic_id_str").getAsString();
                 type = desc.get("type").getAsInt();
@@ -91,7 +91,7 @@ public class POJODynamic {
             return result;
         }
 
-        public String getURL(){
+        String getURL() {
             return "https://t.bilibili.com/"+dynamicID;
         }
     }

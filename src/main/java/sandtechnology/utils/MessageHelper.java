@@ -1,10 +1,7 @@
 package sandtechnology.utils;
 
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.sobte.cqp.jcq.event.JcqApp.CQ;
@@ -14,7 +11,7 @@ public class MessageHelper {
     private MessageHelper(){}
 
     public static void sendingErrorMessage(Throwable e,String...msg){
-        CQ.sendPrivateMsg(DataContainer.getMaster(),  "[Error] "+join(msg)+":"+e.getMessage()+ "\n"+Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
+        CQ.sendPrivateMsg(DataContainer.getMaster(), "[Error] " + join(msg) + ":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")));
     }
     public static void sendingDebugMessage(String...msg){
         CQ.sendPrivateMsg(DataContainer.getMaster(),"[Debug] "+join(msg));

@@ -3,58 +3,62 @@ package sandtechnology.bilibili.dynamic;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.BiliBiliDynamicChecker;
+import sandtechnology.utils.ImageManager;
 
-import java.io.BufferedInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Dynamic {
 
     @SerializedName("item")
+    private
     DynamicItem item;
 
     @SerializedName("origin_user")
+    private
     JsonObject originUserObject;
 
     @SerializedName("origin")
+    private
     String originJson;
 
-    String originAuthor;
+    private String originAuthor;
 
     //video
     @SerializedName("dynamic")
+    private
     String videoComment;
-    long aid;
+    private long aid;
     @SerializedName("pic")
+    private
     String videoPic;
 
-    String title;
+    private String title;
 
     //streaming
-    String roomid;
+    private String roomid;
     @SerializedName("round_status")
+    private
     int status;
     @SerializedName("uname")
+    private
     String streamer;
 
     //widget
 
     @SerializedName("vest")
+    private
     DynamicVest vest;
     @SerializedName("sketch")
+    private
     DynamicSketch sketch;
 
     //article
     @SerializedName("image_urls")
+    private
     String articleImageURL;
     @SerializedName("words")
+    private
     int totalWords;
 
 
@@ -99,23 +103,23 @@ public class Dynamic {
             }
         },Article {
             public String getInfo(Dynamic json) {
-                return "发了一篇文章（累计共"+json.totalWords+"字）：\n"+json.title+"\n"+new DynamicPicture(json.articleImageURL).getImgCQName();
+                return "发了一篇文章（累计共" + json.totalWords + "字）：\n" + json.title + "\n" + ImageManager.getImageData(json.articleImageURL).toCQCode();
             }
         },Video {
             public String getInfo(Dynamic json) {
-                return "发了一个视频："+json.videoComment+"\n"+"https://www.bilibili.com/video/av"+json.aid+"\n"+json.title+"\n"+new DynamicPicture(json.videoPic).getImgCQName();
+                return "发了一个视频：" + json.videoComment + "\n" + "https://www.bilibili.com/video/av" + json.aid + "\n" + json.title + "\n" + ImageManager.getImageData(json.videoPic).toCQCode();
             }
         },MicroVideo{
             @Override
             public String getInfo(Dynamic json) {
-                return "发了一个小视频："+json.item.desc+"\n"+new DynamicPicture(json.item.cover.get("unclipped").getAsString()).getImgCQName();
+                return "发了一个小视频：" + json.item.desc + "\n" + ImageManager.getImageData(json.item.cover.get("unclipped").getAsString()).toCQCode();
             }
         },WidgetShare{
             @Override
             public String getInfo(Dynamic json) {
-                return "分享了挂件："+json.vest.content+new DynamicPicture(json.sketch.coverURL).getImgCQName();
+                return "分享了挂件：" + json.vest.content + ImageManager.getImageData(json.sketch.coverURL).toCQCode();
             }
-        };
+        }
     }
 
 
@@ -162,42 +166,26 @@ public class Dynamic {
 
     }
 
-    public static class DynamicPicture {
+    static class DynamicPicture {
         @SerializedName("img_src")
+        final
         String imgUrl;
 
-        public String getImgCQName() {
-            try {
-                URL url=new URL(imgUrl);
-                URLConnection connection=new URL(imgUrl).openConnection();
-                connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
-                String fileName=url.getFile();
-                fileName=fileName.substring(fileName.lastIndexOf("/")+1);
-                Path file= Paths.get("data","image",fileName).toAbsolutePath();
-                try (FileOutputStream writer=new FileOutputStream(file.toFile(),false); BufferedInputStream inputStream=new BufferedInputStream(connection.getInputStream());){
-                int code;
-                byte[] buff = new byte[1024];
-                    while ((code = inputStream.read(buff)) != -1) {
-                        writer.write(buff,0,code);
-                    }
-                    BiliBiliDynamicChecker.addFileToDeleted(file);
-                return "[CQ:image,file="+fileName+"]";
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return getImgCQName();
-            }
-        }
-        public DynamicPicture(String imgUrl){
+        DynamicPicture(String imgUrl) {
             this.imgUrl=imgUrl;
+        }
+
+        String getImgCQName() {
+            return ImageManager.getImageData(imgUrl).toCQCode();
         }
     }
 
-    public static class DynamicVest {
+    static class DynamicVest {
         @SerializedName("content")
         String content;
     }
-    public static class DynamicSketch{
+
+    static class DynamicSketch {
         @SerializedName("desc_text")
         String desc;
         @SerializedName("title")

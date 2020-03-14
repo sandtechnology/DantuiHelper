@@ -17,16 +17,21 @@ public class HTTPHelper{
    public enum State{
         Init,Success,BiliBiliError,NetworkError,Error
     }
-      private String url;
+
+    private final String url;
       private Consumer<POJOResponse> handler;
       private State state;
-      private Random random=new Random();
+    private final Random random = new Random();
 
     public HTTPHelper(String url, Consumer<POJOResponse> handler){
           this.url=url;
           this.handler=handler;
           state=State.Init;
       }
+
+    public void setHandler(Consumer<POJOResponse> handler) {
+        this.handler = handler;
+    }
 
     public State getState() {
         return state;

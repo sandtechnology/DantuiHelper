@@ -1,16 +1,17 @@
 package sandtechnology;
 
-import com.sobte.cqp.jcq.entity.*;
+import com.sobte.cqp.jcq.entity.CQDebug;
+import com.sobte.cqp.jcq.entity.ICQVer;
+import com.sobte.cqp.jcq.entity.IMsg;
+import com.sobte.cqp.jcq.entity.IRequest;
 import com.sobte.cqp.jcq.event.JcqAppAbstract;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.MessageHelper;
 import sandtechnology.utils.Pair;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
 import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -26,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * {@link JcqAppAbstract#CC CC}({@link com.sobte.cqp.jcq.message.CQCode 酷Q码操作类}),
  * 具体功能可以查看文档
  */
-public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
+class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
     /**
      * 用main方法调试可以最大化的加快开发效率，检测和定位错误位置<br/>
@@ -72,19 +73,14 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     }
 
     /**
-     * 打包后将不会调用 请不要在此事件中写其他代码
+     * 应用已被启用 (Type=1003)<br>
+     * 当应用被启用后，将收到此事件。<br>
+     * 如果酷Q载入时应用已被启用，则在 {@link #startup startup}(Type=1001,酷Q启动) 被调用后，本函数也将被调用一次。<br>
+     * 如非必要，不建议在这里加载窗口。
      *
-     * @return 返回应用的ApiVer、Appid
+     * @return 请固定返回0。
      */
-    public String appInfo() {
-        // 应用AppID,规则见 http://d.cqp.me/Pro/开发/基础信息#appid
-        String AppID = "sandtechnology.dantui";// 记住编译后的文件和json也要使用appid做文件名
-        /**
-         * 本函数【禁止】处理其他任何代码，以免发生异常情况。
-         * 如需执行初始化代码请在 startup 事件中执行（Type=1001）。
-         */
-        return CQAPIVER + "," + AppID;
-    }
+    private static final BiliBiliDynamicChecker checker = new BiliBiliDynamicChecker(452785178).addGroups(532589427L);
 
     /**
      * 酷Q启动 (Type=1001)<br>
@@ -114,16 +110,20 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
         System.exit(0);
         return 0;
     }
-
     /**
-     * 应用已被启用 (Type=1003)<br>
-     * 当应用被启用后，将收到此事件。<br>
-     * 如果酷Q载入时应用已被启用，则在 {@link #startup startup}(Type=1001,酷Q启动) 被调用后，本函数也将被调用一次。<br>
-     * 如非必要，不建议在这里加载窗口。
+     * 群消息 (Type=2)<br>
+     * 本方法会在酷Q【线程】中被调用。<br>
      *
-     * @return 请固定返回0。
+     * @param subType       子类型，目前固定为1
+     * @param msgId         消息ID
+     * @param fromGroup     来源群号
+     * @param fromQQ        来源QQ号
+     * @param fromAnonymous 来源匿名者
+     * @param msg           消息内容
+     * @param font          字体
+     * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
      */
-    private static BiliBiliDynamicChecker checker=new BiliBiliDynamicChecker(452785178).addGroups(532589427L);
+    private final Map<Long, Pair<AtomicInteger, String>> repatingMap = new HashMap<>();
     private Timer timer;
     public int enable() {
         enable = true;
@@ -201,19 +201,19 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     }
 
     /**
-     * 群消息 (Type=2)<br>
-     * 本方法会在酷Q【线程】中被调用。<br>
+     * 打包后将不会调用 请不要在此事件中写其他代码
      *
-     * @param subType       子类型，目前固定为1
-     * @param msgId         消息ID
-     * @param fromGroup     来源群号
-     * @param fromQQ        来源QQ号
-     * @param fromAnonymous 来源匿名者
-     * @param msg           消息内容
-     * @param font          字体
-     * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
+     * @return 返回应用的ApiVer、Appid
      */
-    private Map<Long, Pair<AtomicInteger,String>> repatingMap=new HashMap<>();
+    public String appInfo() {
+        // 应用AppID,规则见 http://d.cqp.me/Pro/开发/基础信息#appid
+        String AppID = "sandtechnology.dantui";// 记住编译后的文件和json也要使用appid做文件名
+        /*
+          本函数【禁止】处理其他任何代码，以免发生异常情况。
+          如需执行初始化代码请在 startup 事件中执行（Type=1001）。
+         */
+        return CQAPIVER + "," + AppID;
+    }
     public int groupMsg(int subType, int msgId, long fromGroup, long fromQQ, String fromAnonymous, String msg,
                         int font) {
         //群号
@@ -379,9 +379,9 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
     public int requestAddFriend(int subtype, int sendTime, long fromQQ, String msg, String responseFlag) {
         // 这里处理消息
 
-        /**
-         * REQUEST_ADOPT 通过
-         * REQUEST_REFUSE 拒绝
+        /*
+          REQUEST_ADOPT 通过
+          REQUEST_REFUSE 拒绝
          */
 
         // CQ.setFriendAddRequest(responseFlag, REQUEST_ADOPT, null); // 同意好友添加请求
@@ -404,11 +404,11 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
                                String responseFlag) {
         // 这里处理消息
 
-        /**
-         * REQUEST_ADOPT 通过
-         * REQUEST_REFUSE 拒绝
-         * REQUEST_GROUP_ADD 群添加
-         * REQUEST_GROUP_INVITE 群邀请
+        /*
+          REQUEST_ADOPT 通过
+          REQUEST_REFUSE 拒绝
+          REQUEST_GROUP_ADD 群添加
+          REQUEST_GROUP_INVITE 群邀请
          */
 		/*if(subtype == 1){ // 本号为群管理，判断是否为他人申请入群
 			CQ.setGroupAddRequest(responseFlag, REQUEST_GROUP_ADD, REQUEST_ADOPT, null);// 同意入群
