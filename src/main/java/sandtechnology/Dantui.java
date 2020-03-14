@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * {@link JcqAppAbstract#CC CC}({@link com.sobte.cqp.jcq.message.CQCode 酷Q码操作类}),
  * 具体功能可以查看文档
  */
-class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
+public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
     /**
      * 用main方法调试可以最大化的加快开发效率，检测和定位错误位置<br/>

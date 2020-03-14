@@ -5,11 +5,10 @@ import sandtechnology.bilibili.dynamic.POJODynamic;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.MessageHelper;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -17,13 +16,7 @@ public class BiliBiliDynamicChecker implements IChecker {
 
     private long lastTimestamp;
     private final Set<Long> groups=new LinkedHashSet<>();
-    private static final List<Path> filesToDeleted = new CopyOnWriteArrayList<>();
     private final HTTPHelper httpHelper;
-    private Random random=new Random();
-
-    public static void addFileToDeleted(Path path) {
-        filesToDeleted.add(path);
-    }
 
     public static void main(String[] args) {
         //System.out.println(new POJODynamic.Dynamic.DynamicPicture("https://i0.hdslb.com/bfs/album/3412a766bbe175fb1d74c2c7bd41a396cc05f63a.jpg").getImgCQName());
@@ -75,13 +68,6 @@ public class BiliBiliDynamicChecker implements IChecker {
     }
 
     public void check() {
-        filesToDeleted.forEach(p -> {
-            try {
-                Files.delete(p);
-            } catch (IOException ignored) {
-            }
-        });
-        filesToDeleted.clear();
         httpHelper.execute();
     }
 }

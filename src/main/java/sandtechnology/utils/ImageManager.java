@@ -14,27 +14,36 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ImageManager {
     private static Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
 
+
+    private static void download(URL url, Path absolutePath) throws Exception {
+        URLConnection connection = url.openConnection();
+        connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
+        Files.createDirectories(absolutePath.getParent());
+        try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false); BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
+            int code;
+            byte[] buff = new byte[1024];
+            while ((code = inputStream.read(buff)) != -1) {
+                writer.write(buff, 0, code);
+            }
+        }
+    }
+
     public static CacheImage getImageData(String imgURL) {
 
-        if (cacheImageMap.containsKey(imgURL)) {
-            return cacheImageMap.get(imgURL).markAccessed();
-        }
-
         try {
-            URLConnection connection = new URL(imgURL).openConnection();
-            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
-            Path absolutePath = Paths.get("data", "image", connection.getURL().getFile()).toAbsolutePath();
-            Files.createDirectories(absolutePath.getParent());
-            try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false); BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
-                int code;
-                byte[] buff = new byte[1024];
-                while ((code = inputStream.read(buff)) != -1) {
-                    writer.write(buff, 0, code);
+            URL url = new URL(imgURL);
+            Path path = Paths.get("data", "image", url.getFile()).toAbsolutePath();
+            if (cacheImageMap.containsKey(imgURL)) {
+                if (!cacheImageMap.get(imgURL).getFile().exists()) {
+                    download(url, path);
                 }
+                return cacheImageMap.get(imgURL).markAccessed();
+            } else {
+                download(url, path);
+                CacheImage cacheImage = new CacheImage(path.toFile(), url.getFile());
+                cacheImageMap.put(imgURL, cacheImage);
+                return cacheImage.markAccessed();
             }
-            CacheImage cacheImage = new CacheImage(absolutePath.toFile(), connection.getURL().getFile());
-            cacheImageMap.put(imgURL, cacheImage);
-            return cacheImage.markAccessed();
         } catch (Exception e) {
             MessageHelper.sendingErrorMessage(e, "GettingImageData,retrying...");
             ThreadHelper.sleep(1000);

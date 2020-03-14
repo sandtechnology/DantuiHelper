@@ -55,7 +55,7 @@ public class HTTPHelper{
               }
               handler.accept(pojoResponse);
               state= State.Success;
-          }catch (IOException e){
+          } catch (IOException e) {
               state=State.NetworkError;
               MessageHelper.sendingErrorMessage(e,"Network Error:");
           } catch (Exception e){
