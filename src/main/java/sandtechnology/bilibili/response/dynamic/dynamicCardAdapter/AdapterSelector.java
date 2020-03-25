@@ -3,12 +3,13 @@ package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.PlainTextAdapter;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.UnknownAdapter;
+import sandtechnology.holder.MessageOut;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
 class AdapterSelector {
 
-    private static String getString(DynamicData data){
+    private static MessageOut getString(DynamicData data) {
         IAdapter adapter;
         switch (data.getDesc().getType()){
 
@@ -19,6 +20,6 @@ class AdapterSelector {
                 adapter=new UnknownAdapter();
                // adapter=getGsonInstance().fromJson(data.getCard(),)
         }
-        return adapter.getString();
+        return adapter.getMessage();
     }
 }

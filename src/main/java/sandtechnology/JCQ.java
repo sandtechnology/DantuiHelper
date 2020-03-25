@@ -5,15 +5,11 @@ import com.sobte.cqp.jcq.entity.ICQVer;
 import com.sobte.cqp.jcq.entity.IMsg;
 import com.sobte.cqp.jcq.entity.IRequest;
 import com.sobte.cqp.jcq.event.JcqAppAbstract;
-import sandtechnology.bilibili.response.live.RoomInfo;
-import sandtechnology.utils.*;
+import sandtechnology.common.Listener;
+import sandtechnology.common.Start;
+import sandtechnology.utils.DataContainer;
 
-import javax.swing.*;
-import java.util.Timer;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import static sandtechnology.utils.ImageManager.deleteCacheImage;
+import static sandtechnology.utils.ImageManager.getImageData;
 
 
 /**
@@ -28,7 +24,7 @@ import static sandtechnology.utils.ImageManager.deleteCacheImage;
  * {@link JcqAppAbstract#CC CC}({@link com.sobte.cqp.jcq.message.CQCode 酷Q码操作类}),
  * 具体功能可以查看文档
  */
-public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
+public class JCQ extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
     /**
      * 用main方法调试可以最大化的加快开发效率，检测和定位错误位置<br/>
@@ -36,16 +32,17 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      *
      * @param args 系统参数
      */
-    private static Dantui demo;
+    private static JCQ demo;
     public static void main(String[] args) {
         // CQ此变量为特殊变量，在JCQ启动时实例化赋值给每个插件，而在测试中可以用CQDebug类来代替他
         CQ = new CQDebug();//new CQDebug("应用目录","应用名称") 可以用此构造器初始化应用的目录
         CQ.logInfo("[JCQ] TEST Demo", "测试启动");// 现在就可以用CQ变量来执行任何想要的操作了
         // 要测试主类就先实例化一个主类对象
-        demo = new Dantui();
+        demo = new JCQ();
         // 下面对主类进行各方法测试,按照JCQ运行过程，模拟实际情况
         demo.startup();// 程序运行开始 调用应用初始化方法
         demo.enable();// 程序初始化完成后，启用应用，让应用正常工作
+        getImageData("https://static.hdslb.com/error/very_sorry.png");
         // 开始模拟发送消息
         // 模拟私聊消息
         // 开始模拟QQ用户发送消息，以下QQ全部编造，请勿添加
@@ -82,7 +79,7 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * @return 请固定返回0。
      */
 
-    public static Dantui getDemo() {
+    public static JCQ getDemo() {
         return demo;
     }
 
@@ -110,79 +107,14 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * @return 请固定返回0，返回后酷Q将很快关闭，请不要再通过线程等方式执行其他代码。
      */
     public int exit() {
-        deleteCacheImage();
-        timer.cancel();
+        Start.exit();
         return 0;
     }
-    /**
-     * 群消息 (Type=2)<br>
-     * 本方法会在酷Q【线程】中被调用。<br>
-     *
-     * @param subType       子类型，目前固定为1
-     * @param msgId         消息ID
-     * @param fromGroup     来源群号
-     * @param fromQQ        来源QQ号
-     * @param fromAnonymous 来源匿名者
-     * @param msg           消息内容
-     * @param font          字体
-     * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
-     */
-    private final Map<Long, Pair<AtomicInteger, String>> repatingMap = new HashMap<>();
-    private Timer timer;
 
-    public Timer getTimer() {
-        return timer;
-    }
 
     public int enable() {
         enable = true;
-        timer=new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            private long time;
-            private int index = 0;
-            private List<IChecker> runnables = new ArrayList<>();
-
-            {
-                runnables.add(new BiliBiliDynamicChecker(452785178).addGroups(532589427L));
-                runnables.add(new IChecker() {
-                    private long lastLive;
-                    HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
-                        RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                        if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
-                            lastLive = roomInfo.getStartTime();
-                            ImageManager.CacheImage image = roomInfo.getImage();
-                            MessageHelper.sendingGroupMessage(532589427L, "星沙姐播了！！！！她播了她播了她播了！！！！！", roomInfo.getRoomURL(), "直播标题：" + roomInfo.getTitle(), "直播封面", image == null ? "无" : image.toCQCode());
-                        }
-                    });
-
-                    @Override
-                    public void check() {
-                        httpHelper.execute();
-                    }
-                });
-            }
-
-            private IChecker next() {
-                index = index == runnables.size() - 1 ? 0 : index + 1;
-                return runnables.get(index);
-            }
-
-            @Override
-            public void run() {
-                try {
-                    if (time == 3 * 60 * 12) {
-                        time = 0;
-                        ImageManager.deleteCacheImage();
-                    } else {
-                        time++;
-                    }
-                    next().check();
-                }catch (Throwable e){
-                    MessageHelper.sendingErrorMessage(e);
-                }
-            }
-        },0,20000);
-        //CQ.sendGroupMsg(group,"Welcome to Love-TokimoriSeisa-Forever system!");
+        Start.start();
         return 0;
     }
 
@@ -214,32 +146,7 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * 如果不回复消息，交由之后的应用/过滤器处理，这里 返回  {@link IMsg#MSG_IGNORE MSG_IGNORE} - 忽略本条消息
      */
     public int privateMsg(int subType, int msgId, long fromQQ, String msg, int font) {
-        // 这里处理消息
-        long owner=DataContainer.getMaster();
-        if(fromQQ==owner){
-            if(msg.startsWith("/")) {
-                String[] command=msg.substring(1).split(" ");
-                if(command.length==1&&command[0].equals("test")){
-                    MessageHelper.sendingInfoMessage(new Random().nextInt(2000)+"www");
-                }
-                if(command[0].equals("send")){
-                    if(command.length==2)
-                        MessageHelper.sendingGroupMessage(DataContainer.getTargetGroup(),command[1]);
-                    else if(command.length==3){
-                        MessageHelper.sendingGroupMessage(Long.parseLong(command[1]),command[2]);
-                    }
-                }
-                if(command[0].equals("fetch")) {
-                    if(command.length==2){
-                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h->MessageHelper.sendingInfoMessage(h.getDynamicData().getDynamics().get(0).getInfo())).check();
-                    }else if (command.length == 3) {
-                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setLastTimestamp(Long.parseLong(command[2])).check();
-                    }else {
-                        MessageHelper.sendingInfoMessage("/fetch [UID] [timestamp]");
-                    }
-                }
-            }
-        }
+        Listener.onPrivateMsg(fromQQ, msg);
         //CQ.sendPrivateMsg(fromQQ, "你发送了这样的消息：" + msg + "\n来自Java插件");
         return MSG_IGNORE;
     }
@@ -258,39 +165,26 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
          */
         return CQAPIVER + "," + AppID;
     }
+
+    /**
+     * 群消息 (Type=2)<br>
+     * 本方法会在酷Q【线程】中被调用。<br>
+     *
+     * @param subType       子类型，目前固定为1
+     * @param msgId         消息ID
+     * @param fromGroup     来源群号
+     * @param fromQQ        来源QQ号
+     * @param fromAnonymous 来源匿名者
+     * @param msg           消息内容
+     * @param font          字体
+     * @return 关于返回值说明, 见 {@link #privateMsg 私聊消息} 的方法
+     */
     public int groupMsg(int subType, int msgId, long fromGroup, long fromQQ, String fromAnonymous, String msg,
                         int font) {
-        //群号
-        if(DataContainer.getTargetGroup().contains(fromGroup)){
-            if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
-                new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
-                    RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                    if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
-                        MessageHelper.sendingGroupMessage(532589427L, "这个小助手还是不太聪明的样子，我来补上：", roomInfo.getRoomURL(), ImageManager.getImageData(roomInfo.getCoverURL()).toCQCode());
-                    }
-                }).execute();
-            }
-            Pair<AtomicInteger,String> pairData;
-            if(repatingMap.containsKey(fromGroup)){
-               pairData=repatingMap.get(fromGroup);
-            }else {
-                pairData=new Pair<>(new AtomicInteger(0),msg);
-                repatingMap.put(fromGroup,pairData);
-            }
-            //消息判断
-                if (msg.equals(pairData.getLast())){
-                    if(pairData.getFirst().incrementAndGet()==2){
-                        MessageHelper.sendingGroupMessage(fromGroup,pairData.getLast());
-                    }
-                }else {
-                    pairData.setLast(msg);
-                    pairData.getFirst().set(1);
-                }
-
-            }
+        Listener.onGroupMsg(fromQQ, fromGroup, msg);
         // 如果消息来自匿名者
         //if (fromQQ == 80000000L && !fromAnonymous.equals("")) {
-            // 将匿名用户信息放到 anonymous 变量中
+        // 将匿名用户信息放到 anonymous 变量中
         //    Anonymous anonymous = CQ.getAnonymous(fromAnonymous);
         //}
 
@@ -470,26 +364,6 @@ public class Dantui extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 		}*/
 
         return MSG_IGNORE;
-    }
-
-    /**
-     * 本函数会在JCQ【线程】中被调用。
-     *
-     * @return 固定返回0
-     */
-    public int menuA() {
-        JOptionPane.showMessageDialog(null, "这是测试菜单A，可以在这里加载窗口");
-        return 0;
-    }
-
-    /**
-     * 本函数会在酷Q【线程】中被调用。
-     *
-     * @return 固定返回0
-     */
-    public int menuB() {
-        JOptionPane.showMessageDialog(null, "这是测试菜单B，可以在这里加载窗口");
-        return 0;
     }
 
 }

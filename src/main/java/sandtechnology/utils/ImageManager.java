@@ -1,20 +1,34 @@
 package sandtechnology.utils;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
+import org.jetbrains.annotations.Nullable;
+
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageManager {
     private static Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
+    private static CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
 
+    static {
+        try {
+            Files.walkFileTree(Paths.get("data", "image"), new SimpleFileVisitor<Path>() {
+                @Override
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                    String relativePath = file.subpath(2, file.getNameCount()).toString();
+                    cacheImageMap.put(relativePath, new CacheImage(file.toAbsolutePath().toFile(), relativePath));
+                    return FileVisitResult.CONTINUE;
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private static void download(URL url, Path absolutePath) throws Exception {
         URLConnection connection = url.openConnection();
@@ -29,6 +43,7 @@ public class ImageManager {
         }
     }
 
+    @Nullable
     public static CacheImage getImageData(String imgURL) {
         try {
             URL url = new URL(imgURL);
@@ -46,8 +61,11 @@ public class ImageManager {
                 cacheImageMap.put(imgURL, cacheImage);
                 return cacheImage.markAccessed();
             }
+        } catch (FileNotFoundException e) {
+            MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
+            return emptyImage;
         } catch (Exception e) {
-            MessageHelper.sendingErrorMessage(e, "GettingImageData,retrying...");
+            MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
             ThreadHelper.sleep(1000);
             return getImageData(imgURL);
         }
@@ -56,15 +74,18 @@ public class ImageManager {
     public static void deleteCacheImage() {
         Iterator<Map.Entry<String, CacheImage>> iterator = cacheImageMap.entrySet().iterator();
         while (iterator.hasNext()) {
-            iterator.next().getValue().getFile().delete();
-            iterator.remove();
+            Map.Entry<String, CacheImage> entry = iterator.next();
+            if ((System.currentTimeMillis() - entry.getValue().getLastAccessed()) >= 1000 * 60 * 60 * 24) {
+                entry.getValue().getFile().delete();
+                iterator.remove();
+            }
         }
     }
 
     public static class CacheImage {
         private final File path;
         private final String CQCode;
-        private long lastAccessed;
+        private long lastAccessed = System.currentTimeMillis();
 
         public CacheImage(File absolutePath, String relativePath) {
             this.path = absolutePath;

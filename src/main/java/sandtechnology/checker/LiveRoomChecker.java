@@ -1,4 +1,4 @@
-package sandtechnology;
+package sandtechnology.checker;
 
 public class LiveRoomChecker implements IChecker {
 
