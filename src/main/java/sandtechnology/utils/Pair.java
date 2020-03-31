@@ -12,12 +12,14 @@ public class Pair<V1,V2> {
         return v1;
     }
 
-    public void setFirst(V1 v1) {
+    public Pair<V1, V2> setFirst(V1 v1) {
         this.v1 = v1;
+        return this;
     }
 
-    public void setLast(V2 v2) {
+    public Pair<V1, V2> setLast(V2 v2) {
         this.v2 = v2;
+        return this;
     }
 
     public V2 getLast() {

@@ -39,8 +39,21 @@ public class MessageOut {
         return list;
     }
 
+    private <T> T getLastElement(List<T> list) {
+        return list.isEmpty() ? null : list.get(list.size() - 1);
+    }
+
+    public MessageOut addFirst(String str) {
+        list.add(0, new Pair<>(str, new ArrayList<>()));
+        return this;
+    }
     public MessageOut add(String str) {
-        list.add(new Pair<>(str, new ArrayList<>()));
+        if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
+            Pair<String, List<ImageManager.CacheImage>> old = list.remove(list.size() - 1);
+            list.add(old.setFirst(old.getFirst() + str));
+        } else {
+            list.add(new Pair<>(str, new ArrayList<>()));
+        }
         return this;
     }
 

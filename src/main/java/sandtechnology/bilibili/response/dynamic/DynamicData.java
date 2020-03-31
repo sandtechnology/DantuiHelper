@@ -2,6 +2,8 @@ package sandtechnology.bilibili.response.dynamic;
 
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.bilibili.response.dynamic.display.DisplayHolder;
+import sandtechnology.bilibili.response.dynamic.extension.ExtensionHolder;
 
 public class DynamicData {
     @SerializedName("desc")
@@ -13,17 +15,25 @@ public class DynamicData {
     JsonObject card;
     //存储额外扩展应用信息：如投票
     @SerializedName("extension")
-    private JsonObject extension;
+    private ExtensionHolder extension;
     //存储额外富文本信息，如@
     @SerializedName("extend_json")
     private JsonObject extend;
     //存储显示用的信息，如B站的表情显示
     @SerializedName("display")
-    private JsonObject displayContent;
+    private DisplayHolder displayContent;
 
 
     public JsonObject getCard() {
         return card;
+    }
+
+    public DisplayHolder getDisplayContent() {
+        return displayContent;
+    }
+
+    public ExtensionHolder getExtension() {
+        return extension;
     }
 
     public DynamicDesc getDesc() {

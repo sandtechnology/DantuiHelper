@@ -6,7 +6,7 @@ import sandtechnology.holder.MessageOut;
 public class ArticleAdapter implements IAdapter {
 
     @Override
-    public MessageOut getMessage() {
+    public MessageOut addMessage(MessageOut out) {
         return null;
     }
 }

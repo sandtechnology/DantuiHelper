@@ -1,6 +1,7 @@
 package sandtechnology.bilibili.response.dynamic;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.bilibili.response.user.UserProfile;
 
 public class DynamicDesc {
 
@@ -13,9 +14,17 @@ public class DynamicDesc {
     private
     String dynamicID;
 
+    @SerializedName("user_profile")
+    private
+    UserProfile userProfile;
+
     @SerializedName("origin")
     private
     DynamicDesc originDynamicDesc;
+
+    public UserProfile getUserProfile() {
+        return userProfile;
+    }
 
     public long getTimestamp() {
         return timestamp;

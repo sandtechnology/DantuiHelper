@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.utils.JsonHelper;
 
-public class displayHolder {
+public class DisplayHolder {
     @SerializedName("emoji_info")
     private JsonObject emojiInfo;
 

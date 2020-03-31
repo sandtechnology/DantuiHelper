@@ -4,6 +4,6 @@ import sandtechnology.holder.MessageOut;
 
 public interface IAdapter {
 
-    MessageOut getMessage();
+    MessageOut addMessage(MessageOut out);
 }
 
