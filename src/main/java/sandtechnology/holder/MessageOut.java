@@ -26,6 +26,19 @@ public class MessageOut {
         return this;
     }
 
+    public MessageOut add(List<ImageManager.CacheImage> image) {
+        if (list.isEmpty()) {
+            list.add(new Pair<>("", new ArrayList<>(image)));
+        } else {
+            list.get(list.size() - 1).getLast().addAll(image);
+        }
+        return this;
+    }
+
+    public List<Pair<String, List<ImageManager.CacheImage>>> getContent() {
+        return list;
+    }
+
     public MessageOut add(String str) {
         list.add(new Pair<>(str, new ArrayList<>()));
         return this;

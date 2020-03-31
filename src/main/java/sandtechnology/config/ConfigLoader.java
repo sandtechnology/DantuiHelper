@@ -20,7 +20,7 @@ import java.util.Scanner;
 
 public class ConfigLoader {
     private static Scanner scanner = new Scanner(System.in);
-    private static Path configPath = Paths.get("data", "config.json");
+    private static Path configPath = Paths.get("config", "config.json");
     private static ConfigHolder holder;
     private static Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
@@ -39,6 +39,8 @@ public class ConfigLoader {
             if (Files.exists(configPath)) {
                 holder = JsonHelper.getGsonInstance().fromJson(Files.newBufferedReader(configPath), ConfigHolder.class);
             } else {
+                Files.createDirectories(configPath.getParent());
+                Files.createFile(configPath);
                 holder = JsonHelper.getGsonInstance().fromJson("{}", ConfigHolder.class);
             }
             for (Field field : holder.getClass().getDeclaredFields()) {
@@ -46,40 +48,39 @@ public class ConfigLoader {
                 if (field.isAnnotationPresent(DefaultValue.class) && field.get(holder) == null) {
                     field.set(holder, field.getAnnotation(DefaultValue.class).value().newInstance());
                 }
-                if (field.isAnnotationPresent(Ask.class) || field.isSynthetic()) {
+                if (field.isAnnotationPresent(Ask.class) && !field.isSynthetic()) {
                     {
-                        if (field.get(holder) != null || field.get(holder) instanceof Number && ((Number) field.get(holder)).doubleValue() != 0) {
-                            continue;
-                        }
-                        System.out.print(String.format(field.getAnnotation(Ask.class).text(), field.getName()));
-                        Class<?> type = field.getType();
+                        if (field.get(holder) == null || (field.getType().isPrimitive() && (field.getType().getTypeName().equals("byte") ? field.getByte(holder) == 0x0 : field.getDouble(holder) == 0D))) {
+                            System.out.print(String.format(field.getAnnotation(Ask.class).text(), field.getName()));
+                            Class<?> type = field.getType();
 
-                        if (!type.isArray()) {
-                            if ((type.isPrimitive() && type.getName().equals("double")) || type.isInstance(Double.class)) {
-                                field.setDouble(holder, scanner.nextDouble());
-                            } else if ((type.isPrimitive() && type.getName().equals("int")) || type.isInstance(Integer.class)) {
-                                field.setInt(holder, scanner.nextInt());
-                            } else if ((type.isPrimitive() && type.getName().equals("long")) || type.isInstance(Long.class)) {
-                                field.setLong(holder, scanner.nextLong());
-                            } else if ((type.isPrimitive() && type.getName().equals("short")) || type.isInstance(Short.class)) {
-                                field.setShort(holder, scanner.nextShort());
-                            } else if ((type.isPrimitive() && type.getName().equals("float")) || type.isInstance(Float.class)) {
-                                field.setFloat(holder, scanner.nextFloat());
-                            } else if ((type.isPrimitive() && type.getName().equals("boolean")) || type.isInstance(Boolean.class)) {
-                                field.setBoolean(holder, scanner.nextBoolean());
-                            } else if ((type.isPrimitive() && type.getName().equals("byte")) || type.isInstance(Byte.class)) {
-                                field.setByte(holder, scanner.nextByte());
-                            } else if (type.getName().equals("java.lang.String")) {
-                                field.set(holder, scanner.next());
+                            if (!type.isArray()) {
+                                if ((type.isPrimitive() && type.getName().equals("double")) || type.isInstance(Double.class)) {
+                                    field.setDouble(holder, scanner.nextDouble());
+                                } else if ((type.isPrimitive() && type.getName().equals("int")) || type.isInstance(Integer.class)) {
+                                    field.setInt(holder, scanner.nextInt());
+                                } else if ((type.isPrimitive() && type.getName().equals("long")) || type.isInstance(Long.class)) {
+                                    field.setLong(holder, scanner.nextLong());
+                                } else if ((type.isPrimitive() && type.getName().equals("short")) || type.isInstance(Short.class)) {
+                                    field.setShort(holder, scanner.nextShort());
+                                } else if ((type.isPrimitive() && type.getName().equals("float")) || type.isInstance(Float.class)) {
+                                    field.setFloat(holder, scanner.nextFloat());
+                                } else if ((type.isPrimitive() && type.getName().equals("boolean")) || type.isInstance(Boolean.class)) {
+                                    field.setBoolean(holder, scanner.nextBoolean());
+                                } else if ((type.isPrimitive() && type.getName().equals("byte")) || type.isInstance(Byte.class)) {
+                                    field.setByte(holder, scanner.nextByte());
+                                } else if (type.getName().equals("java.lang.String")) {
+                                    field.set(holder, scanner.next());
+                                }
+                            }
+                            if (field.get(holder) == null) {
+                                //备用
+                                Class<? extends StringConverter> converter = field.getAnnotation(Ask.class).converter();
+                                field.set(holder, converter.newInstance().convert(scanner.next()));
                             }
                         }
-                        if (field.get(holder) == null) {
-                            //备用
-                            Class<? extends StringConverter> converter = field.getAnnotation(Ask.class).converter();
-                            field.set(holder, converter.newInstance().convert(scanner.next()));
-                        }
+                        System.out.println(field.getName() + "=" + field.get(holder).toString());
                     }
-                    System.out.println(field.getName() + "=" + field.get(holder).toString());
                 }
 
             }

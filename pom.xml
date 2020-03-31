@@ -12,6 +12,10 @@
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
         </repository>
+        <repository>
+            <id>kotlin-eap</id>
+            <url>https://dl.bintray.com/kotlin/kotlin-eap</url>
+        </repository>
     </repositories>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,7 +24,7 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-qqandroid-jvm</artifactId>
-            <version>0.28.0</version> <!-- 替换版本为最新版本 -->
+            <version>0.31.0</version> <!-- 替换版本为最新版本 -->
         </dependency>
         <dependency>
             <groupId>net.mamoe</groupId>
@@ -66,11 +70,12 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
-                        <manifestEntries>
-                            <main-class>sandtechnology.Mirai</main-class>
-                        </manifestEntries>
+                        <manifest>
+                            <mainClass>sandtechnology.Mirai</mainClass>
+                        </manifest>
                     </archive>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
