@@ -11,7 +11,6 @@ import sandtechnology.common.Listener;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.ReadOnlyMessage;
-import sandtechnology.utils.ErrorHandler;
 
 import java.nio.file.Paths;
 
@@ -36,7 +35,7 @@ public class Mirai {
 
         });
         try {
-            bot.getCoroutineContext().plus(new ErrorHandler());
+            //bot.getCoroutineContext().plus(new ErrorHandler());
             bot.login();
             System.out.println("Registering Event....");
             Events.subscribeAlways(GroupMessage.class, groupMessage -> Listener.onGroupMsg(groupMessage.getSender().getId(), groupMessage.getGroup().getId(), new ReadOnlyMessage(groupMessage.getMessage())));
