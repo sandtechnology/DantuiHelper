@@ -9,9 +9,15 @@ public class DisplayHolder {
     private JsonObject emojiInfo;
     @SerializedName("origin")
     private DisplayHolder originDisplayHolder;
+    @SerializedName("usr_action_txt")
+    private String actionText;
 
     public DisplayHolder getOriginDisplayHolder() {
         return originDisplayHolder == null ? new DisplayHolder() : originDisplayHolder;
+    }
+
+    public String getActionText() {
+        return actionText;
     }
 
     public EmojiChain getEmojiInfo() {

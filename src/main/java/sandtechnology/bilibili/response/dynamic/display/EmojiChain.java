@@ -20,6 +20,10 @@ public class EmojiChain {
         this.emojiList = emojiList;
     }
 
+    public WriteOnlyMessage format(String str) {
+        return format(new WriteOnlyMessage(str));
+    }
+
     public WriteOnlyMessage format(WriteOnlyMessage out) {
         WriteOnlyMessage result = out;
         for (Emoji emoji : emojiList) {

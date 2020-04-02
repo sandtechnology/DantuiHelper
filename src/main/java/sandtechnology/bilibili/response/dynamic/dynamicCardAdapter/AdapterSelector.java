@@ -1,9 +1,7 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter;
 
 import sandtechnology.bilibili.response.dynamic.DynamicData;
-import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.PlainTextAdapter;
-import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.TextWithPicAdapter;
-import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.UnknownAdapter;
+import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.*;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.repost.RepostAdapter;
 import sandtechnology.holder.WriteOnlyMessage;
 
@@ -40,11 +38,23 @@ public class AdapterSelector {
                 adapterClass = PlainTextAdapter.class;
                 break;
             case 8:
-
+                adapterClass = VideoAdapter.class;
+                break;
             case 16:
-
+                adapterClass = MiniVideoAdapter.class;
+                break;
+            case 64:
+                adapterClass = ArticleAdapter.class;
+                break;
+            case 256:
+                adapterClass = MusicAdapter.class;
+                break;
             case 2048:
-
+                adapterClass = ShareAdapter.class;
+                break;
+            case 4200:
+                adapterClass = LiveRoomAdapter.class;
+                break;
         }
         return adapterClass;
     }

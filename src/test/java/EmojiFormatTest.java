@@ -8,12 +8,8 @@ import java.util.List;
 
 public class EmojiFormatTest {
 
-    public static void main(String[] args) {
-        test();
-    }
-
     @Test
-    public static void test() {
+    public void test() {
         String textMessage = "瞅了一下，多半都是大会员专享跟大会员抢先看[妙啊]\n那~就👉https:\\\\www.bilibili.com\\blackboard\\activity-_A80QNbtP.html?from=dongtai每天三毛钱，快乐你懂的[奋斗]";
         List<Emoji> emojis = new LinkedList<>();
 

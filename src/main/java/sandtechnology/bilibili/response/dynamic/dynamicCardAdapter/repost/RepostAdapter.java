@@ -25,7 +25,7 @@ public class RepostAdapter implements IAdapter {
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
         return out.add("转发了").add(originUser.getInfo().getUserName()).add("的动态：")
-                .add(item.content)
+                .add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage(item.content)))
                 .add("\n原动态信息：\n")
                 .add(AdapterSelector.getString(
                         new DynamicData(

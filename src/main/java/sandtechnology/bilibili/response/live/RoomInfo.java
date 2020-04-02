@@ -1,6 +1,7 @@
 package sandtechnology.bilibili.response.live;
 
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
 import sandtechnology.utils.ImageManager;
 
 public class RoomInfo {
@@ -82,8 +83,9 @@ public class RoomInfo {
         return subArea;
     }
 
-    public Status getStatus() {
-        switch (status){
+    @NotNull
+    public static Status getStatus(int roundStatus) {
+        switch (roundStatus) {
             case 0:
                 return Status.NoStreaming;
             case 1:
@@ -93,5 +95,9 @@ public class RoomInfo {
             default:
                 return Status.Unknown;
         }
+    }
+
+    public Status getStatus() {
+        return getStatus(status);
     }
 }

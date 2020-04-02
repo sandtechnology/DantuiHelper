@@ -61,6 +61,11 @@ public class WriteOnlyMessage {
     }
 
     public WriteOnlyMessage add(String str) {
+        if (str == null || str.isEmpty()) {
+            return this;
+        }
+        //移除识别的特殊字符
+        str = str.replace("\u200B", "");
         if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
             Pair<String, List<ImageManager.CacheImage>> old = list.remove(list.size() - 1);
             list.add(old.setFirst(old.getFirst() + str));

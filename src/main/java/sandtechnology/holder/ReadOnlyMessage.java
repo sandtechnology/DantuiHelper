@@ -4,8 +4,6 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
-import java.util.Objects;
-
 public class ReadOnlyMessage {
 
     private MessageChain obj;
@@ -34,7 +32,7 @@ public class ReadOnlyMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReadOnlyMessage that = (ReadOnlyMessage) o;
-        return Objects.equals(obj, that.obj);
+        return obj.toString().equals(that.obj.toString());
     }
 
     public WriteOnlyMessage toWriteOnlyMessage() {

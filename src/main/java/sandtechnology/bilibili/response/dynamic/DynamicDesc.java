@@ -18,8 +18,14 @@ public class DynamicDesc {
     private
     UserProfile userProfile;
 
+    @SerializedName("bvid")
+    String bvid;
     @SerializedName("origin")
     DynamicDesc originDynamicDesc;
+
+    public String getBvid() {
+        return bvid;
+    }
 
     public UserProfile getUserProfile() {
         if (userProfile == null) {

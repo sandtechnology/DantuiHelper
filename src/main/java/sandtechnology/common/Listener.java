@@ -41,10 +41,10 @@ public class Listener {
                     MessageHelper.sendingInfoMessage(new Random().nextInt(2000) + "www");
                 }
                 if (command[0].equals("send")) {
-                    if (command.length == 2) {
+                    if (command.length == 1) {
                         MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到群的内容"));
                         waitingMessageMap.put(fromQQ, DataContainer.getTargetGroup());
-                    } else if (command.length == 3) {
+                    } else if (command.length == 2) {
                         MessageHelper.sendPrivateMsg(fromQQ, "请发送需要发送到群的内容");
                         waitingMessageMap.put(fromQQ, Collections.singletonList(Long.parseLong(command[1])));
                     }
@@ -70,7 +70,7 @@ public class Listener {
                 new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
                     RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                     if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
-                        MessageHelper.sendingGroupMessage(532589427L, "这个小助手还是不太聪明的样子，我来补上：", roomInfo.getRoomURL(), getImageData(roomInfo.getCoverURL()).toCQCode());
+                        MessageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).add("\n").add(getImageData(roomInfo.getCoverURL())));
                     }
                 }).execute();
             }
