@@ -2,6 +2,7 @@ package sandtechnology.common;
 
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.BiliBiliDynamicChecker;
+import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.MessageHelper;
@@ -16,9 +17,11 @@ import static sandtechnology.utils.ImageManager.getImageData;
 
 public class Listener {
 
-    private static final Map<Long, Pair<AtomicInteger, String>> repatingMap = new HashMap<>();
+    private static final Map<Long, Pair<AtomicInteger, ReadOnlyMessage>> repatingMap = new HashMap<>();
 
-    public static void onPrivateMsg(long fromQQ, String msg) {
+    public static void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
+
+        String msg = message.toString();
         // 这里处理消息
         long owner = DataContainer.getMaster();
         if (fromQQ == owner) {
@@ -36,7 +39,7 @@ public class Listener {
                 }
                 if (command[0].equals("fetch")) {
                     if (command.length == 2) {
-                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> MessageHelper.sendingInfoMessage(h.getDynamicData().getDynamics().get(0).getInfo())).check();
+                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> MessageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
                     } else if (command.length == 3) {
                         new BiliBiliDynamicChecker(Long.parseLong(command[1])).setLastTimestamp(Long.parseLong(command[2])).check();
                     } else {
@@ -47,7 +50,8 @@ public class Listener {
         }
     }
 
-    public static void onGroupMsg(long fromQQ, long fromGroup, String msg) {
+    public static void onGroupMsg(long fromQQ, long fromGroup, ReadOnlyMessage readOnlyMessage) {
+        String msg = readOnlyMessage.toString();
         //群号
         if (DataContainer.getTargetGroup().contains(fromGroup)) {
             if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
@@ -58,20 +62,20 @@ public class Listener {
                     }
                 }).execute();
             }
-            Pair<AtomicInteger, String> pairData;
+            Pair<AtomicInteger, ReadOnlyMessage> pairData;
             if (repatingMap.containsKey(fromGroup)) {
                 pairData = repatingMap.get(fromGroup);
             } else {
-                pairData = new Pair<>(new AtomicInteger(0), msg);
+                pairData = new Pair<>(new AtomicInteger(0), readOnlyMessage);
                 repatingMap.put(fromGroup, pairData);
             }
             //消息判断
-            if (msg.equals(pairData.getLast())) {
+            if (readOnlyMessage.equals(pairData.getLast())) {
                 if (pairData.getFirst().incrementAndGet() == 2) {
                     MessageHelper.sendingGroupMessage(fromGroup, pairData.getLast());
                 }
             } else {
-                pairData.setLast(msg);
+                pairData.setLast(readOnlyMessage);
                 pairData.getFirst().set(1);
             }
 

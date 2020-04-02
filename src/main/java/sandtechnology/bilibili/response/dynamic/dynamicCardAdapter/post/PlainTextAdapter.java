@@ -1,15 +1,23 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.holder.MessageOut;
+import sandtechnology.bilibili.response.user.UserProfile;
+import sandtechnology.holder.WriteOnlyMessage;
 
 public class PlainTextAdapter implements IAdapter {
 
-    @SerializedName("content")
-    private String content;
+    CommonItem item;
+    @SerializedName("user")
+    private UserProfile.Info profile;
 
-    public MessageOut addMessage(MessageOut out) {
-        return out.add("发了一条文字动态：\n").add(content);
+    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
+        return out.add("发了一条文字动态：\n").add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage().add(item.content)));
+    }
+
+    private static class CommonItem {
+        @SerializedName("content")
+        private String content;
     }
 }

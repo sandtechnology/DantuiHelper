@@ -19,19 +19,34 @@ public class DynamicDesc {
     UserProfile userProfile;
 
     @SerializedName("origin")
-    private
     DynamicDesc originDynamicDesc;
 
     public UserProfile getUserProfile() {
+        if (userProfile == null) {
+            throw new RuntimeException("用户信息不存在");
+        }
         return userProfile;
+    }
+
+    public DynamicDesc setUserProfile(UserProfile userProfile) {
+        this.userProfile = userProfile;
+        return this;
     }
 
     public long getTimestamp() {
         return timestamp;
     }
 
+    public String getOriginDynamicID() {
+        return originDynamicDesc.dynamicID;
+    }
+
     public DynamicDesc getOriginDynamicDesc() {
         return originDynamicDesc;
+    }
+
+    public boolean isRepost() {
+        return originDynamicDesc != null;
     }
 
     public String getDynamicID() {

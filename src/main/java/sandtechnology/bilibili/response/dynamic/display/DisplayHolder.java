@@ -7,6 +7,12 @@ import sandtechnology.utils.JsonHelper;
 public class DisplayHolder {
     @SerializedName("emoji_info")
     private JsonObject emojiInfo;
+    @SerializedName("origin")
+    private DisplayHolder originDisplayHolder;
+
+    public DisplayHolder getOriginDisplayHolder() {
+        return originDisplayHolder == null ? new DisplayHolder() : originDisplayHolder;
+    }
 
     public EmojiChain getEmojiInfo() {
         if (emojiInfo != null) {

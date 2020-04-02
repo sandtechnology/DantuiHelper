@@ -1,7 +1,7 @@
 package sandtechnology.bilibili.response.dynamic.display;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.holder.MessageOut;
+import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 
 public class Emoji {
@@ -24,11 +24,11 @@ public class Emoji {
         return url;
     }
 
-    public MessageOut format(MessageOut out) {
+    public WriteOnlyMessage format(WriteOnlyMessage out) {
         if (url != null) {
             cacheImage = ImageManager.getImageData(url);
         }
-        MessageOut result = new MessageOut();
+        WriteOnlyMessage result = new WriteOnlyMessage();
         out.getContent().forEach(
                 pair -> {
                     String str = pair.getFirst();
@@ -42,16 +42,17 @@ public class Emoji {
                     String[] strings = str.split("\\[" + text.substring(1, text.length() - 1) + "\\]");
                     if (strings.length > 1) {
                         for (int i = 0; i < strings.length; i++) {
-                            result.add(strings[i]);
+                            if (!strings[i].isEmpty()) {
+                                result.add(strings[i]);
+                            }
                             if (i != strings.length - 1) {
                                 result.add(cacheImage);
                             }
                         }
-                        result.add(pair.getLast());
                     } else {
                         result.add(str);
-                        result.add(pair.getLast());
                     }
+                    result.add(pair.getLast());
                     if (addLast) {
                         result.add(cacheImage);
                     }

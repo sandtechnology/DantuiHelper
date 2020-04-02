@@ -7,6 +7,7 @@ import com.sobte.cqp.jcq.entity.IRequest;
 import com.sobte.cqp.jcq.event.JcqAppAbstract;
 import sandtechnology.common.Listener;
 import sandtechnology.common.Start;
+import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.utils.DataContainer;
 
 import static sandtechnology.utils.ImageManager.getImageData;
@@ -146,7 +147,7 @@ public class JCQ extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      * 如果不回复消息，交由之后的应用/过滤器处理，这里 返回  {@link IMsg#MSG_IGNORE MSG_IGNORE} - 忽略本条消息
      */
     public int privateMsg(int subType, int msgId, long fromQQ, String msg, int font) {
-        Listener.onPrivateMsg(fromQQ, msg);
+        Listener.onPrivateMsg(fromQQ, new ReadOnlyMessage(msg));
         //CQ.sendPrivateMsg(fromQQ, "你发送了这样的消息：" + msg + "\n来自Java插件");
         return MSG_IGNORE;
     }
@@ -181,7 +182,7 @@ public class JCQ extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
      */
     public int groupMsg(int subType, int msgId, long fromGroup, long fromQQ, String fromAnonymous, String msg,
                         int font) {
-        Listener.onGroupMsg(fromQQ, fromGroup, msg);
+        Listener.onGroupMsg(fromQQ, fromGroup, new ReadOnlyMessage(msg));
         // 如果消息来自匿名者
         //if (fromQQ == 80000000L && !fromAnonymous.equals("")) {
         // 将匿名用户信息放到 anonymous 变量中

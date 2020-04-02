@@ -13,11 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MessageOut {
+public class WriteOnlyMessage {
 
     private List<Pair<String, List<ImageManager.CacheImage>>> list = new LinkedList<>();
 
-    public MessageOut add(ImageManager.CacheImage image) {
+    public WriteOnlyMessage add(ImageManager.CacheImage image) {
         if (list.isEmpty()) {
             list.add(new Pair<>("", new ArrayList<>(Collections.singleton(image))));
         } else {
@@ -26,7 +26,7 @@ public class MessageOut {
         return this;
     }
 
-    public MessageOut add(List<ImageManager.CacheImage> image) {
+    public WriteOnlyMessage add(List<ImageManager.CacheImage> image) {
         if (list.isEmpty()) {
             list.add(new Pair<>("", new ArrayList<>(image)));
         } else {
@@ -43,17 +43,28 @@ public class MessageOut {
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
-    public MessageOut addFirst(String str) {
+    public WriteOnlyMessage addFirst(String str) {
         list.add(0, new Pair<>(str, new ArrayList<>()));
         return this;
     }
-    public MessageOut add(String str) {
+
+    public WriteOnlyMessage addFirst(WriteOnlyMessage str) {
+        list.addAll(0, str.getContent());
+        return this;
+    }
+
+    public WriteOnlyMessage add(String str) {
         if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
             Pair<String, List<ImageManager.CacheImage>> old = list.remove(list.size() - 1);
             list.add(old.setFirst(old.getFirst() + str));
         } else {
             list.add(new Pair<>(str, new ArrayList<>()));
         }
+        return this;
+    }
+
+    public WriteOnlyMessage add(WriteOnlyMessage msg) {
+        list.addAll(msg.getContent());
         return this;
     }
 
@@ -73,6 +84,11 @@ public class MessageOut {
             builder.append(pair.getLast().stream().map(ImageManager.CacheImage::toCQCode).collect(Collectors.joining()));
         }
         return builder.toString();
+    }
+
+    @Override
+    public WriteOnlyMessage clone() {
+        return new WriteOnlyMessage().add(this);
     }
 
     public enum Type {Friend, Group}

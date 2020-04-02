@@ -1,9 +1,10 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter;
 
-import sandtechnology.holder.MessageOut;
+import sandtechnology.bilibili.response.dynamic.DynamicData;
+import sandtechnology.holder.WriteOnlyMessage;
 
 public interface IAdapter {
 
-    MessageOut addMessage(MessageOut out);
+    WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData);
 }
 

@@ -60,10 +60,12 @@ public class HTTPHelper{
               handler.accept(pojoResponse);
               state= State.Success;
           } catch (IOException e) {
-              state=State.NetworkError;
+              state = State.NetworkError;
+              e.printStackTrace();
               MessageHelper.sendingErrorMessage(e, "Network Error:\n");
-          } catch (Exception e){
-              state=State.Error;
+          } catch (Exception e) {
+              state = State.Error;
+              e.printStackTrace();
               MessageHelper.sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
           }
       }

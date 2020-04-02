@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-class DynamicsDataList {
+public class DynamicsDataList {
 
     @SerializedName("has_more")
     private
@@ -18,4 +18,7 @@ class DynamicsDataList {
     private
     List<DynamicData> dynamics;
 
+    public List<DynamicData> getDynamics() {
+        return dynamics;
+    }
 }

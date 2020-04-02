@@ -1,7 +1,7 @@
 package sandtechnology.checker;
 
 import sandtechnology.bilibili.POJOResponse;
-import sandtechnology.bilibili.dynamic.POJODynamic;
+import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.MessageHelper;
 import sandtechnology.utils.ThreadHelper;
@@ -22,27 +22,28 @@ public class BiliBiliDynamicChecker implements IChecker {
     public BiliBiliDynamicChecker(long uid) {
         String apiUrl = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=0&need_top=0";
         Consumer<POJOResponse> handler = response -> {
-            if (response.getDynamicData().getDynamics() == null) {
+            List<DynamicData> dynamicData = response.getDynamicsDataList().getDynamics();
+            if (dynamicData == null || dynamicData.isEmpty()) {
                 return;
             }
-            POJODynamic.POJOCard firstCard = response.getDynamicData().getDynamics().get(0);
+            DynamicData firstCard = dynamicData.get(0);
             if (lastTimestamp == 0) {
-                lastTimestamp = firstCard.getTimestamp();
-                MessageHelper.sendingInfoMessage(firstCard.getInfo());
+                lastTimestamp = firstCard.getDesc().getTimestamp();
+                MessageHelper.sendingInfoMessage(firstCard.getMessage());
                 return;
             }
-            List<POJODynamic.POJOCard> list = response.getDynamicData().getDynamics().stream().filter(d -> d.getTimestamp() > lastTimestamp).filter(d -> {
-                if (d.getAuthorUID() == uid) {
+            List<DynamicData> list = response.getDynamicsDataList().getDynamics().stream().filter(d -> d.getDesc().getTimestamp() > lastTimestamp).filter(d -> {
+                if (d.getDesc().getUserProfile().getInfo().getUid() == uid) {
                     return true;
                 } else {
-                    MessageHelper.sendingDebugMessage("blocked:",d.getInfo());
+                    MessageHelper.sendingDebugMessage(d.getMessage().addFirst("blocked:"));
                     return false;
                 }
             }).collect(Collectors.toList());
             if (!list.isEmpty()) {
-                lastTimestamp = list.get(0).getTimestamp();
+                lastTimestamp = list.get(0).getDesc().getTimestamp();
                 list.forEach(d -> {
-                    MessageHelper.sendingGroupMessage(groups, d.getInfo());
+                    MessageHelper.sendingGroupMessage(groups, d.getMessage());
                     ThreadHelper.sleep(1000);
                 });
             }

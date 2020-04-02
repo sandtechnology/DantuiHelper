@@ -3,36 +3,49 @@ package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.PlainTextAdapter;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.TextWithPicAdapter;
-import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.VoteAdapter;
-import sandtechnology.holder.MessageOut;
+import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.UnknownAdapter;
+import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.repost.RepostAdapter;
+import sandtechnology.holder.WriteOnlyMessage;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
-class AdapterSelector {
+public class AdapterSelector {
 
-    private static MessageOut getString(DynamicData data) {
-        MessageOut messageOut = new MessageOut();
-        Class<? extends IAdapter> adapterClass = null;
-        switch (data.getDesc().getType()){
+
+    public static WriteOnlyMessage getString(DynamicData data) {
+        return getString(data, true);
+    }
+
+    public static WriteOnlyMessage getString(DynamicData data, boolean withPrefix) {
+        WriteOnlyMessage message = new WriteOnlyMessage().add(data.getDesc().getUserProfile().getInfo().getUserName());
+        if (withPrefix) {
+            message.addFirst(new WriteOnlyMessage().add("动态链接：\n").add("https://t.bilibili.com/").add(data.getDesc().getDynamicID()).add("\n"));
+        }
+        return getGsonInstance().fromJson(data.getCard(), getAdapter(data.getDesc().getType()))
+                .addMessage(message, data)
+                //投票信息
+                .add(data.getDesc().isRepost() ? "" : data.getExtension().getVoteInfo());
+    }
+
+    public static Class<? extends IAdapter> getAdapter(int type) {
+        Class<? extends IAdapter> adapterClass = UnknownAdapter.class;
+        switch (type) {
             case 1:
-                adapterClass = PlainTextAdapter.class;
+                adapterClass = RepostAdapter.class;
                 break;
             case 2:
                 adapterClass = TextWithPicAdapter.class;
                 break;
             case 4:
-                adapterClass = VoteAdapter.class;
+                adapterClass = PlainTextAdapter.class;
                 break;
-               // adapter=getGsonInstance().fromJson(data.getCard(),)
+            case 8:
+
+            case 16:
+
+            case 2048:
+
         }
-        if (adapterClass != null) {
-            getGsonInstance().fromJson(data.getCard(), adapterClass).addMessage(messageOut);
-            messageOut.add(data.getExtension().getVoteInfo());
-        } else {
-            messageOut.add("发了一条无法解析的动态：");
-        }
-        data.getDisplayContent().getEmojiInfo().format(messageOut);
-        messageOut.addFirst(data.getDesc().getUserProfile().getInfo().getUserName());
-        return messageOut;
+        return adapterClass;
     }
 }

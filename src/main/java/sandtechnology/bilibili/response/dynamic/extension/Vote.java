@@ -30,7 +30,7 @@ public class Vote {
 
     @Override
     public String toString() {
-        return "投票信息：" +
+        return "\n投票信息：" +
                 "\n状态：" + (status == 1 ? "已结束" : "进行中")
                 + "\n总投票人数：" + count
                 + "\n投票选项：\n" +
@@ -38,16 +38,14 @@ public class Vote {
     }
 
     public static class Option {
-        @SerializedName("cnt")
-        int count;
         @SerializedName("desc")
-        int text;
+        String text;
         @SerializedName("idx")
         int index;
 
         @Override
         public String toString() {
-            return index + "." + text + "（当前票数" + count + "）";
+            return index + "." + text;
         }
     }
 }

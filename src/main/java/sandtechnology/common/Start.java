@@ -58,7 +58,7 @@ public class Start {
                     }
                     next().check();
                 } catch (Throwable e) {
-                    MessageHelper.sendingErrorMessage(e);
+                    MessageHelper.sendingErrorMessage(e, "");
                 }
             }
         }, 0, 20000);
