@@ -3,6 +3,7 @@ package sandtechnology.common;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.BiliBiliDynamicChecker;
 import sandtechnology.checker.IChecker;
+import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.MessageHelper;
@@ -14,6 +15,7 @@ import java.util.TimerTask;
 
 public class Start {
     private static Timer timer;
+    private static boolean enable;
 
     public static void start() {
         timer = new Timer();
@@ -31,7 +33,7 @@ public class Start {
                         if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                             lastLive = roomInfo.getStartTime();
                             ImageManager.CacheImage image = roomInfo.getImage();
-                            MessageHelper.sendingGroupMessage(532589427L, "星沙姐播了！！！！她播了她播了她播了！！！！！", roomInfo.getRoomURL(), "直播标题：" + roomInfo.getTitle(), "直播封面", image == null ? "无" : image.toCQCode());
+                            MessageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").add("\n").add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
                         }
                     });
 
@@ -62,9 +64,13 @@ public class Start {
                 }
             }
         }, 0, 20000);
+        enable = true;
     }
 
     public static void exit() {
-        timer.cancel();
+        if (enable) {
+            timer.cancel();
+            enable = false;
+        }
     }
 }

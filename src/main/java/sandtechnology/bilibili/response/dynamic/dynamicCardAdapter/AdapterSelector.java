@@ -17,9 +17,9 @@ public class AdapterSelector {
     }
 
     public static WriteOnlyMessage getString(DynamicData data, boolean withPrefix) {
-        WriteOnlyMessage message = new WriteOnlyMessage().add(data.getDesc().getUserProfile().getInfo().getUserName());
+        WriteOnlyMessage message = new WriteOnlyMessage(data.getDesc().getUserProfile().getInfo().getUserName());
         if (withPrefix) {
-            message.addFirst(new WriteOnlyMessage().add("动态链接：\n").add("https://t.bilibili.com/").add(data.getDesc().getDynamicID()).add("\n"));
+            message.addFirst(new WriteOnlyMessage("动态链接：\n").add("https://t.bilibili.com/").add(data.getDesc().getDynamicID()).add("\n"));
         }
         return getGsonInstance().fromJson(data.getCard(), getAdapter(data.getDesc().getType()))
                 .addMessage(message, data)

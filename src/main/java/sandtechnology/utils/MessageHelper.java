@@ -12,15 +12,15 @@ import static com.sobte.cqp.jcq.event.JcqApp.CQ;
 
 public class MessageHelper {
 
-    private static WriteOnlyMessage ERROR = new WriteOnlyMessage().add("[Error] ");
-    private static WriteOnlyMessage DEBUG = new WriteOnlyMessage().add("[Debug] ");
-    private static WriteOnlyMessage INFO = new WriteOnlyMessage().add("[Info] ");
+    private static WriteOnlyMessage ERROR = new WriteOnlyMessage("[Error] ");
+    private static WriteOnlyMessage DEBUG = new WriteOnlyMessage("[Debug] ");
+    private static WriteOnlyMessage INFO = new WriteOnlyMessage("[Info] ");
 
     private MessageHelper() {
     }
 
     public static void sendingErrorMessage(Throwable e, String... msg) {
-        sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(ERROR, new WriteOnlyMessage().add(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
+        sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(ERROR, new WriteOnlyMessage(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
     }
 
     public static void sendingErrorMessage(Throwable e, WriteOnlyMessage... msg) {
@@ -31,7 +31,7 @@ public class MessageHelper {
         sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(DEBUG, join(msg)));
     }
 
-    private static void sendPrivateMsg(long qq, WriteOnlyMessage message) {
+    public static void sendPrivateMsg(long qq, WriteOnlyMessage message) {
         if (CQ != null) {
             CQ.sendPrivateMsg(qq, message.toCQString());
         } else {
@@ -39,7 +39,11 @@ public class MessageHelper {
         }
     }
 
-    private static void sendGroupMsg(long group, WriteOnlyMessage message) {
+    public static void sendPrivateMsg(long qq, String message) {
+        sendPrivateMsg(qq, new WriteOnlyMessage(message));
+    }
+
+    public static void sendGroupMsg(long group, WriteOnlyMessage message) {
         if (CQ != null) {
             CQ.sendGroupMsg(group, message.toCQString());
         } else {
@@ -71,7 +75,7 @@ public class MessageHelper {
     }
 
     public static void sendingInfoMessage(String... strings) {
-        sendingInfoMessage(new WriteOnlyMessage().add(String.join("\n", strings)));
+        sendingInfoMessage(new WriteOnlyMessage(String.join("\n", strings)));
     }
 
     public static void sendingGroupMessage(long group, ReadOnlyMessage msg) {
@@ -83,11 +87,11 @@ public class MessageHelper {
     }
 
     public static void sendingGroupMessage(Collection<Long> groups, String... msg) {
-        sendingGroupMessage(groups, new WriteOnlyMessage().add(String.join("\n", msg)));
+        sendingGroupMessage(groups, new WriteOnlyMessage(String.join("\n", msg)));
     }
 
     public static void sendingGroupMessage(long group, String... msg) {
-        sendingGroupMessage(group, new WriteOnlyMessage().add(String.join("\n", msg)));
+        sendingGroupMessage(group, new WriteOnlyMessage(String.join("\n", msg)));
     }
 
 

@@ -1,5 +1,6 @@
 package sandtechnology.holder;
 
+import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -34,6 +35,20 @@ public class ReadOnlyMessage {
         if (o == null || getClass() != o.getClass()) return false;
         ReadOnlyMessage that = (ReadOnlyMessage) o;
         return Objects.equals(obj, that.obj);
+    }
+
+    public WriteOnlyMessage toWriteOnlyMessage() {
+        return new WriteOnlyMessage() {
+            @Override
+            public MessageChain toMessageChain(Bot bot, Type type, long id) {
+                return obj;
+            }
+
+            @Override
+            public String toCQString() {
+                return obj.toString();
+            }
+        };
     }
 
     @Override

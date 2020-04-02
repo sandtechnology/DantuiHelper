@@ -17,7 +17,7 @@ public class TextWithPicAdapter implements IAdapter {
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
         return out.add("发了一条带图动态：\n")
-                .add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage().add(item.text + "\n")))
+                .add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage(item.text + "\n")))
                 .add(item.pictures.stream().map(Picture::getCacheImage).collect(Collectors.toList()));
     }
 

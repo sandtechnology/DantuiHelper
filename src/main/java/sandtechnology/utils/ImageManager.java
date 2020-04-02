@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageManager {
     private static Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
-    private static CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
+    public static CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
 
     static {
         try {

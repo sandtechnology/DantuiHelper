@@ -3,14 +3,14 @@ package sandtechnology.common;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.BiliBiliDynamicChecker;
 import sandtechnology.holder.ReadOnlyMessage;
+import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.MessageHelper;
 import sandtechnology.utils.Pair;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static sandtechnology.utils.ImageManager.getImageData;
@@ -19,10 +19,20 @@ public class Listener {
 
     private static final Map<Long, Pair<AtomicInteger, ReadOnlyMessage>> repatingMap = new HashMap<>();
 
+    private static final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
     public static void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
 
         String msg = message.toString();
         // 这里处理消息
+        if (waitingMessageMap.containsKey(fromQQ)) {
+            if (msg.equalsIgnoreCase("cancel")) {
+                waitingMessageMap.remove(fromQQ);
+                MessageHelper.sendPrivateMsg(fromQQ, "已取消");
+            } else {
+                MessageHelper.sendingGroupMessage(waitingMessageMap.remove(fromQQ), message.toWriteOnlyMessage());
+                MessageHelper.sendPrivateMsg(fromQQ, "已发送");
+            }
+        }
         long owner = DataContainer.getMaster();
         if (fromQQ == owner) {
             if (msg.startsWith("/")) {
@@ -31,10 +41,12 @@ public class Listener {
                     MessageHelper.sendingInfoMessage(new Random().nextInt(2000) + "www");
                 }
                 if (command[0].equals("send")) {
-                    if (command.length == 2)
-                        MessageHelper.sendingGroupMessage(DataContainer.getTargetGroup(), command[1]);
-                    else if (command.length == 3) {
-                        MessageHelper.sendingGroupMessage(Long.parseLong(command[1]), command[2]);
+                    if (command.length == 2) {
+                        MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到群的内容"));
+                        waitingMessageMap.put(fromQQ, DataContainer.getTargetGroup());
+                    } else if (command.length == 3) {
+                        MessageHelper.sendPrivateMsg(fromQQ, "请发送需要发送到群的内容");
+                        waitingMessageMap.put(fromQQ, Collections.singletonList(Long.parseLong(command[1])));
                     }
                 }
                 if (command[0].equals("fetch")) {

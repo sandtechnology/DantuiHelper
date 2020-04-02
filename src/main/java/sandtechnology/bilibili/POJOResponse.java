@@ -1,7 +1,6 @@
 package sandtechnology.bilibili;
 
 import com.google.gson.JsonObject;
-import sandtechnology.bilibili.dynamic.POJODynamic;
 import sandtechnology.bilibili.response.dynamic.DynamicsDataList;
 import sandtechnology.bilibili.response.live.LiveInfo;
 
@@ -35,7 +34,4 @@ public class POJOResponse {
         return getGsonInstance().fromJson(data, DynamicsDataList.class);
     }
 
-    public POJODynamic getDynamicData() {
-        return getGsonInstance().fromJson(data, POJODynamic.class);
-    }
-}
+  }

@@ -8,6 +8,7 @@ import net.mamoe.mirai.message.GroupMessage;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.SystemDeviceInfoKt;
 import sandtechnology.common.Listener;
+import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.ReadOnlyMessage;
 
@@ -61,11 +62,12 @@ public class Mirai {
             Events.subscribeAlways(GroupMessage.class, groupMessage -> Listener.onGroupMsg(groupMessage.getSender().getId(), groupMessage.getGroup().getId(), new ReadOnlyMessage(groupMessage.getMessage())));
             Events.subscribeAlways(FriendMessage.class, friendMessage -> Listener.onPrivateMsg(friendMessage.getSender().getId(), new ReadOnlyMessage(friendMessage.getMessage())));
             bot.join();
+            Start.start();
         } catch (Throwable e) {
             ConfigLoader.save();
             bot.close(e);
-
             bot = null;
+            Start.exit();
             //main(args);
         }
 

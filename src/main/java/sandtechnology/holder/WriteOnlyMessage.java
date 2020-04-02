@@ -17,6 +17,13 @@ public class WriteOnlyMessage {
 
     private List<Pair<String, List<ImageManager.CacheImage>>> list = new LinkedList<>();
 
+    public WriteOnlyMessage() {
+    }
+
+    public WriteOnlyMessage(String s) {
+        add(s);
+    }
+
     public WriteOnlyMessage add(ImageManager.CacheImage image) {
         if (list.isEmpty()) {
             list.add(new Pair<>("", new ArrayList<>(Collections.singleton(image))));

@@ -39,7 +39,7 @@ public class RoomInfo {
     }
 
     public ImageManager.CacheImage getImage() {
-        return coverURL.isEmpty() ? (keyframeURL.isEmpty() ? null : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
+        return coverURL.isEmpty() ? (keyframeURL.isEmpty() ? ImageManager.emptyImage : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
     }
 
     public String getRoomURL() {

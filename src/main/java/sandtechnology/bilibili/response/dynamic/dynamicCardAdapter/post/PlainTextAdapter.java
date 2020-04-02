@@ -13,7 +13,7 @@ public class PlainTextAdapter implements IAdapter {
     private UserProfile.Info profile;
 
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("发了一条文字动态：\n").add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage().add(item.content)));
+        return out.add("发了一条文字动态：\n").add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage(item.content)));
     }
 
     private static class CommonItem {
