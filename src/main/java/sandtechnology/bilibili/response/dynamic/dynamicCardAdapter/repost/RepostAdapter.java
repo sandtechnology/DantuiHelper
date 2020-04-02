@@ -24,10 +24,10 @@ public class RepostAdapter implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("转发了").add(originUser.getInfo().getUserName()).add("的动态：")
+        return out.add("转发了").add(item.isDeleted() ? "[源动态已被删除]" : originUser.getInfo().getUserName()).add("的动态：")
                 .add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage(item.content)))
                 .add("\n原动态信息：\n")
-                .add(AdapterSelector.getString(
+                .add(item.isDeleted() ? new WriteOnlyMessage(item.tips).addFirst("错误：") : AdapterSelector.getString(
                         new DynamicData(
                                 dynamicData.getDesc().getOriginDynamicDesc().setUserProfile(originUser)
                                 , originDynamic
@@ -40,5 +40,13 @@ public class RepostAdapter implements IAdapter {
     private static class CommonItem {
         @SerializedName("content")
         private String content;
+        @SerializedName("miss")
+        private int deleted;
+        @SerializedName("tips")
+        private String tips;
+
+        public boolean isDeleted() {
+            return deleted == 1;
+        }
     }
 }

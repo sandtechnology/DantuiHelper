@@ -11694,6 +11694,81 @@
           "is_followed": 0
         }
       }
+    },
+    "DeletedDyanmic": {
+      "desc": {
+        "uid": 517204903,
+        "type": 1,
+        "rid": 373656962141949866,
+        "acl": 0,
+        "view": 14,
+        "repost": 0,
+        "comment": 0,
+        "like": 0,
+        "is_liked": 0,
+        "dynamic_id": 373656962142373484,
+        "timestamp": 1585837191,
+        "pre_dy_id": 373656863360222196,
+        "orig_dy_id": 373653702256931990,
+        "orig_type": 1024,
+        "user_profile": {
+          "info": {
+            "uid": 517204903,
+            "uname": "墨家-白述胧",
+            "face": "https://i0.hdslb.com/bfs/face/6399db09a6db6ca526e0b02dbde70d1b2d179cc8.jpg"
+          },
+          "card": {
+            "official_verify": {
+              "type": -1,
+              "desc": ""
+            }
+          },
+          "vip": {
+            "vipType": 0,
+            "vipDueDate": 0,
+            "dueRemark": "",
+            "accessStatus": 0,
+            "vipStatus": 0,
+            "vipStatusWarn": "",
+            "themeType": 0,
+            "label": {
+              "path": ""
+            }
+          },
+          "pendant": {
+            "pid": 0,
+            "name": "",
+            "image": "",
+            "expire": 0
+          },
+          "rank": "10000",
+          "sign": "落魄一狂士，安能称英雄？却因末法至，独坐钓太公。\n",
+          "level_info": {
+            "current_level": 2,
+            "current_min": 0,
+            "current_exp": 0,
+            "next_exp": "0"
+          }
+        },
+        "uid_type": 1,
+        "stype": 0,
+        "r_type": 1,
+        "inner_id": 0,
+        "status": 1,
+        "dynamic_id_str": "373656962142373484",
+        "pre_dy_id_str": "373656863360222196",
+        "orig_dy_id_str": "373653702256931990",
+        "rid_str": "373656962141949866"
+      },
+      "card": "{ \"user\": { \"uid\": 517204903, \"uname\": \"墨家-白述胧\", \"face\": \"https:\\/\\/i0.hdslb.com\\/bfs\\/face\\/6399db09a6db6ca526e0b02dbde70d1b2d179cc8.jpg\" }, \"item\": { \"rp_id\": 373656962141949866, \"uid\": 517204903, \"content\": \"\\/\\/@天清天临Official:【非旻家】再度急报\", \"ctrl\": \"[{\\\"data\\\":\\\"37896248\\\",\\\"location\\\":2,\\\"length\\\":13,\\\"type\\\":1}]\", \"orig_dy_id\": 373653702256931990, \"pre_dy_id\": 373656863360222196, \"timestamp\": 1585837191, \"at_uids\": [ 37896248 ], \"reply\": 0, \"miss\": 1, \"tips\": \"专栏资源已失效\", \"orig_type\": 1024 } }",
+      "extend_json": "{\"ctrl\":[{\"data\":\"37896248\",\"length\":13,\"location\":2,\"type\":1}],\"from\":{\"emoji_type\":1},\"like_icon\":{\"action\":\"\",\"action_url\":\"\",\"end\":\"\",\"end_url\":\"\",\"start\":\"\",\"start_url\":\"\"}}",
+      "display": {
+        "relation": {
+          "status": 2,
+          "is_follow": 1,
+          "is_followed": 0
+        }
+      }
     }
   }
 }
