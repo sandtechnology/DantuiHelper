@@ -6,6 +6,7 @@
   "version_id": 1,
   "author": "sandtechnology",
   "description": "µ¥ÍÆÐÇÉ³²å¼þ",
+  "class": "sandtechnology.JCQ",
   "event": [
     {
       "id": 1,
