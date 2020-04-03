@@ -26,7 +26,7 @@ public class Emoji {
 
     public WriteOnlyMessage format(WriteOnlyMessage out) {
         if (url != null && cacheImage == null) {
-            cacheImage = ImageManager.getImageData(url + "@20w_20h_1e_1c.png");
+            cacheImage = ImageManager.getImageData(url + "@50w_50h_1e_1c.png");
         }
         WriteOnlyMessage result = new WriteOnlyMessage();
         out.getContent().forEach(
