@@ -28,21 +28,23 @@ public class TestDataLoader {
 
     @Test
     public void test() throws Exception {
-        JCQ.main(new String[0]);
-        System.out.println("===========Test Start==========");
-        AtomicInteger atomicInteger = new AtomicInteger(0);
-        TestDataLoader loader = JsonHelper.getGsonInstance().fromJson(new InputStreamReader(new FileInputStream("testdata.json"), StandardCharsets.UTF_8), TestDataLoader.class);
-        loader.testSet.forEach(
-                data -> {
-                    System.out.println("Test #" + atomicInteger.incrementAndGet());
-                    checker.parse(data);
-                }
-        );
-        loader.testMap.forEach((type, content) -> {
-            System.out.println("===========" + "Test Type: " + type + "===========");
-            System.out.println(content.getMessage().toCQString());
-        });
+        if (Tester.getTest()) {
+            JCQ.main(new String[0]);
+            System.out.println("===========Test Start==========");
+            AtomicInteger atomicInteger = new AtomicInteger(0);
+            TestDataLoader loader = JsonHelper.getGsonInstance().fromJson(new InputStreamReader(new FileInputStream("testdata.json"), StandardCharsets.UTF_8), TestDataLoader.class);
+            loader.testSet.forEach(
+                    data -> {
+                        System.out.println("Test #" + atomicInteger.incrementAndGet());
+                        checker.parse(data);
+                    }
+            );
+            loader.testMap.forEach((type, content) -> {
+                System.out.println("===========" + "Test Type: " + type + "===========");
+                System.out.println(content.getMessage().toCQString());
+            });
 
-        JCQ.getDemo().exit();
+            JCQ.getDemo().exit();
+        }
     }
 }
