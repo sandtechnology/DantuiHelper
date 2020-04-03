@@ -20,15 +20,15 @@ public class MessageHelper {
     }
 
     public static void sendingErrorMessage(Throwable e, String... msg) {
-        sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(ERROR, new WriteOnlyMessage(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
+        sendGroupMsg(1074152108L, sendWithPrefix(ERROR, new WriteOnlyMessage(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
     }
 
     public static void sendingErrorMessage(Throwable e, WriteOnlyMessage... msg) {
-        sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(ERROR, join(msg).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
+        sendGroupMsg(1074152108L, sendWithPrefix(ERROR, join(msg).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
     }
 
     public static void sendingDebugMessage(WriteOnlyMessage... msg) {
-        sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(DEBUG, join(msg)));
+        sendGroupMsg(1074152108L, sendWithPrefix(DEBUG, join(msg)));
     }
 
     public static void sendPrivateMsg(long qq, WriteOnlyMessage message) {
@@ -71,7 +71,7 @@ public class MessageHelper {
     }
 
     public static void sendingInfoMessage(WriteOnlyMessage... msg) {
-        sendPrivateMsg(DataContainer.getMaster(), sendWithPrefix(INFO, join(msg)));
+        sendingGroupMessage(1074152108L, sendWithPrefix(INFO, join(msg)));
     }
 
     public static void sendingInfoMessage(String... strings) {

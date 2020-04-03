@@ -64,6 +64,10 @@ public class Listener {
 
     public static void onGroupMsg(long fromQQ, long fromGroup, ReadOnlyMessage readOnlyMessage) {
         String msg = readOnlyMessage.toString();
+        if (fromGroup == 1074152108L) {
+            onPrivateMsg(fromQQ, readOnlyMessage);
+            return;
+        }
         //群号
         if (DataContainer.getTargetGroup().contains(fromGroup)) {
             if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {

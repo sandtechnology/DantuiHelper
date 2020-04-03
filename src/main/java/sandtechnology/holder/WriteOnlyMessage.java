@@ -7,15 +7,13 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
+import sandtechnology.utils.Counter;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.Pair;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class WriteOnlyMessage {
@@ -85,7 +83,50 @@ public class WriteOnlyMessage {
         return this;
     }
 
+    /**
+     * 将多个相同的图片合并
+     */
+    public void trimImage() {
+        String nextAdd = null;
+        for (Pair<String, List<ImageManager.CacheImage>> entry : list) {
+            if (nextAdd != null) {
+                entry.setFirst(nextAdd + entry.getFirst());
+                nextAdd = null;
+            }
+            ImageManager.CacheImage lastImage = null;
+            Counter counter = new Counter();
+            Iterator<ImageManager.CacheImage> iterator = entry.getLast().iterator();
+            while (iterator.hasNext()) {
+                ImageManager.CacheImage image = iterator.next();
+                if (lastImage == null) {
+                    lastImage = image;
+                    counter.firstSeen();
+                    continue;
+                }
+                //因为存在缓存管理器，引用比较可用，且节省性能
+                if (lastImage == image) {
+                    iterator.remove();
+                    counter.seenAgain();
+                } else {
+                    if (counter.now() > 1) {
+                        nextAdd = "（x" + counter + "）";
+                        counter.firstSeen();
+                    }
+                    lastImage = image;
+                }
+            }
+            if (counter.now() > 1) {
+                nextAdd = "（x" + counter + "）";
+            }
+        }
+        //防止直接跳出循环的情况
+        if (nextAdd != null) {
+            add(nextAdd);
+        }
+    }
+
     public MessageChain toMessageChain(Bot bot, Type type, long id) {
+        trimImage();
         MessageChainBuilder builder = new MessageChainBuilder();
         for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
             builder.add(pair.getFirst());
@@ -116,6 +157,7 @@ public class WriteOnlyMessage {
     }
 
     public String toCQString() {
+        trimImage();
         StringBuilder builder = new StringBuilder();
         for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
             builder.append(toCQEmoji(pair.getFirst()));
