@@ -20,4 +20,9 @@ public class Counter {
     public int now() {
         return now;
     }
+
+    @Override
+    public String toString() {
+        return Integer.toString(now);
+    }
 }
