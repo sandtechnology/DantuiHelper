@@ -2,7 +2,7 @@ import com.google.gson.annotations.SerializedName;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import sandtechnology.JCQ;
-import sandtechnology.bilibili.POJOResponse;
+import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.checker.BiliBiliDynamicChecker;
 import sandtechnology.utils.JsonHelper;
@@ -24,7 +24,7 @@ public class TestDataLoader {
     Map<String, DynamicData> testMap;
     @SerializedName("normalSet")
     private
-    List<POJOResponse> testSet;
+    List<NormalResponse> testSet;
 
     @Test
     public void test() throws Exception {

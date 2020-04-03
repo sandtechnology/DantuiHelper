@@ -1,6 +1,6 @@
 package sandtechnology.checker;
 
-import sandtechnology.bilibili.POJOResponse;
+import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.MessageHelper;
@@ -21,7 +21,7 @@ public class BiliBiliDynamicChecker implements IChecker {
 
     public BiliBiliDynamicChecker(long uid) {
         String apiUrl = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=0&need_top=0";
-        Consumer<POJOResponse> handler = response -> {
+        Consumer<NormalResponse> handler = response -> {
             List<DynamicData> dynamicData = response.getDynamicsDataList().getDynamics();
             if (dynamicData == null || dynamicData.isEmpty()) {
                 return;
@@ -56,7 +56,7 @@ public class BiliBiliDynamicChecker implements IChecker {
         return this;
     }
 
-    public BiliBiliDynamicChecker setHandler(Consumer<POJOResponse> handler) {
+    public BiliBiliDynamicChecker setHandler(Consumer<NormalResponse> handler) {
         this.httpHelper.setHandler(handler);
         return this;
     }
@@ -66,7 +66,7 @@ public class BiliBiliDynamicChecker implements IChecker {
         return this;
     }
 
-    public void parse(POJOResponse response) {
+    public void parse(NormalResponse response) {
         httpHelper.getHandler().accept(response);
     }
 

@@ -27,7 +27,7 @@ public class LiveRoomChecker implements IChecker {
             if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                 lastLive = roomInfo.getStartTime();
                 ImageManager.CacheImage image = roomInfo.getImage();
-                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage("Ruki开播啦！！！").add("\n").add(roomInfo.getRoomURL()).add("\n" + roomInfo.getTitle()).add("\n").add(image));
+                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage("Ruki开播啦！！！").newLine().add(roomInfo.getRoomURL()).add("\n" + roomInfo.getTitle()).newLine().add(image));
             }
         });
     }

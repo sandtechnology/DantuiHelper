@@ -19,7 +19,7 @@ public class VideoAdapter implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add(dynamicData.getDisplayContent().getActionText()).add("：").add(dynamicData.getDisplayContent().getEmojiInfo().format(dynamic)).add("\n").add(getVideoLink(dynamicData)).add("\n").add(title).add("\n").add(ImageManager.getImageData(picURL));
+        return out.add(dynamicData.getDisplayContent().getActionText()).add("：").add(dynamicData.getDisplayContent().getEmojiInfo().format(dynamic)).newLine().add(getVideoLink(dynamicData)).newLine().add(title).newLine().add(ImageManager.getImageData(picURL));
     }
 
     private String getVideoLink(DynamicData dynamicData) {

@@ -27,6 +27,6 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("的直播间：\n").add(getRoomURL()).add("\n").add(getTitle()).add("[").add(getStatus().getName()).add("]").add(ImageManager.getImageData(getCoverURL()));
+        return out.add("的直播间：").newLine().add(getRoomURL()).newLine().add(getTitle()).add("[").add(getStatus().getName()).add("]").newLine().add(ImageManager.getImageData(getCoverURL()));
     }
 }

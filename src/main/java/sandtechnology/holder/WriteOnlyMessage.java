@@ -83,6 +83,10 @@ public class WriteOnlyMessage {
         return this;
     }
 
+    public WriteOnlyMessage newLine() {
+        return add("\n");
+    }
+
     /**
      * 将多个相同的图片合并
      */

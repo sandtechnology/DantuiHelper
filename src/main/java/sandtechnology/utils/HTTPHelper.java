@@ -1,6 +1,7 @@
 package sandtechnology.utils;
 
-import sandtechnology.bilibili.POJOResponse;
+import sandtechnology.bilibili.NormalResponse;
+import sandtechnology.bilibili.SafeResponse;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,47 +20,49 @@ public class HTTPHelper{
     }
 
     private final String url;
-      private Consumer<POJOResponse> handler;
-      private State state;
+    private Consumer<NormalResponse> handler;
+    private State state;
     private final Random random = new Random();
 
-    public HTTPHelper(String url, Consumer<POJOResponse> handler){
-          this.url=url;
-          this.handler=handler;
-          state=State.Init;
-      }
-
-    public void setHandler(Consumer<POJOResponse> handler) {
+    public HTTPHelper(String url, Consumer<NormalResponse> handler) {
+        this.url = url;
         this.handler = handler;
+        state = State.Init;
+    }
+
+    public Consumer<NormalResponse> getHandler() {
+        return handler;
     }
 
     public State getState() {
         return state;
     }
 
-    public Consumer<POJOResponse> getHandler() {
-        return handler;
+    public void setHandler(Consumer<NormalResponse> handler) {
+        this.handler = handler;
     }
 
-    public void execute(){
+    public void execute() {
         String result = "";
-          try {
-              URLConnection urlConnection = new URL(url).openConnection();
-              urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
-              try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
-                  result = stream.lines().collect(Collectors.joining("\n"));
-              }
-              POJOResponse pojoResponse = JsonHelper.getGsonInstance().fromJson(result, POJOResponse.class);
-              if (pojoResponse.getCode() != 0) {
-                  if (pojoResponse.getCode() != 600005 && pojoResponse.getCode() != -22) {
-                      MessageHelper.sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error:"+pojoResponse.getCode()),"content"+result);
-                  }
-                  state=State.BiliBiliError;
-                  ThreadHelper.sleep(random.nextInt(10000) + 5000);
-              }
-              handler.accept(pojoResponse);
-              state= State.Success;
-          } catch (IOException e) {
+        try {
+            URLConnection urlConnection = new URL(url).openConnection();
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
+            try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
+                result = stream.lines().collect(Collectors.joining("\n"));
+            }
+            SafeResponse safeResponse = JsonHelper.getGsonInstance().fromJson(result, SafeResponse.class);
+            long code = safeResponse.getCode();
+            if (code != 0) {
+                if (code != 600005 && code != -22 && code != 19002003) {
+                    MessageHelper.sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error " + code), "content" + result);
+                }
+                state = State.BiliBiliError;
+                ThreadHelper.sleep(random.nextInt(10000) + 5000);
+                return;
+            }
+            handler.accept(JsonHelper.getGsonInstance().fromJson(result, NormalResponse.class));
+            state = State.Success;
+        } catch (IOException e) {
               state = State.NetworkError;
               e.printStackTrace();
               MessageHelper.sendingErrorMessage(e, "Network Error:\n");

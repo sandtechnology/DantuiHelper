@@ -74,7 +74,7 @@ public class Listener {
                 new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
                     RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                     if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
-                        MessageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).add("\n").add(getImageData(roomInfo.getCoverURL())));
+                        MessageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(getImageData(roomInfo.getCoverURL())));
                     }
                 }).execute();
             }

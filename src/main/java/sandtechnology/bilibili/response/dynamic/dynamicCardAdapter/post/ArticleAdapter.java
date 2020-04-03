@@ -21,6 +21,6 @@ public class ArticleAdapter implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("发了一篇专栏：\n").add(dynamicData.getDisplayContent().getEmojiInfo().format(text)).add("\nhttps://www.bilibili.com/read/cv").add(Long.toString(id)).add("\n").add(title).add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
+        return out.add("发了一篇专栏：\n").add(dynamicData.getDisplayContent().getEmojiInfo().format(text)).newLine().add("https://www.bilibili.com/read/cv").add(Long.toString(id)).newLine().add(title).newLine().add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
     }
 }

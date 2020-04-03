@@ -14,7 +14,7 @@ public class MiniVideoAdapter implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("发了一个小视频：").add(dynamicData.getDisplayContent().getEmojiInfo().format(item.description)).add("\n").add(ImageManager.getImageData(item.cover.originImgURL));
+        return out.add("发了一个小视频：").add(dynamicData.getDisplayContent().getEmojiInfo().format(item.description)).newLine().add(ImageManager.getImageData(item.cover.originImgURL));
     }
 
     private static class AuthorProfile extends UserProfile.Info {
