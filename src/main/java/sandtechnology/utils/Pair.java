@@ -28,7 +28,7 @@ public class Pair<V1,V2> {
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof Pair&&v1.equals(((Pair) obj).v1)&&v2.equals(((Pair) obj).v2);
+        return obj instanceof Pair && v1.equals(((Pair) obj).getFirst()) && v2.equals(((Pair) obj).v2);
     }
 
     @Override

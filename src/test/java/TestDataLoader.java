@@ -19,7 +19,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TestDataLoader {
 
 
-    private static BiliBiliDynamicChecker checker = new BiliBiliDynamicChecker(1).setLastTimestamp(1);
+    private static final BiliBiliDynamicChecker checker = new BiliBiliDynamicChecker(1).setLastTimestamp(1);
     @SerializedName("typeSet")
     Map<String, DynamicData> testMap;
     @SerializedName("normalSet")

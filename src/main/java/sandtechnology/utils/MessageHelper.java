@@ -12,9 +12,9 @@ import static com.sobte.cqp.jcq.event.JcqApp.CQ;
 
 public class MessageHelper {
 
-    private static WriteOnlyMessage ERROR = new WriteOnlyMessage("[Error] ");
-    private static WriteOnlyMessage DEBUG = new WriteOnlyMessage("[Debug] ");
-    private static WriteOnlyMessage INFO = new WriteOnlyMessage("[Info] ");
+    private static final WriteOnlyMessage ERROR = new WriteOnlyMessage("[Error] ");
+    private static final WriteOnlyMessage DEBUG = new WriteOnlyMessage("[Debug] ");
+    private static final WriteOnlyMessage INFO = new WriteOnlyMessage("[Info] ");
 
     private MessageHelper() {
     }

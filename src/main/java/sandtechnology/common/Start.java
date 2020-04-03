@@ -23,7 +23,7 @@ public class Start {
         timer.scheduleAtFixedRate(new TimerTask() {
             private long time;
             private int index = 0;
-            private List<IChecker> runnables = new ArrayList<>();
+            private final List<IChecker> runnables = new ArrayList<>();
 
             {
                 runnables.add(new BiliBiliDynamicChecker(452785178).addGroups(532589427L));
@@ -31,7 +31,7 @@ public class Start {
                 runnables.add(new LiveRoomChecker(21403609L, 1035554886L, 739568838L, 1027385586L));
                 runnables.add(new IChecker() {
                     private long lastLive;
-                    HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
+                    final HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
                         RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                         if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                             lastLive = roomInfo.getStartTime();

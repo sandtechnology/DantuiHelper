@@ -41,7 +41,8 @@ public class Mirai {
             Events.subscribeAlways(GroupMessage.class, groupMessage -> Listener.onGroupMsg(groupMessage.getSender().getId(), groupMessage.getGroup().getId(), new ReadOnlyMessage(groupMessage.getMessage())));
             Events.subscribeAlways(FriendMessage.class, friendMessage -> Listener.onPrivateMsg(friendMessage.getSender().getId(), new ReadOnlyMessage(friendMessage.getMessage())));
             bot.join();
-            Start.start();
+            //尚在测试阶段暂不发布
+            // Start.start();
         } catch (Throwable e) {
             ConfigLoader.save();
             bot.close(e);

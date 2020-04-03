@@ -19,10 +19,10 @@ import java.util.List;
 import java.util.Scanner;
 
 public class ConfigLoader {
-    private static Scanner scanner = new Scanner(System.in);
-    private static Path configPath = Paths.get("config", "config.json");
+    private static final Scanner scanner = new Scanner(System.in);
+    private static final Path configPath = Paths.get("config", "config.json");
     private static ConfigHolder holder;
-    private static Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    private static final Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
     private ConfigLoader() {
     }

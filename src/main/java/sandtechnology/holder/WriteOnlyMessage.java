@@ -1,12 +1,17 @@
 package sandtechnology.holder;
 
+import com.vdurmont.emoji.EmojiManager;
+import com.vdurmont.emoji.EmojiParser;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
-import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.utils.ExternalImage;
+import net.mamoe.mirai.utils.ExternalImageJvmKt;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.Pair;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -15,7 +20,7 @@ import java.util.stream.Collectors;
 
 public class WriteOnlyMessage {
 
-    private List<Pair<String, List<ImageManager.CacheImage>>> list = new LinkedList<>();
+    private final List<Pair<String, List<ImageManager.CacheImage>>> list = new LinkedList<>();
 
     public WriteOnlyMessage() {
     }
@@ -84,18 +89,55 @@ public class WriteOnlyMessage {
         MessageChainBuilder builder = new MessageChainBuilder();
         for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
             builder.add(pair.getFirst());
-            builder.addAll(type == Type.Friend ? pair.getLast().stream().map(img -> MessageUtils.newImage(bot.getFriend(id).uploadImage(img.getFile()).getImageId())).collect(Collectors.toList()) : pair.getLast().stream().map(img -> MessageUtils.newImage(bot.getGroup(id).uploadImage(img.getFile()).getImageId())).collect(Collectors.toList()));
+
+            builder.addAll(pair.getLast().stream().map(
+                    img -> {
+
+                        if (type == Type.Friend) {
+                            return bot.getFriend(id).uploadImage(getExternalImage(img.getFile()));
+                        } else {
+                            return bot.getGroup(id).uploadImage(getExternalImage(img.getFile()));
+                        }
+                    }).collect(Collectors.toList()));
         }
         return builder.asMessageChain();
+    }
+
+    private ExternalImage getExternalImage(File file) {
+        ExternalImage externalImage;
+        try {
+            externalImage = ExternalImageJvmKt.toExternalImage(file);
+        } catch (FileNotFoundException e) {
+            return getExternalImage(ImageManager.emptyImage.getFile());
+        } catch (Exception e) {
+            return getExternalImage(file);
+        }
+        return externalImage;
     }
 
     public String toCQString() {
         StringBuilder builder = new StringBuilder();
         for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
-            builder.append(pair.getFirst());
+            builder.append(toCQEmoji(pair.getFirst()));
             builder.append(pair.getLast().stream().map(ImageManager.CacheImage::toCQCode).collect(Collectors.joining()));
         }
         return builder.toString();
+    }
+
+    private String toCQEmoji(String str) {
+
+        if (EmojiManager.containsEmoji(str)) {
+            boolean handleHtml = false;
+            if (str.contains("&#")) {
+                str = str.replace("&#", "|&stand-by&|");
+                handleHtml = true;
+            }
+            str = EmojiParser.parseToHtmlDecimal(str).replaceAll("&#(?<id>[0-9]*);", "[CQ:emoji,id=${id}]");
+            if (handleHtml) {
+                str = str.replace("|&stand-by&|", "&#");
+            }
+        }
+        return str;
     }
 
     @Override

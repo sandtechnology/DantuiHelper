@@ -7,14 +7,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EmojiChain {
-    public static EmojiChain emptyEmojiChain = new EmojiChain(new LinkedList<>()) {
+    public static final EmojiChain emptyEmojiChain = new EmojiChain(new LinkedList<>()) {
         @Override
         public WriteOnlyMessage format(WriteOnlyMessage out) {
             return out;
         }
     };
     @SerializedName("emoji_details")
-    private List<Emoji> emojiList;
+    private final List<Emoji> emojiList;
 
     public EmojiChain(List<Emoji> emojiList) {
         this.emojiList = emojiList;

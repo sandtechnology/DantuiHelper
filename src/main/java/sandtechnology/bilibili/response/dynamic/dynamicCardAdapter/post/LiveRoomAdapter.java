@@ -12,6 +12,14 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
     @SerializedName("round_status")
     private int roundStatus;
 
+    @SerializedName("roomid")
+    private long roomID;
+
+    @Override
+    public long getRoomID() {
+        return roomID;
+    }
+
     @Override
     public Status getStatus() {
         return getStatus(roundStatus);
@@ -19,6 +27,6 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add(getRoomURL()).add("\n").add(getTitle()).add("[").add(getStatus().getName()).add("]").add(ImageManager.getImageData(getCoverURL()));
+        return out.add("的直播间：\n").add(getRoomURL()).add("\n").add(getTitle()).add("[").add(getStatus().getName()).add("]").add(ImageManager.getImageData(getCoverURL()));
     }
 }

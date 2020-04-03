@@ -44,7 +44,7 @@ public class RoomInfo {
     }
 
     public String getRoomURL() {
-        return "https://live.bilibili.com/" + roomID;
+        return "https://live.bilibili.com/" + getRoomID();
     }
 
     public enum Status {

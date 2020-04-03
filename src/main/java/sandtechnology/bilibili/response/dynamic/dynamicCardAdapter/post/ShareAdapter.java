@@ -15,13 +15,13 @@ public class ShareAdapter implements IAdapter {
         return out.add("分享了以下内容：").add(dynamicData.getDisplayContent().getEmojiInfo().format(vest.content)).add("\n").add(sketch.targetURL).add("\n").add(sketch.title).add("\n").add(ImageManager.getImageData(sketch.coverURL));
     }
 
-    class Vest {
+    static class Vest {
         long uid;
         String content;
 
     }
 
-    class Sketch {
+    static class Sketch {
         String title;
         @SerializedName("desc_text")
         String desc;

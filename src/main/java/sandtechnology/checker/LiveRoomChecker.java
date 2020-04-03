@@ -14,7 +14,7 @@ public class LiveRoomChecker implements IChecker {
     private final HTTPHelper httpHelper;
     private final long roomID;
     private long lastLive;
-    private List<Long> groups;
+    private final List<Long> groups;
 
     public LiveRoomChecker(long roomID, long... groupIDs) {
         groups = new ArrayList<>();

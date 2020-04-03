@@ -18,7 +18,7 @@ public class RepostAdapter implements IAdapter {
     UserProfile originUser;
     CommonItem item;
     @SerializedName("origin_extension")
-    private ExtensionHolder originExtensionHolder = new ExtensionHolder();
+    private final ExtensionHolder originExtensionHolder = new ExtensionHolder();
     @SerializedName("user")
     private UserProfile.Info profile;
 

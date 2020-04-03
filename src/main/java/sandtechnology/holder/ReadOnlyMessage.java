@@ -6,7 +6,7 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 
 public class ReadOnlyMessage {
 
-    private MessageChain obj;
+    private final MessageChain obj;
 
     public ReadOnlyMessage(MessageChain obj) {
         this.obj = obj;

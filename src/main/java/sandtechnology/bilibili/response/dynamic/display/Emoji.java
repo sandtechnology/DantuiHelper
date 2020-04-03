@@ -8,7 +8,7 @@ public class Emoji {
     @SerializedName("url")
     private final String url;
     @SerializedName("text")
-    private String text;
+    private final String text;
     private ImageManager.CacheImage cacheImage;
 
     public Emoji(String text, String url) {
@@ -39,7 +39,7 @@ public class Emoji {
                         str = str.substring(0, lastWithTextIndex);
                         addLast = true;
                     }
-                    String[] strings = str.split("\\[" + text.substring(1, text.length() - 1) + "\\]");
+                    String[] strings = str.split("\\[" + text.substring(1, text.length() - 1) + "]");
                     if (strings.length > 1) {
                         for (int i = 0; i < strings.length; i++) {
                             if (!strings[i].isEmpty()) {

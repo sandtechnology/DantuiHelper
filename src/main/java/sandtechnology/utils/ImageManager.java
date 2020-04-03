@@ -1,8 +1,9 @@
 package sandtechnology.utils;
 
-import org.jetbrains.annotations.Nullable;
-
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.*;
@@ -12,14 +13,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageManager {
-    private static Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
-    public static CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
+    private static final Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
+    public static final CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
 
     static {
         try {
             Files.walkFileTree(Paths.get("data", "image"), new SimpleFileVisitor<Path>() {
                 @Override
-                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+                public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     String relativePath = file.subpath(2, file.getNameCount()).toString();
                     cacheImageMap.put(relativePath, new CacheImage(file.toAbsolutePath().toFile(), relativePath));
                     return FileVisitResult.CONTINUE;
@@ -43,7 +44,6 @@ public class ImageManager {
         }
     }
 
-    @Nullable
     public static CacheImage getImageData(String imgURL) {
         try {
             URL url = new URL(imgURL);

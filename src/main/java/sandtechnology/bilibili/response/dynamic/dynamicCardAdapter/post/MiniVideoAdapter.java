@@ -39,7 +39,7 @@ public class MiniVideoAdapter implements IAdapter {
         String description;
         Cover cover;
 
-        class Cover {
+        static class Cover {
             @SerializedName("default")
             String defaultImgURL;
             @SerializedName("unclipped")
