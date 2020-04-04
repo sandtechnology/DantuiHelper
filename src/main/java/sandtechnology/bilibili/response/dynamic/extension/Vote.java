@@ -31,7 +31,7 @@ public class Vote {
     @Override
     public String toString() {
         return "\n投票信息：" +
-                "\n状态：" + (status == 1 ? "已结束" : "进行中")
+                "\n状态：" + (status == 1 ? "进行中" : "已结束")
                 + "\n总投票人数：" + count
                 + "\n投票选项：\n" +
                 optionList.stream().map(Option::toString).collect(Collectors.joining("\n"));
