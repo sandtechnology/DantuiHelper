@@ -61,10 +61,6 @@ public class BiliBiliDynamicChecker implements IChecker {
         return this;
     }
 
-    public BiliBiliDynamicChecker setLastTimestamp(long lastTimestamp) {
-        this.lastTimestamp = lastTimestamp;
-        return this;
-    }
 
     public void parse(NormalResponse response) {
         httpHelper.getHandler().accept(response);
