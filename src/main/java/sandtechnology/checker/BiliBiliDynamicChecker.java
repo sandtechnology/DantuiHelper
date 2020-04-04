@@ -51,7 +51,7 @@ public class BiliBiliDynamicChecker implements IChecker {
         httpHelper = new HTTPHelper(apiUrl, handler);
     }
 
-    public BiliBiliDynamicChecker addGroups(Long...groups) {
+    public BiliBiliDynamicChecker addGroups(Long... groups) {
         this.groups.addAll(Arrays.asList(groups));
         return this;
     }
@@ -61,6 +61,10 @@ public class BiliBiliDynamicChecker implements IChecker {
         return this;
     }
 
+    public BiliBiliDynamicChecker setLastTimestamp(long lastTimestamp) {
+        this.lastTimestamp = lastTimestamp;
+        return this;
+    }
 
     public void parse(NormalResponse response) {
         httpHelper.getHandler().accept(response);

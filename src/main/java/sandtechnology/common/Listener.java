@@ -48,8 +48,10 @@ public class Listener {
                 if (command[0].equals("fetch")) {
                     if (command.length == 2) {
                         new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> MessageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
+                    } else if (command.length == 3) {
+                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setLastTimestamp(Long.parseLong(command[2])).check();
                     } else {
-                        MessageHelper.sendingInfoMessage("/fetch [UID]");
+                        MessageHelper.sendingInfoMessage("/fetch [UID] [timestamp]");
                     }
                 }
                 if (command[0].equals("get")) {
