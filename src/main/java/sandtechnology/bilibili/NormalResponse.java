@@ -20,7 +20,7 @@ public class NormalResponse extends SafeResponse {
     }
 
     public DynamicData getDynamicData() {
-        return getGsonInstance().fromJson(data, DynamicData.class);
+        return getGsonInstance().fromJson(data.getAsJsonObject("card"), DynamicData.class);
     }
 
   }
