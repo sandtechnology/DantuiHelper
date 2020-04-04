@@ -1,6 +1,7 @@
 package sandtechnology.bilibili;
 
 import com.google.gson.JsonObject;
+import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.DynamicsDataList;
 import sandtechnology.bilibili.response.live.LiveInfo;
 
@@ -16,6 +17,10 @@ public class NormalResponse extends SafeResponse {
 
     public DynamicsDataList getDynamicsDataList() {
         return getGsonInstance().fromJson(data, DynamicsDataList.class);
+    }
+
+    public DynamicData getDynamicData() {
+        return getGsonInstance().fromJson(data, DynamicData.class);
     }
 
   }

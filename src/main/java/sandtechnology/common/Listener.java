@@ -54,9 +54,14 @@ public class Listener {
                         MessageHelper.sendingInfoMessage("/fetch [UID] [timestamp]");
                     }
                 }
+                if (command[0].equals("get")) {
+                    if (command.length == 2) {
+                        new HTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Long.parseLong(command[1]), rep -> MessageHelper.sendingInfoMessage(rep.getDynamicData().getMessage())).execute();
+                    }
+                }
+            }
             }
         }
-    }
 
     public static void onGroupMsg(long fromQQ, long fromGroup, ReadOnlyMessage readOnlyMessage) {
         String msg = readOnlyMessage.toString();
