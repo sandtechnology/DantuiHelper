@@ -4,20 +4,16 @@ import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.BiliBiliDynamicChecker;
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.HTTPHelper;
-import sandtechnology.utils.MessageHelper;
-import sandtechnology.utils.Pair;
+import sandtechnology.utils.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static sandtechnology.utils.ImageManager.getImageData;
 
 public class Listener {
 
-    private static final Map<Long, Pair<AtomicInteger, ReadOnlyMessage>> repatingMap = new HashMap<>();
+    private static final Map<Long, Pair<SeenCounter, ReadOnlyMessage>> repatingMap = new HashMap<>();
 
     private static final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
     public static void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
@@ -70,6 +66,7 @@ public class Listener {
         }
         //群号
         if (DataContainer.getTargetGroup().contains(fromGroup)) {
+            //补充群内小助手的信息
             if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
                 new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
                     RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
@@ -78,21 +75,21 @@ public class Listener {
                     }
                 }).execute();
             }
-            Pair<AtomicInteger, ReadOnlyMessage> pairData;
+            Pair<SeenCounter, ReadOnlyMessage> pairData;
             if (repatingMap.containsKey(fromGroup)) {
                 pairData = repatingMap.get(fromGroup);
             } else {
-                pairData = new Pair<>(new AtomicInteger(0), readOnlyMessage);
+                pairData = new Pair<>(new SeenCounter(), readOnlyMessage);
                 repatingMap.put(fromGroup, pairData);
             }
             //消息判断
             if (readOnlyMessage.equals(pairData.getLast())) {
-                if (pairData.getFirst().incrementAndGet() == 2) {
+                if (pairData.getFirst().seenAgain().now() == 2) {
                     MessageHelper.sendingGroupMessage(fromGroup, pairData.getLast());
                 }
             } else {
                 pairData.setLast(readOnlyMessage);
-                pairData.getFirst().set(1);
+                pairData.getFirst().firstSeen();
             }
 
         }

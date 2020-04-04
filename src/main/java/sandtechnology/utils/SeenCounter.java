@@ -1,20 +1,23 @@
 package sandtechnology.utils;
 
-public class Counter {
+public class SeenCounter {
 
     private int now = 0;
 
 
-    public void firstSeen() {
+    public SeenCounter firstSeen() {
         now = 1;
+        return this;
     }
 
-    public void reset() {
+    public SeenCounter reset() {
         now = 0;
+        return this;
     }
 
-    public void seenAgain() {
+    public SeenCounter seenAgain() {
         now++;
+        return this;
     }
 
     public int now() {

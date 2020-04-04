@@ -7,9 +7,9 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
-import sandtechnology.utils.Counter;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.Pair;
+import sandtechnology.utils.SeenCounter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -98,29 +98,29 @@ public class WriteOnlyMessage {
                 nextAdd = null;
             }
             ImageManager.CacheImage lastImage = null;
-            Counter counter = new Counter();
+            SeenCounter seenCounter = new SeenCounter();
             Iterator<ImageManager.CacheImage> iterator = entry.getLast().iterator();
             while (iterator.hasNext()) {
                 ImageManager.CacheImage image = iterator.next();
                 if (lastImage == null) {
                     lastImage = image;
-                    counter.firstSeen();
+                    seenCounter.firstSeen();
                     continue;
                 }
                 //因为存在缓存管理器，引用比较可用，且节省性能
                 if (lastImage == image) {
                     iterator.remove();
-                    counter.seenAgain();
+                    seenCounter.seenAgain();
                 } else {
-                    if (counter.now() > 1) {
-                        nextAdd = "（x" + counter + "）";
-                        counter.firstSeen();
+                    if (seenCounter.now() > 1) {
+                        nextAdd = "（x" + seenCounter + "）";
+                        seenCounter.firstSeen();
                     }
                     lastImage = image;
                 }
             }
-            if (counter.now() > 1) {
-                nextAdd = "（x" + counter + "）";
+            if (seenCounter.now() > 1) {
+                nextAdd = "（x" + seenCounter + "）";
             }
         }
         //防止直接跳出循环的情况

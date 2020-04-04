@@ -7,6 +7,7 @@ import sandtechnology.checker.LiveRoomChecker;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.IndexIterator;
 import sandtechnology.utils.MessageHelper;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Start {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             private long time;
-            private int index = 0;
+            private IndexIterator index;
             private final List<IChecker> runnables = new ArrayList<>();
 
             {
@@ -48,8 +49,10 @@ public class Start {
             }
 
             private IChecker next() {
-                index = index == runnables.size() - 1 ? 0 : index + 1;
-                return runnables.get(index);
+                if (index == null) {
+                    index = new IndexIterator.IndexIteratorBuilder(runnables.size()).excludeMax().build();
+                }
+                return runnables.get(index.next());
             }
 
             @Override
