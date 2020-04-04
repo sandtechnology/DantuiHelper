@@ -1,37 +1,37 @@
 package sandtechnology.utils;
 
-public class IndexIterator {
+public interface IndexIterator {
+    int next();
 
+    class RangeIndexIterator implements IndexIterator {
+        private int min;
+        private int max;
+        private int now;
+        private boolean first = true;
 
-    private int min;
-    private int max;
-    private int now;
-    private boolean first = true;
+        private RangeIndexIterator(int min, int max, boolean includeMin, boolean includeMax) {
+            this.min = includeMin ? min : min + 1;
+            this.max = includeMax ? max : max - 1;
+            now = this.min;
+        }
 
-    private IndexIterator() {
-    }
-
-    private IndexIterator(int min, int max, boolean includeMin, boolean includeMax) {
-        this.min = includeMin ? min : min + 1;
-        this.max = includeMax ? max : max - 1;
-        now = this.min;
-    }
-
-    public int next() {
-        if (first) {
-            first = false;
-            return now;
-        } else {
-            return now = now + 1 > max ? min : now + 1;
+        public int next() {
+            if (first) {
+                first = false;
+                return now;
+            } else {
+                return now = now + 1 > max ? min : now + 1;
+            }
         }
     }
 
-    private static class SingleValueIterator extends IndexIterator {
+    class SingleValueIterator implements IndexIterator {
 
         int value;
 
         private SingleValueIterator(int value) {
             super();
+            this.value = value;
         }
 
         @Override
@@ -40,7 +40,7 @@ public class IndexIterator {
         }
     }
 
-    public static class IndexIteratorBuilder {
+    class IndexIteratorBuilder {
         private int min = 0;
         private int max;
         private boolean includeMin = true;
@@ -88,7 +88,7 @@ public class IndexIterator {
                     return new SingleValueIterator(min);
                 }
             }
-            return new IndexIterator(min, max, includeMin, includeMax);
+            return new RangeIndexIterator(min, max, includeMin, includeMax);
         }
 
         @Override
