@@ -33,20 +33,21 @@ public class Emoji {
                 pair -> {
                     String str = pair.getFirst();
                     //末尾带有表情的识别
-                    boolean addLast = false;
-                    int lastWithTextIndex = str.length() - text.length();
-                    if (str.lastIndexOf(text) == lastWithTextIndex) {
+                    int addLastCounter = 0;
+                    while (str.endsWith(text)) {
+                        int lastWithTextIndex = str.length() - text.length();
                         str = str.substring(0, lastWithTextIndex);
-                        addLast = true;
+                        addLastCounter++;
+
                     }
+
                     String[] strings = str.split
                             (
                                     //"[表情]"->"表情"->"\[表情\]"（语法糖的原因后面的]不需要再次加入转义符号）
-                                    "\\[" + text.substring(1, text.length() - 1) + "]"
+                                    "\\[" + text.substring(1, text.length() - 1) + "]?"
                             );
                     if (strings.length > 1) {
-                        //排除末尾元素
-                        for (int i = 0; i < strings.length - 1; i++) {
+                        for (int i = 0; i < strings.length; i++) {
                             //防止多余的元素
                             if (!strings[i].isEmpty()) {
                                 result.add(strings[i]);
@@ -60,8 +61,10 @@ public class Emoji {
                         result.add(str);
                     }
                     result.add(pair.getLast());
-                    if (addLast) {
+
+                    while (addLastCounter > 0) {
                         result.add(cacheImage);
+                        addLastCounter--;
                     }
                 }
         );

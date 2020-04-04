@@ -11769,6 +11769,146 @@
           "is_followed": 0
         }
       }
+    },
+    "emoji": {
+      "desc": {
+        "uid": 420249427,
+        "type": 1,
+        "rid": 373335840318051830,
+        "acl": 0,
+        "view": 72694,
+        "repost": 0,
+        "comment": 40,
+        "like": 1534,
+        "is_liked": 0,
+        "dynamic_id": 373335840316915448,
+        "timestamp": 1585762424,
+        "pre_dy_id": 373335307740969247,
+        "orig_dy_id": 373335011389273607,
+        "orig_type": 4,
+        "user_profile": {
+          "info": {
+            "uid": 420249427,
+            "uname": "琉绮Ruki",
+            "face": "https://i0.hdslb.com/bfs/face/8331a9f5f41c55e066fd3a826558643caa5ced24.jpg"
+          },
+          "card": {
+            "official_verify": {
+              "type": 0,
+              "desc": "bilibili直播签约主播、虚拟UP主"
+            }
+          },
+          "vip": {
+            "vipType": 2,
+            "vipDueDate": 1619712000000,
+            "dueRemark": "",
+            "accessStatus": 0,
+            "vipStatus": 1,
+            "vipStatusWarn": "",
+            "themeType": 0,
+            "label": {
+              "path": ""
+            }
+          },
+          "pendant": {
+            "pid": 452,
+            "name": "灵笼",
+            "image": "https://i1.hdslb.com/bfs/face/9c5f14d6749daded668f3f66998baf4a50e7d8da.png",
+            "expire": 0
+          },
+          "rank": "10000",
+          "sign": "Virtuareal Project一期生。唱跳rapOW。群：1027385586。⭐去摘遥不可及的星。商务合作联系bd@vrp.live",
+          "level_info": {
+            "current_level": 6,
+            "current_min": 0,
+            "current_exp": 0,
+            "next_exp": "0"
+          }
+        },
+        "uid_type": 1,
+        "stype": 0,
+        "r_type": 1,
+        "inner_id": 0,
+        "status": 1,
+        "dynamic_id_str": "373335840316915448",
+        "pre_dy_id_str": "373335307740969247",
+        "orig_dy_id_str": "373335011389273607",
+        "rid_str": "373335840318051830",
+        "origin": {
+          "uid": 480680646,
+          "type": 4,
+          "rid": 373335011393556609,
+          "acl": 0,
+          "view": 186134,
+          "repost": 7,
+          "like": 0,
+          "dynamic_id": 373335011389273607,
+          "timestamp": 1585762231,
+          "pre_dy_id": 0,
+          "orig_dy_id": 0,
+          "uid_type": 1,
+          "stype": 0,
+          "r_type": 1,
+          "inner_id": 0,
+          "status": 1,
+          "dynamic_id_str": "373335011389273607",
+          "pre_dy_id_str": "0",
+          "orig_dy_id_str": "0",
+          "rid_str": "373335011393556609"
+        }
+      },
+      "card": "{ \"user\": { \"uid\": 420249427, \"uname\": \"琉绮Ruki\", \"face\": \"https:\\/\\/i0.hdslb.com\\/bfs\\/face\\/8331a9f5f41c55e066fd3a826558643caa5ced24.jpg\" }, \"item\": { \"rp_id\": 373335840318051830, \"uid\": 420249427, \"content\": \"大家都辛苦了！！！我们都玩的很开心！！！！不过话说回来整个愚人节当天活动都没骗人的我到底可不可信呢[思考]\\/\\/@度人Tabibito:对我来说，遇到对手是开心，遇到战胜我的对手，是两倍的开心！\", \"ctrl\": \"[{\\\"type\\\":1,\\\"location\\\":55,\\\"length\\\":11,\\\"data\\\":\\\"474369808\\\"}]\", \"orig_dy_id\": 373335011389273607, \"pre_dy_id\": 373335307740969247, \"timestamp\": 1585762424, \"at_uids\": [ 474369808 ], \"reply\": 40, \"orig_type\": 4 }, \"origin\": \"{ \\\"user\\\": { \\\"uid\\\": 480680646, \\\"uname\\\": \\\"阿萨Aza\\\", \\\"face\\\": \\\"https:\\\\\\/\\\\\\/i0.hdslb.com\\\\\\/bfs\\\\\\/face\\\\\\/8878b46ea862b1339cbd139851f7f77baaa5b524.jpg\\\" }, \\\"item\\\": { \\\"rp_id\\\": 373335011393556609, \\\"uid\\\": 480680646, \\\"content\\\": \\\"今天真的玩的心跳增速\\\\n大家辛苦了\\\\n也请不要因为游戏内容对其他人有反感，大家玩的都很开心！[么么哒][么么哒][么么哒]\\\", \\\"ctrl\\\": \\\"\\\", \\\"orig_dy_id\\\": 0, \\\"pre_dy_id\\\": 0, \\\"timestamp\\\": 1585762231, \\\"reply\\\": 158 } }\", \"origin_extend_json\": \"{\\\"from\\\":{\\\"emoji_type\\\":1,\\\"verify\\\":{\\\"cc\\\":{\\\"nv\\\":1}}},\\\"like_icon\\\":{\\\"action\\\":\\\"\\\",\\\"action_url\\\":\\\"\\\",\\\"end\\\":\\\"\\\",\\\"end_url\\\":\\\"\\\",\\\"start\\\":\\\"\\\",\\\"start_url\\\":\\\"\\\"}}\", \"origin_user\": { \"info\": { \"uid\": 480680646, \"uname\": \"阿萨Aza\", \"face\": \"https:\\/\\/i0.hdslb.com\\/bfs\\/face\\/8878b46ea862b1339cbd139851f7f77baaa5b524.jpg\" }, \"card\": { \"official_verify\": { \"type\": 0, \"desc\": \"bilibili直播签约主播\" } }, \"vip\": { \"vipType\": 2, \"vipDueDate\": 1643040000000, \"dueRemark\": \"\", \"accessStatus\": 0, \"vipStatus\": 1, \"vipStatusWarn\": \"\", \"themeType\": 0, \"label\": { \"path\": \"\" } }, \"pendant\": { \"pid\": 0, \"name\": \"\", \"image\": \"\", \"expire\": 0 }, \"rank\": \"10000\", \"sign\": \"你好！我是VRP所属的Vliver，喜欢唱歌打游戏。粉丝群：1072797387，商务合作请联系bd@vrp.live\", \"level_info\": { \"current_level\": 6, \"current_min\": 0, \"current_exp\": 0, \"next_exp\": \"0\" } } }",
+      "extend_json": "{\"ctrl\":[{\"data\":\"474369808\",\"length\":11,\"location\":55,\"type\":1}],\"from\":{\"emoji_type\":1,\"verify\":{\"cc\":{\"nv\":1}}},\"like_icon\":{\"action\":\"\",\"action_url\":\"\",\"end\":\"\",\"end_url\":\"\",\"start\":\"\",\"start_url\":\"\"}}",
+      "display": {
+        "origin": {
+          "emoji_info": {
+            "emoji_details": [
+              {
+                "emoji_name": "[么么哒]",
+                "id": 86,
+                "package_id": 3,
+                "state": 0,
+                "type": 1,
+                "attr": 0,
+                "text": "[么么哒]",
+                "url": "https://i0.hdslb.com/bfs/emote/2f418440776e88605ddc426eac898202c1f5fa4d.png",
+                "meta": {
+                  "size": 1
+                },
+                "mtime": 1560325317
+              }
+            ]
+          },
+          "relation": {
+            "status": 2,
+            "is_follow": 1,
+            "is_followed": 0
+          }
+        },
+        "emoji_info": {
+          "emoji_details": [
+            {
+              "emoji_name": "[思考]",
+              "id": 1941,
+              "package_id": 1,
+              "state": 0,
+              "type": 1,
+              "attr": 0,
+              "text": "[思考]",
+              "url": "https://i0.hdslb.com/bfs/emote/cfa9b7e89e4bfe04bbcd34ccb1b0df37f4fa905c.png",
+              "meta": {
+                "size": 1
+              },
+              "mtime": 1582182969
+            }
+          ]
+        },
+        "relation": {
+          "status": 2,
+          "is_follow": 1,
+          "is_followed": 0
+        }
+      }
     }
   }
 }
