@@ -24,7 +24,7 @@ public class ReadOnlyMessage {
 
     @Override
     public String toString() {
-        return obj.toString();
+        return obj.contentToString();
     }
 
     @Override

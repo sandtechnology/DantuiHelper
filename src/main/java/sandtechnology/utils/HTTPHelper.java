@@ -22,6 +22,7 @@ public class HTTPHelper{
     private final String url;
     private Consumer<NormalResponse> handler;
     private State state;
+    private int retry = 0;
     private final Random random = new Random();
 
     public HTTPHelper(String url, Consumer<NormalResponse> handler) {
@@ -63,14 +64,25 @@ public class HTTPHelper{
             handler.accept(JsonHelper.getGsonInstance().fromJson(result, NormalResponse.class));
             state = State.Success;
         } catch (IOException e) {
-              state = State.NetworkError;
-              e.printStackTrace();
-              MessageHelper.sendingErrorMessage(e, "Network Error:\n");
-          } catch (Exception e) {
-              state = State.Error;
-              e.printStackTrace();
-              MessageHelper.sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
-          }
+            state = State.NetworkError;
+            e.printStackTrace();
+            MessageHelper.sendingErrorMessage(e, "Network Error:\n");
+        } catch (Exception e) {
+            if (retry < 3) {
+                ThreadHelper.sleep(2000);
+                execute();
+                retry++;
+            } else {
+                retry = 0;
+                state = State.Error;
+                e.printStackTrace();
+                if (result.length() <= 500) {
+                    MessageHelper.sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
+                } else {
+                    MessageHelper.sendingErrorMessage(e, "Unknown Error:\n");
+                }
+            }
+        }
       }
 
 

@@ -52,6 +52,11 @@ public class AdapterSelector {
             case 2048:
                 adapterClass = ShareAdapter.class;
                 break;
+            case 4098:
+            case 4099:
+            case 512:
+                adapterClass = FilmAdapter.class;
+                break;
             case 4200:
                 adapterClass = LiveRoomAdapter.class;
                 break;
