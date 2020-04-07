@@ -32,7 +32,7 @@ public class ReadOnlyMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReadOnlyMessage that = (ReadOnlyMessage) o;
-        return obj.toString().equals(that.obj.toString());
+        return toString().equals(that.toString());
     }
 
     public WriteOnlyMessage toWriteOnlyMessage() {
