@@ -1,5 +1,6 @@
 package sandtechnology.holder;
 
+import kotlin.Unit;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
@@ -24,7 +25,12 @@ public class ReadOnlyMessage {
 
     @Override
     public String toString() {
-        return obj.contentToString();
+        StringBuilder stringBuilder = new StringBuilder();
+        obj.forEachContent((x) -> {
+            stringBuilder.append(x.toString());
+            return Unit.INSTANCE;
+        });
+        return stringBuilder.toString();
     }
 
     @Override

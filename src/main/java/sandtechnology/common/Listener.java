@@ -91,7 +91,6 @@ public class Listener {
                 pairData = new Pair<>(new SeenCounter(), readOnlyMessage);
                 repatingMap.put(fromGroup, pairData);
             }
-            System.out.println(pairData.getLast().toString());
             //消息判断
             if (readOnlyMessage.equals(pairData.getLast())) {
                 if (pairData.getFirst().seenAgain().now() == 2) {
