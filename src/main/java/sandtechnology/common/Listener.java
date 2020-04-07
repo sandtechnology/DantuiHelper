@@ -7,14 +7,17 @@ import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static sandtechnology.utils.ImageManager.getImageData;
 
 public class Listener {
 
-    private static final Map<Long, Pair<SeenCounter, ReadOnlyMessage>> repatingMap = new HashMap<>();
+    private static final Map<Long, Pair<SeenCounter, ReadOnlyMessage>> repatingMap = new ConcurrentHashMap<>();
 
     private static final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
     public static void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
@@ -88,6 +91,7 @@ public class Listener {
                 pairData = new Pair<>(new SeenCounter(), readOnlyMessage);
                 repatingMap.put(fromGroup, pairData);
             }
+            System.out.println(pairData.getLast().toString());
             //消息判断
             if (readOnlyMessage.equals(pairData.getLast())) {
                 if (pairData.getFirst().seenAgain().now() == 2) {
