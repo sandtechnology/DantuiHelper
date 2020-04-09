@@ -14,22 +14,30 @@ public class LiveRoomChecker implements IChecker {
     private final HTTPHelper httpHelper;
     private final long roomID;
     private long lastLive;
-    private final List<Long> groups;
+    private final List<Long> groups = new ArrayList<>();
 
-    public LiveRoomChecker(long roomID, long... groupIDs) {
-        groups = new ArrayList<>();
-        for (long group : groupIDs) {
-            groups.add(group);
-        }
+    public LiveRoomChecker(long roomID, List<Long> groupIDs) {
+        this(roomID);
+        groups.addAll(groupIDs);
+    }
+
+    private LiveRoomChecker(long roomID) {
         this.roomID = roomID;
         httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + roomID, response -> {
             RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
             if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                 lastLive = roomInfo.getStartTime();
                 ImageManager.CacheImage image = roomInfo.getImage();
-                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage("Ruki开播啦！！！").newLine().add(roomInfo.getRoomURL()).add("\n" + roomInfo.getTitle()).newLine().add(image));
+                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage("Ruki开播啦！！！").add("\n").add(roomInfo.getRoomURL()).add("\n" + roomInfo.getTitle()).add("\n").add(image));
             }
         });
+    }
+
+    public LiveRoomChecker(long roomID, long... groupIDs) {
+        this(roomID);
+        for (long group : groupIDs) {
+            groups.add(group);
+        }
     }
 
     @Override

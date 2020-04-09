@@ -5,10 +5,7 @@ import sandtechnology.checker.BiliBiliDynamicChecker;
 import sandtechnology.checker.IChecker;
 import sandtechnology.checker.LiveRoomChecker;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.HTTPHelper;
-import sandtechnology.utils.ImageManager;
-import sandtechnology.utils.IndexIterator;
-import sandtechnology.utils.MessageHelper;
+import sandtechnology.utils.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +25,8 @@ public class Start {
 
             {
                 runnables.add(new BiliBiliDynamicChecker(452785178).addGroups(532589427L));
-                runnables.add(new BiliBiliDynamicChecker(420249427).addGroups(1035554886L, 739568838L, 752224664L, 1027385586L));
-                runnables.add(new LiveRoomChecker(21403609L, 1035554886L, 739568838L, 752224664L, 1027385586L));
+                runnables.add(new BiliBiliDynamicChecker(420249427).addGroups(DataContainer.getRukiTargetGroup()));
+                runnables.add(new LiveRoomChecker(21403609L, DataContainer.getRukiTargetGroup()));
                 runnables.add(new IChecker() {
                     private long lastLive;
                     final HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {

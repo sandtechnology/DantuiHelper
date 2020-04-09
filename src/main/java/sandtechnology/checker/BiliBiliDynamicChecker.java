@@ -56,6 +56,11 @@ public class BiliBiliDynamicChecker implements IChecker {
         return this;
     }
 
+    public BiliBiliDynamicChecker addGroups(List<Long> groups) {
+        this.groups.addAll(groups);
+        return this;
+    }
+
     public BiliBiliDynamicChecker setHandler(Consumer<NormalResponse> handler) {
         this.httpHelper.setHandler(handler);
         return this;

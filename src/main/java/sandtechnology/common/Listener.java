@@ -40,6 +40,10 @@ public class Listener {
                 if (command.length == 1 && command[0].equals("test")) {
                     MessageHelper.sendingInfoMessage(new Random().nextInt(2000) + "www");
                 }
+                if (command[0].equals("sendruki")) {
+                    MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到Ruki粉丝群的内容"));
+                    waitingMessageMap.put(fromQQ, DataContainer.getRukiTargetGroup());
+                }
                 if (command[0].equals("send")) {
                     if (command.length == 1) {
                         MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到群的内容"));
