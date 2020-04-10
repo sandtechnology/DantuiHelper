@@ -35,6 +35,7 @@ public class Mirai {
             }
 
         });
+        ConfigLoader.save();
         try {
             //bot.getCoroutineContext().plus(new ErrorHandler());
             bot.login();
@@ -44,7 +45,6 @@ public class Mirai {
             Events.subscribeAlways(TempMessage.class, tempMessage -> Listener.onTempMsg(tempMessage.getSender().getGroup().getId(), tempMessage.getSender().getId(), new ReadOnlyMessage(tempMessage.getMessage())));
             Start.start();
             bot.join();
-            //尚在测试阶段暂不发布
         } catch (Throwable e) {
             ConfigLoader.save();
             bot.close(e);
