@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
+import static com.sobte.cqp.jcq.event.JcqApp.CQ;
 import static sandtechnology.utils.ImageManager.getImageData;
 
 public class Listener {
@@ -20,6 +21,17 @@ public class Listener {
     private static final Map<Long, Pair<SeenCounter, ReadOnlyMessage>> repatingMap = new ConcurrentHashMap<>();
 
     private static final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
+
+
+    public static void onTempMsg(long fromGroup, long fromQQ, ReadOnlyMessage message) {
+        String msg = message.toString();
+        if (msg.equalsIgnoreCase("/info")) {
+            MessageHelper.sendTempMsg(fromGroup, fromQQ, new WriteOnlyMessage("机器人信息：").newLine().add("编写者：sandtechnology").newLine().add("版本号：").add(DataContainer.getVersion()).add(CQ == null ? "（JCQ内核）" : "（Mirai内核）").newLine().add("开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper"));
+        } else {
+            MessageHelper.sendTempMsg(fromGroup, fromQQ, new WriteOnlyMessage("回复/info查看版本等信息"));
+        }
+    }
+
     public static void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
 
         String msg = message.toString();
@@ -34,6 +46,8 @@ public class Listener {
             }
         }
         long owner = DataContainer.getMaster();
+
+
         if (fromQQ == owner) {
             if (msg.startsWith("/")) {
                 String[] command = msg.substring(1).split(" ");

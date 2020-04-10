@@ -1,7 +1,6 @@
 package sandtechnology.holder;
 
 import kotlin.Unit;
-import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 
@@ -44,13 +43,13 @@ public class ReadOnlyMessage {
     public WriteOnlyMessage toWriteOnlyMessage() {
         return new WriteOnlyMessage() {
             @Override
-            public MessageChain toMessageChain(Bot bot, Type type, long id) {
+            public MessageChain toMessageChain(ExtraData data) {
                 return obj;
             }
 
             @Override
             public String toCQString() {
-                return obj.toString();
+                return toString();
             }
         };
     }

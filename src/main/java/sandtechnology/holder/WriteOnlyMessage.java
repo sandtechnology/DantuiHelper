@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
+import sandtechnology.Mirai;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.Pair;
 import sandtechnology.utils.SeenCounter;
@@ -129,7 +130,7 @@ public class WriteOnlyMessage {
         }
     }
 
-    public MessageChain toMessageChain(Bot bot, Type type, long id) {
+    public MessageChain toMessageChain(ExtraData data) {
         trimImage();
         MessageChainBuilder builder = new MessageChainBuilder();
         for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
@@ -137,16 +138,22 @@ public class WriteOnlyMessage {
 
             builder.addAll(pair.getLast().stream().map(
                     img -> {
-
-                        if (type == Type.Friend) {
-                            return bot.getFriend(id).uploadImage(getExternalImage(img.getFile()));
-                        } else {
-                            return bot.getGroup(id).uploadImage(getExternalImage(img.getFile()));
+                        switch (data.getType()) {
+                            case Friend:
+                                return data.getBot().getFriend(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
+                            case Group:
+                                return data.getBot().getGroup(data.getFromGroup()).uploadImage(getExternalImage(img.getFile()));
+                            case Temp:
+                                return data.getBot().getGroup(data.getFromGroup()).get(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
+                            default:
+                                throw new IllegalArgumentException("类型不存在");
                         }
                     }).collect(Collectors.toList()));
         }
         return builder.asMessageChain();
     }
+
+    public enum Type {Friend, Group, Temp}
 
     private ExternalImage getExternalImage(File file) {
         ExternalImage externalImage;
@@ -191,5 +198,67 @@ public class WriteOnlyMessage {
         return new WriteOnlyMessage().add(this);
     }
 
-    public enum Type {Friend, Group}
+    public static class ExtraData {
+        final Type type;
+        final Bot bot;
+        final long fromGroup;
+        final long fromQQ;
+
+        private ExtraData(Type type, Bot bot, long fromGroup, long fromQQ) {
+            this.type = type;
+            this.bot = bot;
+            this.fromGroup = fromGroup;
+            this.fromQQ = fromQQ;
+        }
+
+        public Type getType() {
+            return type;
+        }
+
+        public Bot getBot() {
+            return bot;
+        }
+
+        public long getFromGroup() {
+            return fromGroup;
+        }
+
+        public long getFromQQ() {
+            return fromQQ;
+        }
+
+        public static class ExtraDataBuilder {
+            Type type = Type.Friend;
+            Bot bot = Mirai.getBot();
+            long fromGroup;
+            long fromQQ;
+
+            public ExtraDataBuilder() {
+            }
+
+            public ExtraDataBuilder type(Type type) {
+                this.type = type;
+                return this;
+            }
+
+            public ExtraDataBuilder bot(Bot bot) {
+                this.bot = bot;
+                return this;
+            }
+
+            public ExtraDataBuilder fromQQ(long fromQQ) {
+                this.fromQQ = fromQQ;
+                return this;
+            }
+
+            public ExtraDataBuilder fromGroup(long fromGroup) {
+                this.fromGroup = fromGroup;
+                return this;
+            }
+
+            public ExtraData build() {
+                return new ExtraData(type, bot, fromGroup, fromQQ);
+            }
+        }
+    }
 }

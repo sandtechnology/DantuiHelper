@@ -35,9 +35,14 @@ public class MessageHelper {
         if (CQ != null) {
             CQ.sendPrivateMsg(qq, message.toCQString());
         } else {
-            Mirai.getBot().getFriend(qq).sendMessage(message.toMessageChain(Mirai.getBot(), WriteOnlyMessage.Type.Friend, qq));
+            Mirai.getBot().getFriend(qq).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(qq).build()));
         }
     }
+
+    public static void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
+        Mirai.getBot().getGroup(fromGroup).get(fromQQ).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(fromQQ).fromGroup(fromGroup).type(WriteOnlyMessage.Type.Temp).build()));
+    }
+
 
     public static void sendPrivateMsg(long qq, String message) {
         sendPrivateMsg(qq, new WriteOnlyMessage(message));
@@ -47,7 +52,7 @@ public class MessageHelper {
         if (CQ != null) {
             CQ.sendGroupMsg(group, message.toCQString());
         } else {
-            Mirai.getBot().getGroup(group).sendMessage(message.toMessageChain(Mirai.getBot(), WriteOnlyMessage.Type.Group, group));
+            Mirai.getBot().getGroup(group).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromGroup(group).type(WriteOnlyMessage.Type.Group).build()));
         }
     }
 

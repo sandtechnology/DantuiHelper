@@ -8,7 +8,11 @@ public class DataContainer {
     private static final long master = 1294790523;
     private static final List<Long> targetGroup = new ArrayList<>();
     private static final List<Long> rukiTargetGroup = new ArrayList<>();
-    private static final long bot = 1700065177;
+    private static final String version = "v2.2";
+
+    public static String getVersion() {
+        return version;
+    }
 
     static {
         rukiTargetGroup.addAll(Arrays.asList(1035554886L, 739568838L, 752224664L, 1027385586L));
@@ -19,9 +23,6 @@ public class DataContainer {
         return rukiTargetGroup;
     }
 
-    public static long getBot() {
-        return bot;
-    }
 
     public static List<Long> getTargetGroup() {
         return targetGroup;

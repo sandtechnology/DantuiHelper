@@ -5,6 +5,7 @@ import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.japt.Events;
 import net.mamoe.mirai.message.FriendMessage;
 import net.mamoe.mirai.message.GroupMessage;
+import net.mamoe.mirai.message.TempMessage;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.SystemDeviceInfoKt;
 import sandtechnology.common.Listener;
@@ -40,6 +41,7 @@ public class Mirai {
             System.out.println("Registering Event....");
             Events.subscribeAlways(GroupMessage.class, groupMessage -> Listener.onGroupMsg(groupMessage.getSender().getId(), groupMessage.getGroup().getId(), new ReadOnlyMessage(groupMessage.getMessage())));
             Events.subscribeAlways(FriendMessage.class, friendMessage -> Listener.onPrivateMsg(friendMessage.getSender().getId(), new ReadOnlyMessage(friendMessage.getMessage())));
+            Events.subscribeAlways(TempMessage.class, tempMessage -> Listener.onTempMsg(tempMessage.getSender().getGroup().getId(), tempMessage.getSender().getId(), new ReadOnlyMessage(tempMessage.getMessage())));
             Start.start();
             bot.join();
             //尚在测试阶段暂不发布
