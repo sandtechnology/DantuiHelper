@@ -92,7 +92,7 @@ public class Listener {
 
     public static void onGroupMsg(long fromQQ, long fromGroup, ReadOnlyMessage readOnlyMessage) {
         String msg = readOnlyMessage.toString();
-        if (fromGroup == 1074152108L) {
+        if (fromGroup == 1074152108L && fromQQ == DataContainer.getMaster()) {
             onPrivateMsg(fromQQ, readOnlyMessage);
             return;
         }
