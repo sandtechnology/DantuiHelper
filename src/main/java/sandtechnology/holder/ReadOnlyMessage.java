@@ -7,6 +7,8 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 public class ReadOnlyMessage {
 
     private final MessageChain obj;
+    private String toStringCache;
+
 
     public ReadOnlyMessage(MessageChain obj) {
         this.obj = obj;
@@ -24,12 +26,16 @@ public class ReadOnlyMessage {
 
     @Override
     public String toString() {
-        StringBuilder stringBuilder = new StringBuilder();
-        obj.forEachContent((x) -> {
-            stringBuilder.append(x.toString());
-            return Unit.INSTANCE;
-        });
-        return stringBuilder.toString();
+        if (toStringCache == null) {
+            StringBuilder stringBuilder = new StringBuilder();
+            obj.forEachContent((x) -> {
+                stringBuilder.append(x.toString());
+                return Unit.INSTANCE;
+            });
+            return toStringCache = stringBuilder.toString();
+        } else {
+            return toStringCache;
+        }
     }
 
     @Override
@@ -37,7 +43,7 @@ public class ReadOnlyMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReadOnlyMessage that = (ReadOnlyMessage) o;
-        return toString().equals(that.toString());
+        return that.toString().equals(obj.toString());
     }
 
     public WriteOnlyMessage toWriteOnlyMessage() {
