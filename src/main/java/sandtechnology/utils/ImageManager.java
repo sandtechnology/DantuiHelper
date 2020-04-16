@@ -54,9 +54,7 @@ public class ImageManager {
                 }
                 return cacheImageMap.get(imgURL).markAccessed();
             } else {
-                if (!Files.exists(path)) {
-                    download(url, path);
-                }
+                download(url, path);
                 CacheImage cacheImage = new CacheImage(path.toFile(), url.getFile());
                 cacheImageMap.put(imgURL, cacheImage);
                 return cacheImage.markAccessed();
@@ -66,6 +64,7 @@ public class ImageManager {
             return emptyImage;
         } catch (Exception e) {
             MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
+
             ThreadHelper.sleep(1000);
             return getImageData(imgURL);
         }
