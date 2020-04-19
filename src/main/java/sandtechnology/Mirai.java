@@ -50,6 +50,7 @@ public class Mirai {
             bot.close(e);
             bot = null;
             Start.exit();
+            e.printStackTrace();
             Thread.sleep(30000);
             main(args);
         }

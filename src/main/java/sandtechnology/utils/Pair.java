@@ -1,12 +1,12 @@
 package sandtechnology.utils;
 
-public class Pair<V1,V2> {
+public class Pair<V1, V2> implements Cloneable {
     private V1 v1;
     private V2 v2;
 
-    public Pair(V1 v1,V2 v2){
-        this.v1=v1;
-        this.v2=v2;
+    public Pair(V1 v1, V2 v2) {
+        this.v1 = v1;
+        this.v2 = v2;
     }
 
     synchronized public V1 getFirst() {
@@ -41,4 +41,5 @@ public class Pair<V1,V2> {
     synchronized public String toString() {
         return super.toString() + "[V1=" + v1 + ",v2=" + v2 + "]";
     }
+
 }

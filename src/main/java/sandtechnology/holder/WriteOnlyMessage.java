@@ -28,6 +28,10 @@ public class WriteOnlyMessage {
         add(s);
     }
 
+    public WriteOnlyMessage(List<Pair<String, List<ImageManager.CacheImage>>> list) {
+        this.list.addAll(list);
+    }
+
     public WriteOnlyMessage add(ImageManager.CacheImage image) {
         if (list.isEmpty()) {
             list.add(new Pair<>("", new ArrayList<>(Collections.singleton(image))));
@@ -195,7 +199,11 @@ public class WriteOnlyMessage {
 
     @Override
     public WriteOnlyMessage clone() {
-        return new WriteOnlyMessage().add(this);
+        List<Pair<String, List<ImageManager.CacheImage>>> tempList = new ArrayList<>(list.size());
+        for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
+            tempList.add(new Pair<>(pair.getFirst(), new ArrayList<>(pair.getLast())));
+        }
+        return new WriteOnlyMessage(tempList);
     }
 
     public static class ExtraData {

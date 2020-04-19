@@ -55,7 +55,7 @@ public class Start {
             @Override
             public void run() {
                 try {
-                    if (time == 3 * 60 * 12) {
+                    if (time == 3 * 60 * 6) {
                         time = 0;
                         ImageManager.deleteCacheImage();
                     } else {

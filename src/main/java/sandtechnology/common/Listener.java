@@ -46,6 +46,11 @@ public class Listener {
         }
         long owner = DataContainer.getMaster();
 
+        if (msg.equalsIgnoreCase("/info")) {
+            MessageHelper.sendPrivateMsg(fromQQ, DataContainer.getVersionMessage());
+        } else {
+            MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("回复/info查看版本等信息"));
+        }
 
         if (fromQQ == owner) {
             if (msg.startsWith("/")) {
@@ -80,12 +85,6 @@ public class Listener {
                         new HTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Long.parseLong(command[1]), rep -> MessageHelper.sendingInfoMessage(rep.getDynamicData().getMessage())).execute();
                     }
                 }
-            }
-        } else {
-            if (msg.equalsIgnoreCase("/info")) {
-                MessageHelper.sendPrivateMsg(fromQQ, DataContainer.getVersionMessage());
-            } else {
-                MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("回复/info查看版本等信息"));
             }
         }
         }

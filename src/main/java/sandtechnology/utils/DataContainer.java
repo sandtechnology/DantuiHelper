@@ -13,6 +13,7 @@ public class DataContainer {
     private static final List<Long> targetGroup = new ArrayList<>();
     private static final List<Long> rukiTargetGroup = new ArrayList<>();
     private static final String version = "v2.2";
+    private static final long startTime = System.currentTimeMillis();
     private static final WriteOnlyMessage message = new WriteOnlyMessage("机器人信息：").newLine().add("编写者：sandtechnology").newLine().add("版本号：").add(version).add(isJCQ() ? "（JCQ内核）" : "（Mirai内核）").newLine().add("开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper").newLine().add(isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai");
 
     public static boolean isJCQ() {
@@ -24,8 +25,37 @@ public class DataContainer {
     }
 
     public static WriteOnlyMessage getVersionMessage() {
-        return message;
+        return message.clone().add("\n运行时间：").add(getRunningTime());
     }
+
+    private static String getRunningTime() {
+        long offset = System.currentTimeMillis() - startTime;
+        //秒
+        long sec = offset / 1000;
+        //毫秒
+        long millsec = offset - sec * 1000;
+        //分钟
+        long minutes = 0;
+        //小时
+        long hours = 0;
+        //天
+        long d = 0;
+        if (sec >= 60) {
+            minutes = sec / 60;
+            sec = sec - minutes * 60;
+            if (minutes >= 60) {
+                hours = minutes / 60;
+                minutes = minutes - sec * 60;
+                if (hours >= 24) {
+                    d = minutes / 24;
+                    hours = hours - d * 24;
+                }
+            }
+
+        }
+        return d + "天" + hours + "时" + minutes + "分" + sec + "秒" + millsec + "毫秒";
+    }
+
 
     static {
         rukiTargetGroup.addAll(Arrays.asList(1035554886L, 739568838L, 752224664L, 1027385586L));
