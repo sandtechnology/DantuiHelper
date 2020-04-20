@@ -18,17 +18,16 @@ import java.nio.file.Paths;
 
 public class Mirai {
 
-    private static Bot bot;
 
     public static Bot getBot() {
-        return bot;
+        return Bot.getInstance(ConfigLoader.getHolder().getQQ());
     }
 
     public static void main(String[] args) throws InterruptedException {
 
         System.out.println("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
         System.out.println("Logging....");
-        bot = BotFactoryJvm.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
+        Bot bot = BotFactoryJvm.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
             {
                 setDeviceInfo(context -> SystemDeviceInfoKt.loadAsDeviceInfo(Paths.get("config", "deviceInfo.json").toFile(), context));
 
@@ -48,7 +47,6 @@ public class Mirai {
         } catch (Throwable e) {
             ConfigLoader.save();
             bot.close(e);
-            bot = null;
             Start.exit();
             e.printStackTrace();
             Thread.sleep(30000);
