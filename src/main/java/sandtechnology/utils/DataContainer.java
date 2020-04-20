@@ -1,5 +1,6 @@
 package sandtechnology.utils;
 
+import net.mamoe.mirai.Bot;
 import sandtechnology.holder.WriteOnlyMessage;
 
 import java.util.ArrayList;
@@ -39,21 +40,22 @@ public class DataContainer {
         //小时
         long hours = 0;
         //天
-        long d = 0;
+        long day = 0;
         if (sec >= 60) {
             minutes = sec / 60;
             sec = sec - minutes * 60;
             if (minutes >= 60) {
+                Bot.getInstance(3459492025L).getFriends();
                 hours = minutes / 60;
                 minutes = minutes - sec * 60;
                 if (hours >= 24) {
-                    d = minutes / 24;
-                    hours = hours - d * 24;
+                    day = hours / 24;
+                    hours = hours - day * 24;
                 }
             }
 
         }
-        return d + "天" + hours + "时" + minutes + "分" + sec + "秒" + millsec + "毫秒";
+        return day + "天" + hours + "时" + minutes + "分" + sec + "秒" + millsec + "毫秒";
     }
 
 
