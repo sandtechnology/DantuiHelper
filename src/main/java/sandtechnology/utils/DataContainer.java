@@ -1,6 +1,5 @@
 package sandtechnology.utils;
 
-import net.mamoe.mirai.Bot;
 import sandtechnology.holder.WriteOnlyMessage;
 
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ public class DataContainer {
             minutes = sec / 60;
             sec = sec - minutes * 60;
             if (minutes >= 60) {
-                Bot.getInstance(3459492025L).getFriends();
                 hours = minutes / 60;
                 minutes = minutes - sec * 60;
                 if (hours >= 24) {
