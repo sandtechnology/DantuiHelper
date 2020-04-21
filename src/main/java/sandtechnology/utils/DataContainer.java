@@ -42,13 +42,13 @@ public class DataContainer {
         long day = 0;
         if (sec >= 60) {
             minutes = sec / 60;
-            sec = sec - minutes * 60;
+            sec -= minutes * 60;
             if (minutes >= 60) {
                 hours = minutes / 60;
-                minutes = minutes - sec * 60;
+                minutes -= hours * 60;
                 if (hours >= 24) {
                     day = hours / 24;
-                    hours = hours - day * 24;
+                    hours -= day * 24;
                 }
             }
 
