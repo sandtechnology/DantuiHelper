@@ -10,19 +10,22 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageManager {
     private static final Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
+    private static final Map<String, CacheImage> LocalStorageImageMap = new ConcurrentHashMap<>();
     public static final CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
 
+    //删除缓存文件
     static {
         try {
             Files.walkFileTree(Paths.get("data", "image"), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     String relativePath = file.subpath(2, file.getNameCount()).toString();
-                    cacheImageMap.put(relativePath, new CacheImage(file.toAbsolutePath().toFile(), relativePath));
+                    LocalStorageImageMap.put(relativePath, new CacheImage(file.toAbsolutePath().toFile(), relativePath));
                     return FileVisitResult.CONTINUE;
                 }
             });
@@ -47,15 +50,21 @@ public class ImageManager {
     public static CacheImage getImageData(String imgURL) {
         try {
             URL url = new URL(imgURL);
-            Path path = Paths.get("data", "image", url.getFile()).toAbsolutePath();
+            Path path = Paths.get("data", "image", url.getHost(), url.getFile()).toAbsolutePath();
             if (cacheImageMap.containsKey(imgURL)) {
                 if (!cacheImageMap.get(imgURL).getFile().exists()) {
                     download(url, path);
                 }
                 return cacheImageMap.get(imgURL).markAccessed();
             } else {
-                download(url, path);
-                CacheImage cacheImage = new CacheImage(path.toFile(), url.getFile());
+                CacheImage cacheImage;
+                String relativePath = Paths.get(url.getHost(), url.getFile()).toString();
+                if (LocalStorageImageMap.containsKey(relativePath)) {
+                    cacheImage = LocalStorageImageMap.remove(relativePath);
+                } else {
+                    download(url, path);
+                    cacheImage = new CacheImage(path.toAbsolutePath().toFile(), relativePath);
+                }
                 cacheImageMap.put(imgURL, cacheImage);
                 return cacheImage.markAccessed();
             }
@@ -64,7 +73,6 @@ public class ImageManager {
             return emptyImage;
         } catch (Exception e) {
             MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
-
             ThreadHelper.sleep(1000);
             return getImageData(imgURL);
         }
@@ -107,6 +115,20 @@ public class ImageManager {
 
         public File getFile() {
             return path;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof CacheImage)) return false;
+            CacheImage image = (CacheImage) o;
+            return path.equals(image.path) &&
+                    CQCode.equals(image.CQCode);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(path, CQCode);
         }
     }
 }

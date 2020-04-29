@@ -9,6 +9,7 @@ import sandtechnology.utils.*;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static sandtechnology.utils.ImageManager.getImageData;
 
@@ -18,7 +19,7 @@ public class Listener {
 
     private static final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
     private static final List<Pair<Long, Long>> waitingReplyMessageMap = new ArrayList<>(1);
-
+    private static final Map<Long, AtomicLong> countingMap = DataContainer.getCountingMap();
 
     public static void onTempMsg(long fromGroup, long fromQQ, ReadOnlyMessage message) {
         String msg = message.toString();
@@ -70,6 +71,9 @@ public class Listener {
                     MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到Ruki粉丝群的内容"));
                     waitingMessageMap.put(fromQQ, DataContainer.getRukiTargetGroup());
                 }
+                if (command[0].equals("stats")) {
+                    MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage(DataContainer.getCountingData()));
+                }
                 if (command[0].equals("send")) {
                     if (command.length == 1) {
                         MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到群的内容"));
@@ -107,6 +111,11 @@ public class Listener {
         }
 
     public static void onGroupMsg(long fromQQ, long fromGroup, ReadOnlyMessage readOnlyMessage) {
+        if (!countingMap.containsKey(fromGroup)) {
+            countingMap.put(fromGroup, new AtomicLong(1));
+        } else {
+            countingMap.get(fromGroup).addAndGet(1);
+        }
         String msg = readOnlyMessage.toString();
         if (fromGroup == 1074152108L && fromQQ == DataContainer.getMaster()) {
             onPrivateMsg(fromQQ, readOnlyMessage);

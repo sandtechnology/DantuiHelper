@@ -1,10 +1,16 @@
 package sandtechnology.utils;
 
+import sandtechnology.Mirai;
 import sandtechnology.holder.WriteOnlyMessage;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.MemoryUsage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 import static com.sobte.cqp.jcq.event.JcqApp.CQ;
 
@@ -12,24 +18,54 @@ public class DataContainer {
     private static final long master = 1294790523;
     private static final List<Long> targetGroup = new ArrayList<>();
     private static final List<Long> rukiTargetGroup = new ArrayList<>();
-    private static final String version = "v2.3";
-    private static final long startTime = System.currentTimeMillis();
-    private static final WriteOnlyMessage message = new WriteOnlyMessage("机器人信息：").newLine().add("编写者：sandtechnology").newLine().add("版本号：").add(version).add(isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号0.39.5）").newLine().add("开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper").newLine().add(isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai");
+    private static final String versionMessage = "机器人信息：" +
+            "\n编写者：sandtechnology" +
+            "\n版本号：%s" +
+            "\n开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper" +
+            "\n%s" +
+            "\n%s" +
+            "\n运行时间：%s";
+    private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号0.39.5）");
+    private static final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
+    private static final Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
+
+    public static Map<Long, AtomicLong> getCountingMap() {
+        return countingMap;
+    }
+
+    public static String getCountingData() {
+        StringBuilder stringBuilder = new StringBuilder("统计信息：");
+        countingMap.forEach((group, count) -> {
+            stringBuilder.append(Mirai.getBot().getGroup(group).getName());
+            stringBuilder.append("(");
+            stringBuilder.append(group);
+            stringBuilder.append("):");
+            stringBuilder.append(count);
+            stringBuilder.append("\n");
+        });
+        return stringBuilder.toString();
+    }
 
     public static boolean isJCQ() {
         return CQ != null;
     }
 
     public static String getVersion() {
-        return version;
+        return "v2.3.1";
     }
 
     public static WriteOnlyMessage getVersionMessage() {
-        return message.clone().add("\n运行时间：").add(getRunningTime());
+        return new WriteOnlyMessage(String.format(versionMessage, coreVersion, coreOpenSourceLink, getMemoryUsage(), getRunningTime()));
+    }
+
+    private static String getMemoryUsage() {
+        MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+        MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+        return String.format("堆内存：%d/%dMB\n堆外内存：%d/%dMB", heapMemoryUsage.getUsed(), heapMemoryUsage.getMax(), nonHeapMemoryUsage.getUsed(), nonHeapMemoryUsage.getMax());
     }
 
     private static String getRunningTime() {
-        long offset = System.currentTimeMillis() - startTime;
+        long offset = ManagementFactory.getRuntimeMXBean().getUptime();
         //秒
         long sec = offset / 1000;
         //毫秒
@@ -53,7 +89,7 @@ public class DataContainer {
             }
 
         }
-        return day + "天" + hours + "时" + minutes + "分" + sec + "秒" + millsec + "毫秒";
+        return String.format("%d天%d时%d分%d秒%d毫秒", day, hours, minutes, sec, millsec);
     }
 
 
