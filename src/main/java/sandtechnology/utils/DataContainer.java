@@ -33,17 +33,9 @@ public class DataContainer {
         return countingMap;
     }
 
-    public static String getCountingData() {
-        StringBuilder stringBuilder = new StringBuilder("统计信息：");
-        countingMap.forEach((group, count) -> {
-            stringBuilder.append(Mirai.getBot().getGroup(group).getName());
-            stringBuilder.append("(");
-            stringBuilder.append(group);
-            stringBuilder.append("):");
-            stringBuilder.append(count);
-            stringBuilder.append("\n");
-        });
-        return stringBuilder.toString();
+    static {
+        rukiTargetGroup.addAll(Arrays.asList(857529607L, 1005397354L, 1035554886L, 739568838L, 752224664L, 1027385586L));
+        targetGroup.add(532589427L);
     }
 
     public static boolean isJCQ() {
@@ -58,10 +50,17 @@ public class DataContainer {
         return new WriteOnlyMessage(String.format(versionMessage, coreVersion, coreOpenSourceLink, getMemoryUsage(), getRunningTime()));
     }
 
-    private static String getMemoryUsage() {
-        MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
-        MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
-        return String.format("堆内存：%d/%dMB\n堆外内存：%d/%dMB", heapMemoryUsage.getUsed(), heapMemoryUsage.getMax(), nonHeapMemoryUsage.getUsed(), nonHeapMemoryUsage.getMax());
+    public static String getCountingData() {
+        StringBuilder stringBuilder = new StringBuilder("统计信息：\n");
+        countingMap.forEach((group, count) -> {
+            stringBuilder.append(Mirai.getBot().getGroup(group).getName());
+            stringBuilder.append("(");
+            stringBuilder.append(group);
+            stringBuilder.append("):");
+            stringBuilder.append(count);
+            stringBuilder.append("\n");
+        });
+        return stringBuilder.toString();
     }
 
     private static String getRunningTime() {
@@ -92,10 +91,10 @@ public class DataContainer {
         return String.format("%d天%d时%d分%d秒%d毫秒", day, hours, minutes, sec, millsec);
     }
 
-
-    static {
-        rukiTargetGroup.addAll(Arrays.asList(1035554886L, 739568838L, 752224664L, 1027385586L));
-        targetGroup.add(532589427L);
+    private static String getMemoryUsage() {
+        MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
+        MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
+        return String.format("堆内存：%.2f/%.2fMB\n堆外内存：%.2f/%dMB", heapMemoryUsage.getUsed() / 1E6, heapMemoryUsage.getMax() / 1E6, nonHeapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getMax());
     }
 
     public static List<Long> getRukiTargetGroup() {

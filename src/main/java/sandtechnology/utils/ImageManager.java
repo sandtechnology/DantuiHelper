@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageManager {
     private static final Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
-    private static final Map<String, CacheImage> LocalStorageImageMap = new ConcurrentHashMap<>();
+    private static final Map<String, CacheImage> localStorageImageMap = new ConcurrentHashMap<>();
     public static final CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
 
     //删除缓存文件
@@ -25,7 +25,7 @@ public class ImageManager {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
                     String relativePath = file.subpath(2, file.getNameCount()).toString();
-                    LocalStorageImageMap.put(relativePath, new CacheImage(file.toAbsolutePath().toFile(), relativePath));
+                    localStorageImageMap.put(relativePath, new CacheImage(file.toAbsolutePath().toFile(), relativePath));
                     return FileVisitResult.CONTINUE;
                 }
             });
@@ -59,8 +59,8 @@ public class ImageManager {
             } else {
                 CacheImage cacheImage;
                 String relativePath = Paths.get(url.getHost(), url.getFile()).toString();
-                if (LocalStorageImageMap.containsKey(relativePath)) {
-                    cacheImage = LocalStorageImageMap.remove(relativePath);
+                if (localStorageImageMap.containsKey(relativePath)) {
+                    cacheImage = localStorageImageMap.remove(relativePath);
                 } else {
                     download(url, path);
                     cacheImage = new CacheImage(path.toAbsolutePath().toFile(), relativePath);
@@ -79,7 +79,11 @@ public class ImageManager {
     }
 
     public static void deleteCacheImage() {
-        Iterator<Map.Entry<String, CacheImage>> iterator = cacheImageMap.entrySet().iterator();
+        delete(cacheImageMap.entrySet().iterator());
+        delete(localStorageImageMap.entrySet().iterator());
+    }
+
+    private static void delete(Iterator<Map.Entry<String, CacheImage>> iterator) {
         while (iterator.hasNext()) {
             Map.Entry<String, CacheImage> entry = iterator.next();
             if ((System.currentTimeMillis() - entry.getValue().getLastAccessed()) >= 1000 * 60 * 60 * 24) {
