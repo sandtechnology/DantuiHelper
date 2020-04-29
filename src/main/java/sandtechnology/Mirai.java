@@ -12,6 +12,7 @@ import sandtechnology.common.Listener;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.ReadOnlyMessage;
+import sandtechnology.utils.ThreadHelper;
 
 import java.nio.file.Paths;
 
@@ -23,7 +24,7 @@ public class Mirai {
         return Bot.getInstance(ConfigLoader.getHolder().getQQ());
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
 
         System.out.println("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
         System.out.println("Logging....");
@@ -43,13 +44,13 @@ public class Mirai {
             Events.subscribeAlways(FriendMessage.class, friendMessage -> Listener.onPrivateMsg(friendMessage.getSender().getId(), new ReadOnlyMessage(friendMessage.getMessage())));
             Events.subscribeAlways(TempMessage.class, tempMessage -> Listener.onTempMsg(tempMessage.getSender().getGroup().getId(), tempMessage.getSender().getId(), new ReadOnlyMessage(tempMessage.getMessage())));
             Start.start();
+            System.out.println("Done!");
             bot.join();
         } catch (Throwable e) {
-            ConfigLoader.save();
             bot.close(e);
             Start.exit();
             e.printStackTrace();
-            Thread.sleep(30000);
+            ThreadHelper.sleep(3000);
             main(args);
         }
 

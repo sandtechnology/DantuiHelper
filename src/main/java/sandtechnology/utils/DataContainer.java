@@ -14,7 +14,7 @@ public class DataContainer {
     private static final List<Long> rukiTargetGroup = new ArrayList<>();
     private static final String version = "v2.3";
     private static final long startTime = System.currentTimeMillis();
-    private static final WriteOnlyMessage message = new WriteOnlyMessage("机器人信息：").newLine().add("编写者：sandtechnology").newLine().add("版本号：").add(version).add(isJCQ() ? "（JCQ内核）" : "（Mirai内核）").newLine().add("开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper").newLine().add(isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai");
+    private static final WriteOnlyMessage message = new WriteOnlyMessage("机器人信息：").newLine().add("编写者：sandtechnology").newLine().add("版本号：").add(version).add(isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号0.39.5）").newLine().add("开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper").newLine().add(isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai");
 
     public static boolean isJCQ() {
         return CQ != null;

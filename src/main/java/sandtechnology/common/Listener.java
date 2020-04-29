@@ -7,10 +7,7 @@ import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static sandtechnology.utils.ImageManager.getImageData;
@@ -20,21 +17,37 @@ public class Listener {
     private static final Map<Long, Pair<SeenCounter, ReadOnlyMessage>> repatingMap = new ConcurrentHashMap<>();
 
     private static final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
+    private static final List<Pair<Long, Long>> waitingReplyMessageMap = new ArrayList<>(1);
 
 
     public static void onTempMsg(long fromGroup, long fromQQ, ReadOnlyMessage message) {
         String msg = message.toString();
         if (msg.equalsIgnoreCase("/info")) {
             MessageHelper.sendTempMsg(fromGroup, fromQQ, DataContainer.getVersionMessage());
+        } else if (msg.startsWith("/msg")) {
+            MessageHelper.sendTempMsg(fromGroup, fromQQ, new WriteOnlyMessage("留言已收到！会尽快进行回复"));
+            MessageHelper.sendPrivateMsg(DataContainer.getMaster(), new WriteOnlyMessage("来自群").add(fromGroup + "临时会话的").add(fromQQ + "向你发送了留言："));
+            MessageHelper.sendPrivateMsg(DataContainer.getMaster(), message.toWriteOnlyMessage());
         } else {
-            MessageHelper.sendTempMsg(fromGroup, fromQQ, new WriteOnlyMessage("回复/info查看版本等信息"));
+            MessageHelper.sendTempMsg(fromGroup, fromQQ, new WriteOnlyMessage("回复/info查看版本等信息\n回复/msg [内容] 留言"));
         }
+
     }
 
     public static void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
 
         String msg = message.toString();
         // 这里处理消息
+        if (!waitingReplyMessageMap.isEmpty()) {
+            if (msg.equalsIgnoreCase("cancel")) {
+                waitingReplyMessageMap.clear();
+                MessageHelper.sendPrivateMsg(fromQQ, "已取消");
+            } else {
+                Pair<Long, Long> pair = waitingReplyMessageMap.remove(0);
+                MessageHelper.sendTempMsg(pair.getFirst(), pair.getLast(), message.toWriteOnlyMessage());
+                MessageHelper.sendPrivateMsg(fromQQ, "已发送");
+            }
+        }
         if (waitingMessageMap.containsKey(fromQQ)) {
             if (msg.equalsIgnoreCase("cancel")) {
                 waitingMessageMap.remove(fromQQ);
@@ -46,11 +59,6 @@ public class Listener {
         }
         long owner = DataContainer.getMaster();
 
-        if (msg.equalsIgnoreCase("/info")) {
-            MessageHelper.sendPrivateMsg(fromQQ, DataContainer.getVersionMessage());
-        } else {
-            MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("回复/info查看版本等信息"));
-        }
 
         if (fromQQ == owner) {
             if (msg.startsWith("/")) {
@@ -71,6 +79,12 @@ public class Listener {
                         waitingMessageMap.put(fromQQ, Collections.singletonList(Long.parseLong(command[1])));
                     }
                 }
+                if (command[0].equals("reply")) {
+                    if (command.length == 3) {
+                        MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到临时会话的内容"));
+                        waitingReplyMessageMap.add(new Pair<>(Long.parseLong(command[1]), Long.parseLong(command[2])));
+                    }
+                }
                 if (command[0].equals("fetch")) {
                     if (command.length == 2) {
                         new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> MessageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
@@ -84,6 +98,9 @@ public class Listener {
                     if (command.length == 2) {
                         new HTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Long.parseLong(command[1]), rep -> MessageHelper.sendingInfoMessage(rep.getDynamicData().getMessage())).execute();
                     }
+                }
+                if (command[0].equals("info")) {
+                    MessageHelper.sendPrivateMsg(fromQQ, DataContainer.getVersionMessage());
                 }
             }
         }
@@ -105,6 +122,7 @@ public class Listener {
                         MessageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(getImageData(roomInfo.getCoverURL())));
                     }
                 }).execute();
+                return;
             }
             Pair<SeenCounter, ReadOnlyMessage> pairData;
             if (repatingMap.containsKey(fromGroup)) {
