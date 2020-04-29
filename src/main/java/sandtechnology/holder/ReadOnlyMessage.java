@@ -23,14 +23,22 @@ public class ReadOnlyMessage {
         return obj;
     }
 
-    @Override
-    public String toString() {
+    public String toString(boolean miraiCode) {
+        if (miraiCode) {
             StringBuilder stringBuilder = new StringBuilder();
             obj.forEachContent((x) -> {
                 stringBuilder.append(x.toString());
                 return Unit.INSTANCE;
             });
             return stringBuilder.toString();
+        } else {
+            return obj.contentToString();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return toString(false);
     }
 
     @Override
