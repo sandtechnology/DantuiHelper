@@ -2,37 +2,35 @@ package sandtechnology.holder;
 
 import kotlin.Unit;
 import net.mamoe.mirai.message.data.MessageChain;
-import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.MessageUtils;
 
 public class ReadOnlyMessage {
 
-    private final MessageChain obj;
+    private final MessageChain chain;
 
 
-    public ReadOnlyMessage(MessageChain obj) {
-        this.obj = obj;
+    public ReadOnlyMessage(MessageChain chain) {
+        this.chain = chain;
     }
 
-    public ReadOnlyMessage(String obj) {
-        MessageChainBuilder chainBuilder = new MessageChainBuilder();
-        chainBuilder.add(obj);
-        this.obj = chainBuilder.asMessageChain();
+    public ReadOnlyMessage(String msg) {
+        this.chain = MessageUtils.newChain(msg);
     }
 
     public MessageChain get() {
-        return obj;
+        return chain;
     }
 
     public String toString(boolean miraiCode) {
         if (miraiCode) {
             StringBuilder stringBuilder = new StringBuilder();
-            obj.forEachContent((x) -> {
+            chain.forEachContent((x) -> {
                 stringBuilder.append(x.toString());
                 return Unit.INSTANCE;
             });
             return stringBuilder.toString();
         } else {
-            return obj.contentToString();
+            return chain.contentToString();
         }
     }
 
@@ -46,25 +44,25 @@ public class ReadOnlyMessage {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReadOnlyMessage that = (ReadOnlyMessage) o;
-        return that.obj.contentEquals(obj, false);
+        return that.chain.contentEquals(chain, false);
     }
 
     public WriteOnlyMessage toWriteOnlyMessage() {
         return new WriteOnlyMessage() {
             @Override
             public MessageChain toMessageChain(ExtraData data) {
-                return obj;
+                return chain;
             }
 
             @Override
             public String toCQString() {
-                return toString();
+                return ReadOnlyMessage.this.toString(true);
             }
         };
     }
 
     @Override
     public int hashCode() {
-        return obj.hashCode() * 31;
+        return chain.hashCode() * 31;
     }
 }
