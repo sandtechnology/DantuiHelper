@@ -1,5 +1,6 @@
 package sandtechnology.checker;
 
+import sandtechnology.bilibili.response.live.LiveInfo;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.HTTPHelper;
@@ -24,11 +25,12 @@ public class LiveRoomChecker implements IChecker {
     private LiveRoomChecker(long roomID) {
         this.roomID = roomID;
         httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + roomID, response -> {
-            RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
+            LiveInfo liveInfo = response.getLiveInfo();
+            RoomInfo roomInfo = liveInfo.getRoomInfo();
             if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                 lastLive = roomInfo.getStartTime();
                 ImageManager.CacheImage image = roomInfo.getImage();
-                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage("Ruki开播啦！！！").add("\n").add(roomInfo.getRoomURL()).add("\n" + roomInfo.getTitle()).add("\n").add(image));
+                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage(liveInfo.getAnchorInfo().getBaseInfo().getUsername()).add("开播啦！！！").add("\n").add(roomInfo.getRoomURL()).add("\n" + roomInfo.getTitle()).add("\n").add(image));
             }
         });
     }
