@@ -42,10 +42,10 @@ public class BiliBiliDynamicChecker implements IChecker {
             }).collect(Collectors.toList());
             if (!list.isEmpty()) {
                 lastTimestamp = list.get(0).getDesc().getTimestamp();
-                list.forEach(d -> {
+                for (DynamicData d : list) {
                     MessageHelper.sendingGroupMessage(groups, d.getMessage());
                     ThreadHelper.sleep(1000);
-                });
+                }
             }
         };
         httpHelper = new HTTPHelper(apiUrl, handler);

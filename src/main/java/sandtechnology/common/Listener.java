@@ -93,7 +93,12 @@ public class Listener {
                     if (command.length == 2) {
                         new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> MessageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
                     } else if (command.length == 3) {
-                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> h.getDynamicsDataList().getDynamics().stream().map(DynamicData::getMessage).forEach(MessageHelper::sendingInfoMessage)).setLastTimestamp(Long.parseLong(command[2])).check();
+                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> {
+                            for (DynamicData dynamicData : h.getDynamicsDataList().getDynamics()) {
+                                WriteOnlyMessage dynamicDataMessage = dynamicData.getMessage();
+                                MessageHelper.sendingInfoMessage(dynamicDataMessage);
+                            }
+                        }).setLastTimestamp(Long.parseLong(command[2])).check();
                     } else {
                         MessageHelper.sendingInfoMessage("/fetch [UID] [timestamp]");
                     }

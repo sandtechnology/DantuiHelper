@@ -101,7 +101,9 @@ public class MessageHelper {
 
 
     public static void sendingGroupMessage(Collection<Long> groups, WriteOnlyMessage... msg) {
-        groups.forEach(id -> sendingGroupMessage(id, msg));
+        for (Long id : groups) {
+            sendingGroupMessage(id, msg);
+        }
     }
 
     public static void sendingGroupMessage(long group, WriteOnlyMessage... msg) {

@@ -43,7 +43,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.3.1";
+        return "v2.3.2";
     }
 
     public static WriteOnlyMessage getVersionMessage() {
@@ -52,14 +52,16 @@ public class DataContainer {
 
     public static String getCountingData() {
         StringBuilder stringBuilder = new StringBuilder("统计信息：\n");
-        countingMap.forEach((group, count) -> {
+        for (Map.Entry<Long, AtomicLong> entry : countingMap.entrySet()) {
+            Long group = entry.getKey();
+            AtomicLong count = entry.getValue();
             stringBuilder.append(Mirai.getBot().getGroup(group).getName());
             stringBuilder.append("(");
             stringBuilder.append(group);
             stringBuilder.append("):");
             stringBuilder.append(count);
             stringBuilder.append("\n");
-        });
+        }
         return stringBuilder.toString();
     }
 
