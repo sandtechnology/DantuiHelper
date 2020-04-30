@@ -31,17 +31,16 @@ public class Emoji {
         WriteOnlyMessage result = new WriteOnlyMessage();
         out.getContent().forEach(
                 pair -> {
-                    String str = pair.getFirst();
+                    StringBuilder str = pair.getFirst();
                     //末尾带有表情的识别
                     int addLastCounter = 0;
-                    while (str.endsWith(text)) {
-                        int lastWithTextIndex = str.length() - text.length();
-                        str = str.substring(0, lastWithTextIndex);
+                    int lastWithTextIndex;
+                    while (str.lastIndexOf(text) == (lastWithTextIndex = str.length() - text.length())) {
+                        str.delete(lastWithTextIndex, str.length());
                         addLastCounter++;
-
                     }
 
-                    String[] strings = str.split
+                    String[] strings = str.toString().split
                             (
                                     //"[表情]"->"表情"->"\[表情\]"（语法糖的原因后面的]不需要再次加入转义符号）
                                     "\\[" + text.substring(1, text.length() - 1) + "]?"
@@ -58,7 +57,7 @@ public class Emoji {
                             }
                         }
                     } else {
-                        result.add(str);
+                        result.add(str.toString());
                     }
                     result.add(pair.getLast());
 
