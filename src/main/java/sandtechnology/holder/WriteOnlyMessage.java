@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 public class WriteOnlyMessage {
 
-    private final List<Pair<String, List<ImageManager.CacheImage>>> list = new LinkedList<>();
+    private final List<Pair<StringBuilder, List<ImageManager.CacheImage>>> list = Collections.synchronizedList(new LinkedList<>());
 
     public WriteOnlyMessage() {
     }
@@ -28,13 +28,13 @@ public class WriteOnlyMessage {
         add(s);
     }
 
-    public WriteOnlyMessage(List<Pair<String, List<ImageManager.CacheImage>>> list) {
+    public WriteOnlyMessage(List<Pair<StringBuilder, List<ImageManager.CacheImage>>> list) {
         this.list.addAll(list);
     }
 
     public WriteOnlyMessage add(ImageManager.CacheImage image) {
         if (list.isEmpty()) {
-            list.add(new Pair<>("", new ArrayList<>(Collections.singleton(image))));
+            list.add(new Pair<>(new StringBuilder(), new ArrayList<>(Collections.singleton(image))));
         } else {
             list.get(list.size() - 1).getLast().add(image);
         }
@@ -43,14 +43,14 @@ public class WriteOnlyMessage {
 
     public WriteOnlyMessage add(List<ImageManager.CacheImage> image) {
         if (list.isEmpty()) {
-            list.add(new Pair<>("", new ArrayList<>(image)));
+            list.add(new Pair<>(new StringBuilder(), new ArrayList<>(image)));
         } else {
             list.get(list.size() - 1).getLast().addAll(image);
         }
         return this;
     }
 
-    public List<Pair<String, List<ImageManager.CacheImage>>> getContent() {
+    public List<Pair<StringBuilder, List<ImageManager.CacheImage>>> getContent() {
         return list;
     }
 
@@ -59,7 +59,7 @@ public class WriteOnlyMessage {
     }
 
     public WriteOnlyMessage addFirst(String str) {
-        list.add(0, new Pair<>(str, new ArrayList<>()));
+        list.get(0).getFirst().insert(0, str);
         return this;
     }
 
@@ -75,10 +75,9 @@ public class WriteOnlyMessage {
         //移除识别的特殊字符
         str = str.replace("\u200B", "").replace("\u200D", "");
         if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
-            Pair<String, List<ImageManager.CacheImage>> old = list.remove(list.size() - 1);
-            list.add(old.setFirst(old.getFirst() + str));
+            list.get(list.size() - 1).getFirst().append(str);
         } else {
-            list.add(new Pair<>(str, new ArrayList<>()));
+            list.add(new Pair<>(new StringBuilder(str), new ArrayList<>()));
         }
         return this;
     }
@@ -97,9 +96,9 @@ public class WriteOnlyMessage {
      */
     public void trimImage() {
         String nextAdd = null;
-        for (Pair<String, List<ImageManager.CacheImage>> entry : list) {
+        for (Pair<StringBuilder, List<ImageManager.CacheImage>> entry : list) {
             if (nextAdd != null) {
-                entry.setFirst(nextAdd + entry.getFirst());
+                entry.getFirst().insert(0, nextAdd);
                 nextAdd = null;
             }
             ImageManager.CacheImage lastImage = null;
@@ -137,8 +136,8 @@ public class WriteOnlyMessage {
     public MessageChain toMessageChain(ExtraData data) {
         trimImage();
         MessageChainBuilder builder = new MessageChainBuilder();
-        for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
-            builder.add(pair.getFirst());
+        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+            builder.add(pair.getFirst().toString());
 
             builder.addAll(pair.getLast().stream().map(
                     img -> {
@@ -174,8 +173,8 @@ public class WriteOnlyMessage {
     public String toCQString() {
         trimImage();
         StringBuilder builder = new StringBuilder();
-        for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
-            builder.append(toCQEmoji(pair.getFirst()));
+        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+            builder.append(toCQEmoji(pair.getFirst().toString()));
             builder.append(pair.getLast().stream().map(ImageManager.CacheImage::toCQCode).collect(Collectors.joining()));
         }
         return builder.toString();
@@ -199,9 +198,9 @@ public class WriteOnlyMessage {
 
     @Override
     public WriteOnlyMessage clone() {
-        List<Pair<String, List<ImageManager.CacheImage>>> tempList = new ArrayList<>(list.size());
-        for (Pair<String, List<ImageManager.CacheImage>> pair : list) {
-            tempList.add(new Pair<>(pair.getFirst(), new ArrayList<>(pair.getLast())));
+        List<Pair<StringBuilder, List<ImageManager.CacheImage>>> tempList = new ArrayList<>(list.size());
+        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+            tempList.add(new Pair<>(new StringBuilder(pair.getFirst()), new ArrayList<>(pair.getLast())));
         }
         return new WriteOnlyMessage(tempList);
     }
