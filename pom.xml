@@ -34,11 +34,6 @@
             <version>0.40.0</version> <!-- 替换版本为最新版本 -->
         </dependency>
         <dependency>
-            <groupId>net.mamoe</groupId>
-            <artifactId>mirai-japt</artifactId>
-            <version>1.1.1</version> <!-- 替换版本为最新版本 -->
-        </dependency>
-        <dependency>
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>

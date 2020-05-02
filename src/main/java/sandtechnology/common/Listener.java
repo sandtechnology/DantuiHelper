@@ -1,5 +1,6 @@
 package sandtechnology.common;
 
+import sandtechnology.Mirai;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.BiliBiliDynamicChecker;
@@ -11,6 +12,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
+import static com.sobte.cqp.jcq.event.JcqApp.CQ;
 import static sandtechnology.utils.ImageManager.getImageData;
 
 public class Listener {
@@ -87,6 +89,16 @@ public class Listener {
                     if (command.length == 3) {
                         MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("请发送需要发送到临时会话的内容"));
                         waitingReplyMessageMap.add(new Pair<>(Long.parseLong(command[1]), Long.parseLong(command[2])));
+                    }
+                }
+                if (command[0].equals("restart")) {
+                    MessageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("正在重启...."));
+                    Start.exit();
+                    if (CQ == null) {
+                        Mirai.getBot().close(null);
+                        System.exit(0);
+                    } else {
+                        Start.start();
                     }
                 }
                 if (command[0].equals("fetch")) {
