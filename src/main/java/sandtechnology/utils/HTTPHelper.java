@@ -44,7 +44,7 @@ public class HTTPHelper{
         this.handler = handler;
     }
 
-    public void execute() {
+    public void execute(int retry) {
         String result = "";
         try {
             URLConnection urlConnection = new URL(url).openConnection();
@@ -69,12 +69,10 @@ public class HTTPHelper{
             e.printStackTrace();
             MessageHelper.sendingErrorMessage(e, "Network Error:\n");
         } catch (Exception e) {
-            if (retry.get() < 3) {
-                ThreadHelper.sleep(2000);
-                execute();
-                retry.getAndIncrement();
+            if (retry < 3) {
+                ThreadHelper.sleep(random.nextInt(5000) + 5000);
+                execute(++retry);
             } else {
-                retry.set(0);
                 state = State.Error;
                 e.printStackTrace();
                 if (result.length() <= 500) {
@@ -84,7 +82,11 @@ public class HTTPHelper{
                 }
             }
         }
-      }
-
-
     }
+
+    public void execute() {
+        execute(0);
+    }
+
+
+}

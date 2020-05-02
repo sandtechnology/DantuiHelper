@@ -2,16 +2,11 @@ package sandtechnology;
 
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
-import net.mamoe.mirai.japt.Events;
-import net.mamoe.mirai.message.FriendMessage;
-import net.mamoe.mirai.message.GroupMessage;
-import net.mamoe.mirai.message.TempMessage;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.SystemDeviceInfoKt;
-import sandtechnology.common.Listener;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
-import sandtechnology.holder.ReadOnlyMessage;
+import sandtechnology.utils.AsyncEvents;
 import sandtechnology.utils.ThreadHelper;
 
 import java.nio.file.Paths;
@@ -40,9 +35,7 @@ public class Mirai {
             //bot.getCoroutineContext().plus(new ErrorHandler());
             bot.login();
             System.out.println("Registering Event....");
-            Events.subscribeAlways(GroupMessage.class, groupMessage -> Listener.onGroupMsg(groupMessage.getSender().getId(), groupMessage.getGroup().getId(), new ReadOnlyMessage(groupMessage.getMessage())));
-            Events.subscribeAlways(FriendMessage.class, friendMessage -> Listener.onPrivateMsg(friendMessage.getSender().getId(), new ReadOnlyMessage(friendMessage.getMessage())));
-            Events.subscribeAlways(TempMessage.class, tempMessage -> Listener.onTempMsg(tempMessage.getSender().getGroup().getId(), tempMessage.getSender().getId(), new ReadOnlyMessage(tempMessage.getMessage())));
+            AsyncEvents.Companion.registerEventsAsync(bot);
             Start.start();
             System.out.println("Done!");
             bot.join();
