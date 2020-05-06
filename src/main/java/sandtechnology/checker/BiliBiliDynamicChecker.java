@@ -16,11 +16,14 @@ import java.util.stream.Collectors;
 public class BiliBiliDynamicChecker implements IChecker {
 
     private long lastTimestamp;
-    private final Set<Long> groups=new LinkedHashSet<>();
+    private final Set<Long> groups = new LinkedHashSet<>();
     private final HTTPHelper httpHelper;
+    private final long uid;
+    private long nextPageOffsetById = 0;
 
     public BiliBiliDynamicChecker(long uid) {
-        String apiUrl = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=0&need_top=0";
+        this.uid = uid;
+        String apiUrl = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0";
         Consumer<NormalResponse> handler = response -> {
             List<DynamicData> dynamicData = response.getDynamicsDataList().getDynamics();
             if (dynamicData == null || dynamicData.isEmpty()) {
@@ -49,6 +52,12 @@ public class BiliBiliDynamicChecker implements IChecker {
             }
         };
         httpHelper = new HTTPHelper(apiUrl, handler);
+    }
+
+    public BiliBiliDynamicChecker setNextPageOffsetById(long nextPageOffsetById) {
+        this.nextPageOffsetById = nextPageOffsetById;
+        httpHelper.setUrl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0");
+        return this;
     }
 
     public BiliBiliDynamicChecker addGroups(Long... groups) {

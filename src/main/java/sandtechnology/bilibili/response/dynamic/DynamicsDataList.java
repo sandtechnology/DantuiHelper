@@ -21,4 +21,8 @@ public class DynamicsDataList {
     public List<DynamicData> getDynamics() {
         return dynamics;
     }
+
+    public long getNextPageOffsetById() {
+        return nextPageOffsetById;
+    }
 }

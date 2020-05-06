@@ -20,7 +20,7 @@ public class HTTPHelper{
         Init,Success,BiliBiliError,NetworkError,Error
     }
 
-    private final String url;
+    private String url;
     private Consumer<NormalResponse> handler;
     private State state;
     private AtomicInteger retry = new AtomicInteger();
@@ -38,6 +38,10 @@ public class HTTPHelper{
 
     public State getState() {
         return state;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public void setHandler(Consumer<NormalResponse> handler) {
