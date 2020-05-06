@@ -38,6 +38,7 @@ public class ImageManager {
         URLConnection connection = url.openConnection();
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
         Files.createDirectories(absolutePath.getParent());
+        DataContainer.getProcessDataCount().addAndGet(1);
         try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false); BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
             int code;
             byte[] buff = new byte[1024];
@@ -83,9 +84,7 @@ public class ImageManager {
                 return emptyImage;
             }
             ThreadHelper.sleep(1000);
-            return getImageData(imgURL, 1);
-        } finally {
-            DataContainer.getProcessDataCount().addAndGet(1);
+            return getImageData(imgURL, ++retryCount);
         }
     }
 
