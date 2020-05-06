@@ -35,6 +35,7 @@ public class BiliBiliDynamicChecker implements IChecker {
                 MessageHelper.sendingInfoMessage(firstCard.getMessage());
                 return;
             }
+
             List<DynamicData> list = response.getDynamicsDataList().getDynamics().stream().filter(d -> d.getDesc().getTimestamp() > lastTimestamp).filter(d -> {
                 if (d.getDesc().getUserProfile().getInfo().getUid() == uid) {
                     return true;

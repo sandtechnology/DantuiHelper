@@ -10,7 +10,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -23,7 +22,6 @@ public class HTTPHelper{
     private String url;
     private Consumer<NormalResponse> handler;
     private State state;
-    private AtomicInteger retry = new AtomicInteger();
     private final Random random = new Random();
 
     public HTTPHelper(String url, Consumer<NormalResponse> handler) {
@@ -84,6 +82,13 @@ public class HTTPHelper{
                 } else {
                     MessageHelper.sendingErrorMessage(e, "Unknown Error:\n");
                 }
+            }
+        } finally {
+            DataContainer.getProcessDataCount().addAndGet(1);
+            if (state != State.Success) {
+                DataContainer.getProcessDataFailedCount().addAndGet(1);
+            } else {
+                DataContainer.getProcessDataSuccessCount().addAndGet(1);
             }
         }
     }

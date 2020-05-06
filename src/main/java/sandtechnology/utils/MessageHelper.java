@@ -32,6 +32,7 @@ public class MessageHelper {
     }
 
     public static void sendPrivateMsg(long qq, WriteOnlyMessage message) {
+        DataContainer.getSendMessageCount().addAndGet(1);
         if (CQ != null) {
             CQ.sendPrivateMsg(qq, message.toCQString());
         } else {
@@ -40,6 +41,7 @@ public class MessageHelper {
     }
 
     public static void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
+        DataContainer.getSendMessageCount().addAndGet(1);
         Mirai.getBot().getGroup(fromGroup).get(fromQQ).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(fromQQ).fromGroup(fromGroup).type(WriteOnlyMessage.Type.Temp).build()));
     }
 
@@ -49,6 +51,7 @@ public class MessageHelper {
     }
 
     public static void sendGroupMsg(long group, WriteOnlyMessage message) {
+        DataContainer.getSendMessageCount().addAndGet(1);
         if (CQ != null) {
             CQ.sendGroupMsg(group, message.toCQString());
         } else {

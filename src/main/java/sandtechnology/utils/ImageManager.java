@@ -45,9 +45,14 @@ public class ImageManager {
                 writer.write(buff, 0, code);
             }
         }
+        DataContainer.getProcessDataSuccessCount().addAndGet(1);
     }
 
     public static CacheImage getImageData(String imgURL) {
+        return getImageData(imgURL, 0);
+    }
+
+    public static CacheImage getImageData(String imgURL, int retryCount) {
         try {
             URL url = new URL(imgURL);
             Path path = Paths.get("data", "image", url.getHost(), url.getFile()).toAbsolutePath();
@@ -72,9 +77,15 @@ public class ImageManager {
             MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
             return emptyImage;
         } catch (Exception e) {
-            MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
+            DataContainer.getProcessDataFailedCount().addAndGet(1);
+            if (retryCount > 3) {
+                MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
+                return emptyImage;
+            }
             ThreadHelper.sleep(1000);
-            return getImageData(imgURL);
+            return getImageData(imgURL, 1);
+        } finally {
+            DataContainer.getProcessDataCount().addAndGet(1);
         }
     }
 

@@ -21,10 +21,31 @@ public class DataContainer {
             "\n开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper" +
             "\n%s" +
             "\n%s" +
+            "\n%s" +
             "\n运行时间：%s";
     private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC）");
     private static final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
     private static final Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
+    private static final AtomicLong processDataCount = new AtomicLong();
+    private static final AtomicLong processDataSuccessCount = new AtomicLong();
+    private static final AtomicLong processDataFailedCount = new AtomicLong();
+    private static final AtomicLong sendMessageCount = new AtomicLong();
+
+    public static AtomicLong getProcessDataCount() {
+        return processDataCount;
+    }
+
+    public static AtomicLong getProcessDataFailedCount() {
+        return processDataFailedCount;
+    }
+
+    public static AtomicLong getProcessDataSuccessCount() {
+        return processDataSuccessCount;
+    }
+
+    public static AtomicLong getSendMessageCount() {
+        return sendMessageCount;
+    }
 
     public static Map<Long, AtomicLong> getCountingMap() {
         return countingMap;
@@ -44,7 +65,12 @@ public class DataContainer {
     }
 
     public static WriteOnlyMessage getVersionMessage() {
-        return new WriteOnlyMessage(String.format(versionMessage, coreVersion, coreOpenSourceLink, getMemoryUsage(), getRunningTime()));
+        return new WriteOnlyMessage(String.format(versionMessage, coreVersion, coreOpenSourceLink, getHandlerInfo(), getMemoryUsage(), getRunningTime()));
+    }
+
+    public static String getHandlerInfo() {
+        return String.format("处理数据条数：%d\n成功条数：%d\n失败条数：%d\n成功率：%.2f %%", processDataCount.get(), processDataSuccessCount.get(), processDataFailedCount.get(), (double) processDataSuccessCount.get() * 100 / (double) processDataCount.get());
+
     }
 
     public static String getCountingData() {
