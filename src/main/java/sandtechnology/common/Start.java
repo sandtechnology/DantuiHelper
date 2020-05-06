@@ -5,7 +5,10 @@ import sandtechnology.checker.BiliBiliDynamicChecker;
 import sandtechnology.checker.IChecker;
 import sandtechnology.checker.LiveRoomChecker;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.*;
+import sandtechnology.utils.DataContainer;
+import sandtechnology.utils.HTTPHelper;
+import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +23,6 @@ public class Start {
         timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             private long time;
-            private IndexIterator index;
             private final List<IChecker> runnables = new ArrayList<>();
 
             {
@@ -45,12 +47,6 @@ public class Start {
                 });
             }
 
-            private IChecker next() {
-                if (index == null) {
-                    index = new IndexIterator.IndexIteratorBuilder(runnables.size()).excludeMax().build();
-                }
-                return runnables.get(index.next());
-            }
 
             @Override
             public void run() {
@@ -61,7 +57,9 @@ public class Start {
                     } else {
                         time++;
                     }
-                    next().check();
+                    for (IChecker runnable : runnables) {
+                        runnable.check();
+                    }
                 } catch (Throwable e) {
                     MessageHelper.sendingErrorMessage(e, "");
                 }
