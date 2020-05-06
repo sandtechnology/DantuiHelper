@@ -5,10 +5,7 @@ import sandtechnology.holder.WriteOnlyMessage;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -52,7 +49,10 @@ public class DataContainer {
 
     public static String getCountingData() {
         StringBuilder stringBuilder = new StringBuilder("统计信息：\n");
-        for (Map.Entry<Long, AtomicLong> entry : countingMap.entrySet()) {
+        List<Map.Entry<Long, AtomicLong>> list = new ArrayList<>(countingMap.entrySet());
+        list.sort(Comparator.comparingLong(e -> e.getValue().get()));
+        Collections.reverse(list);
+        for (Map.Entry<Long, AtomicLong> entry : list) {
             Long group = entry.getKey();
             AtomicLong count = entry.getValue();
             stringBuilder.append(Mirai.getBot().getGroup(group).getName());

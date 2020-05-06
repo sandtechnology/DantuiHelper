@@ -7,6 +7,7 @@ import net.mamoe.mirai.utils.SystemDeviceInfoKt;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.utils.AsyncEvents;
+import sandtechnology.utils.MessageHelper;
 import sandtechnology.utils.ThreadHelper;
 
 import java.nio.file.Paths;
@@ -37,6 +38,7 @@ public class Mirai {
             AsyncEvents.Companion.registerEventsAsync(bot);
             Start.start();
             System.out.println("Done!");
+            Thread.setDefaultUncaughtExceptionHandler((t, e) -> MessageHelper.sendingErrorMessage(e, t.getName() + "线程发生了异常："));
             bot.join();
         } catch (Throwable e) {
             bot.close(e);
