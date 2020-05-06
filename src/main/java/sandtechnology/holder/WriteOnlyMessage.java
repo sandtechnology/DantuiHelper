@@ -9,11 +9,11 @@ import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
 import sandtechnology.Mirai;
 import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.MessageHelper;
 import sandtechnology.utils.Pair;
 import sandtechnology.utils.SeenCounter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -160,12 +160,14 @@ public class WriteOnlyMessage {
 
     private ExternalImage getExternalImage(File file) {
         ExternalImage externalImage;
-        try {
-            externalImage = ExternalImageJvmKt.toExternalImage(file);
-        } catch (FileNotFoundException e) {
+        if (!file.exists()) {
             return getExternalImage(ImageManager.emptyImage.getFile());
+        }
+        try {
+            externalImage = ExternalImageJvmKt.toExternalImage(file, false);
         } catch (Exception e) {
-            return getExternalImage(file);
+            MessageHelper.sendingErrorMessage(e, "在转换图片为ExternalImage时出错");
+            return getExternalImage(ImageManager.emptyImage.getFile());
         }
         return externalImage;
     }

@@ -25,7 +25,7 @@ public class DataContainer {
             "\n%s" +
             "\n%s" +
             "\n运行时间：%s";
-    private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号0.40.0）");
+    private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC）");
     private static final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
     private static final Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
 
@@ -43,7 +43,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.3.3";
+        return "v2.3.4";
     }
 
     public static WriteOnlyMessage getVersionMessage() {
