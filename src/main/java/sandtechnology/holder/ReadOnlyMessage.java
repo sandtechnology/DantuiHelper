@@ -4,6 +4,9 @@ import kotlin.Unit;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageUtils;
 
+/**
+ * 接收消息的包装类
+ */
 public class ReadOnlyMessage {
 
     private final MessageChain chain;

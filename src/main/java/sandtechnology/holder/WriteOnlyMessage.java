@@ -8,15 +8,15 @@ import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
 import sandtechnology.Mirai;
-import sandtechnology.utils.ImageManager;
-import sandtechnology.utils.MessageHelper;
-import sandtechnology.utils.Pair;
-import sandtechnology.utils.SeenCounter;
+import sandtechnology.utils.*;
 
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * 发送消息的包装类
+ */
 public class WriteOnlyMessage {
 
     private final List<Pair<StringBuilder, List<ImageManager.CacheImage>>> list = Collections.synchronizedList(new LinkedList<>());
@@ -73,7 +73,7 @@ public class WriteOnlyMessage {
             return this;
         }
         //移除识别的特殊字符
-        str = str.replace("\u200B", "").replace("\u200D", "");
+        str = StringUtil.delete(str, '\u200B', '\u200D');
         if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
             list.get(list.size() - 1).getFirst().append(str);
         } else {
