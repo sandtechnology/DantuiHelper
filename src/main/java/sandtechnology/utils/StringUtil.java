@@ -16,6 +16,6 @@ public class StringUtil {
                 stringBuilder.append(c);
             }
         }
-        return stringBuilder.toString();
+        return stringBuilder.length() == s.length() ? s : stringBuilder.toString();
     }
 }
