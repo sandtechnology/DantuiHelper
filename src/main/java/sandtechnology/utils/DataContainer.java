@@ -23,7 +23,7 @@ public class DataContainer {
             "\n%s" +
             "\n%s" +
             "\n运行时间：%s";
-    private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC）");
+    private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC2）");
     private static final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
     private static final Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
     private static final AtomicLong processDataCount = new AtomicLong();
@@ -61,7 +61,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.3.4";
+        return "v2.3.5";
     }
 
     public static WriteOnlyMessage getVersionMessage() {
@@ -122,7 +122,7 @@ public class DataContainer {
     private static String getMemoryUsage() {
         MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
         MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
-        return String.format("堆内存：%.2f/%.2fMB\n堆外内存：%.2f/%dMB", heapMemoryUsage.getUsed() / 1E6, heapMemoryUsage.getMax() / 1E6, nonHeapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getMax());
+        return String.format("堆内存：%.2f/%.2fMB\n堆外内存：%.2f/%dMB", heapMemoryUsage.getCommitted() / 1E6, heapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getMax());
     }
 
     public static List<Long> getRukiTargetGroup() {
