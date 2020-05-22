@@ -3,9 +3,9 @@ package sandtechnology.checker;
 import sandtechnology.bilibili.response.live.LiveInfo;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
-import sandtechnology.utils.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class LiveRoomChecker implements IChecker {
             if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                 lastLive = roomInfo.getStartTime();
                 ImageManager.CacheImage image = roomInfo.getImage();
-                MessageHelper.sendingGroupMessage(groups, new WriteOnlyMessage(liveInfo.getAnchorInfo().getBaseInfo().getUsername()).add("开播啦！！！\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).newLine().add(image));
+                DataContainer.getMessageHelper().sendingGroupMessage(groups, new WriteOnlyMessage(liveInfo.getAnchorInfo().getBaseInfo().getUsername()).add("开播啦！！！\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).newLine().add(image));
             }
         });
     }

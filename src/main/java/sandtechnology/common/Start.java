@@ -8,7 +8,6 @@ import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
-import sandtechnology.utils.MessageHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,8 +26,8 @@ public class Start {
 
             {
                 runnables.add(new BiliBiliDynamicChecker(452785178).addGroups(532589427L));
-                runnables.add(new BiliBiliDynamicChecker(420249427).addGroups(DataContainer.getRukiTargetGroup()));
-                runnables.add(new LiveRoomChecker(21403609L, DataContainer.getRukiTargetGroup()));
+                runnables.add(new BiliBiliDynamicChecker(420249427).addGroups(DataContainer.getDataContainer().getRukiTargetGroup()));
+                runnables.add(new LiveRoomChecker(21403609L, DataContainer.getDataContainer().getRukiTargetGroup()));
                 runnables.add(new IChecker() {
                     private long lastLive;
                     final HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
@@ -36,7 +35,7 @@ public class Start {
                         if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
                             lastLive = roomInfo.getStartTime();
                             ImageManager.CacheImage image = roomInfo.getImage();
-                            MessageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
+                            DataContainer.getMessageHelper().sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
                         }
                     });
 
@@ -61,7 +60,7 @@ public class Start {
                         runnable.check();
                     }
                 } catch (Throwable e) {
-                    MessageHelper.sendingErrorMessage(e, "");
+                    DataContainer.getMessageHelper().sendingErrorMessage(e, "");
                 }
             }
         }, 0, 20000);

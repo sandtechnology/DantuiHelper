@@ -33,12 +33,13 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-qqandroid</artifactId>
-            <version>1.0-RC2</version> <!-- 替换版本为最新版本 -->
+            <version>1.0.0</version> <!-- 替换版本为最新版本 -->
         </dependency>
         <dependency>
             <groupId>com.vdurmont</groupId>
             <artifactId>emoji-java</artifactId>
             <version>5.1.1</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
@@ -49,6 +50,7 @@
             <groupId>com.sobte.cqp</groupId>
             <artifactId>jcq-coolq</artifactId>
             <version>1.2.7</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

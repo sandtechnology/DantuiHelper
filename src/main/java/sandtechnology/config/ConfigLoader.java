@@ -45,12 +45,9 @@ public class ConfigLoader {
             }
             for (Field field : holder.getClass().getDeclaredFields()) {
                 field.setAccessible(true);
-                if (field.isAnnotationPresent(DefaultValue.class) && field.get(holder) == null) {
-                    field.set(holder, field.getAnnotation(DefaultValue.class).value().newInstance());
-                }
                 if (field.isAnnotationPresent(Ask.class) && !field.isSynthetic()) {
                     {
-                        if (field.get(holder) == null || (field.getType().isPrimitive() && (field.getType().getTypeName().equals("byte") ? field.getByte(holder) == 0x0 : field.getDouble(holder) == 0D))) {
+                        if (field.get(holder).toString().equals(field.getAnnotation(Ask.class).defaultValue())) {
                             System.out.print(String.format(field.getAnnotation(Ask.class).text(), field.getName()));
                             Class<?> type = field.getType();
 
@@ -103,18 +100,16 @@ public class ConfigLoader {
     public static class ConfigHolder {
 
         @SerializedName("QQ")
-        @Ask(text = "请输入QQ：")
-        long qq;
+        @Ask(defaultValue = "-1", text = "请输入QQ：")
+        long qq = -1;
         @SerializedName("Password")
         @Ask(text = "请输入密码：")
-        String password;
+        String password = "";
         @SerializedName("PasswordMD5")
         byte[] passwordMD5;
 
-        @DefaultValue(ArrayList.class)
-        List<Long> targetLiveRooms;
-        @DefaultValue(ArrayList.class)
-        List<Long> targetUsers;
+        List<Long> targetLiveRooms = new ArrayList<>();
+        List<Long> targetUsers = new ArrayList<>();
 
         public long getQQ() {
             return qq;

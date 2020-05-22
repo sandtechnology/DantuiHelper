@@ -58,7 +58,7 @@ public class HTTPHelper{
             long code = safeResponse.getCode();
             if (code != 0) {
                 if (code != 600005 && code != -22 && code != 19002003) {
-                    MessageHelper.sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error " + code), "content" + result);
+                    DataContainer.getMessageHelper().sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error " + code), "content" + result);
                 }
                 state = State.BiliBiliError;
                 ThreadHelper.sleep(random.nextInt(10000) + 5000);
@@ -69,7 +69,7 @@ public class HTTPHelper{
         } catch (IOException e) {
             state = State.NetworkError;
             e.printStackTrace();
-            MessageHelper.sendingErrorMessage(e, "Network Error:\n");
+            DataContainer.getMessageHelper().sendingErrorMessage(e, "Network Error:\n");
         } catch (Exception e) {
             if (retry < 3) {
                 ThreadHelper.sleep(random.nextInt(5000) + 5000);
@@ -78,9 +78,9 @@ public class HTTPHelper{
                 state = State.Error;
                 e.printStackTrace();
                 if (result.length() <= 500) {
-                    MessageHelper.sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
+                    DataContainer.getMessageHelper().sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
                 } else {
-                    MessageHelper.sendingErrorMessage(e, "Unknown Error:\n");
+                    DataContainer.getMessageHelper().sendingErrorMessage(e, "Unknown Error:\n");
                 }
             }
         } finally {

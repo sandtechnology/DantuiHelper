@@ -2,8 +2,8 @@ package sandtechnology.checker;
 
 import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
+import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
-import sandtechnology.utils.MessageHelper;
 import sandtechnology.utils.ThreadHelper;
 
 import java.util.Arrays;
@@ -32,7 +32,7 @@ public class BiliBiliDynamicChecker implements IChecker {
             DynamicData firstCard = dynamicData.get(0);
             if (lastTimestamp == 0) {
                 lastTimestamp = firstCard.getDesc().getTimestamp();
-                MessageHelper.sendingInfoMessage(firstCard.getMessage());
+                DataContainer.getMessageHelper().sendingInfoMessage(firstCard.getMessage());
                 return;
             }
 
@@ -40,14 +40,14 @@ public class BiliBiliDynamicChecker implements IChecker {
                 if (d.getDesc().getUserProfile().getInfo().getUid() == uid) {
                     return true;
                 } else {
-                    MessageHelper.sendingDebugMessage(d.getMessage().addFirst("blocked:"));
+                    DataContainer.getMessageHelper().sendingDebugMessage(d.getMessage().addFirst("blocked:"));
                     return false;
                 }
             }).collect(Collectors.toList());
             if (!list.isEmpty()) {
                 lastTimestamp = list.get(0).getDesc().getTimestamp();
                 for (DynamicData d : list) {
-                    MessageHelper.sendingGroupMessage(groups, d.getMessage());
+                    DataContainer.getMessageHelper().sendingGroupMessage(groups, d.getMessage());
                     ThreadHelper.sleep(1000);
                 }
             }

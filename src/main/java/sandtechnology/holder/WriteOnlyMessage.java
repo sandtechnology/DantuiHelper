@@ -166,7 +166,7 @@ public class WriteOnlyMessage {
         try {
             externalImage = ExternalImageJvmKt.toExternalImage(file, false);
         } catch (Exception e) {
-            MessageHelper.sendingErrorMessage(e, "在转换图片为ExternalImage时出错");
+            DataContainer.getMessageHelper().sendingErrorMessage(e, "在转换图片为ExternalImage时出错");
             return getExternalImage(ImageManager.emptyImage.getFile());
         }
         return externalImage;

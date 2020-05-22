@@ -75,12 +75,12 @@ public class ImageManager {
                 return cacheImage.markAccessed();
             }
         } catch (FileNotFoundException e) {
-            MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
+            DataContainer.getMessageHelper().sendingErrorMessage(e, "Getting Image Data,retrying...");
             return emptyImage;
         } catch (Exception e) {
             DataContainer.getProcessDataFailedCount().addAndGet(1);
             if (retryCount > 3) {
-                MessageHelper.sendingErrorMessage(e, "Getting Image Data,retrying...");
+                DataContainer.getMessageHelper().sendingErrorMessage(e, "Getting Image Data,retrying...");
                 return emptyImage;
             }
             ThreadHelper.sleep(1000);

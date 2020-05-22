@@ -2,12 +2,13 @@ package sandtechnology;
 
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
+import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.SystemDeviceInfoKt;
+import sandtechnology.common.MessageListener;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
-import sandtechnology.utils.AsyncEvents;
-import sandtechnology.utils.MessageHelper;
+import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ThreadHelper;
 
 import java.nio.file.Paths;
@@ -35,10 +36,11 @@ public class Mirai {
             //bot.getCoroutineContext().plus(new ErrorHandler());
             bot.login();
             System.out.println("Registering Event....");
-            AsyncEvents.Companion.registerEventsAsync(bot);
+            Events.registerEvents(bot, MessageListener.getMessageListener());
             Start.start();
             System.out.println("Done!");
-            Thread.setDefaultUncaughtExceptionHandler((t, e) -> MessageHelper.sendingErrorMessage(e, t.getName() + "线程发生了异常："));
+            DataContainer.initialize(DataContainer.BotType.Mirai);
+            Thread.setDefaultUncaughtExceptionHandler((t, e) -> DataContainer.getMessageHelper().sendingErrorMessage(e, t.getName() + "线程发生了异常："));
             bot.join();
         } catch (Throwable e) {
             bot.close(e);

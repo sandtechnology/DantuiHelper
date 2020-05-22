@@ -2,6 +2,9 @@ package sandtechnology.utils;
 
 import sandtechnology.Mirai;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.message.AbstractMessageHelper;
+import sandtechnology.utils.message.CQMessageHelper;
+import sandtechnology.utils.message.MiraiMessageHelper;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.MemoryUsage;
@@ -9,12 +12,10 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.sobte.cqp.jcq.event.JcqApp.CQ;
-
 public class DataContainer {
     private static final long master = 1294790523;
-    private static final List<Long> targetGroup = new ArrayList<>();
-    private static final List<Long> rukiTargetGroup = new ArrayList<>();
+    private final static List<Long> targetGroup = Collections.singletonList(532589427L);
+    private final static List<Long> rukiTargetGroup = Arrays.asList(857529607L, 1005397354L, 1035554886L, 739568838L, 752224664L, 1027385586L);
     private static final String versionMessage = "机器人信息：" +
             "\n编写者：sandtechnology" +
             "\n版本号：%s" +
@@ -23,13 +24,13 @@ public class DataContainer {
             "\n%s" +
             "\n%s" +
             "\n运行时间：%s";
-    private static final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC2）");
-    private static final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
-    private static final Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
-    private static final AtomicLong processDataCount = new AtomicLong();
-    private static final AtomicLong processDataSuccessCount = new AtomicLong();
-    private static final AtomicLong processDataFailedCount = new AtomicLong();
-    private static final AtomicLong sendMessageCount = new AtomicLong();
+    private final static Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
+    private final static AtomicLong processDataCount = new AtomicLong();
+    private final static AtomicLong processDataSuccessCount = new AtomicLong();
+    private final static AtomicLong processDataFailedCount = new AtomicLong();
+    private final static AtomicLong sendMessageCount = new AtomicLong();
+    private static DataContainer dataContainer;
+    private final BotType botType;
 
     public static AtomicLong getProcessDataCount() {
         return processDataCount;
@@ -51,29 +52,47 @@ public class DataContainer {
         return countingMap;
     }
 
-    static {
-        rukiTargetGroup.addAll(Arrays.asList(857529607L, 1005397354L, 1035554886L, 739568838L, 752224664L, 1027385586L));
-        targetGroup.add(532589427L);
+    private final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC2-1）");
+    private final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
+    private final AbstractMessageHelper messageHelper;
+
+    private DataContainer(BotType botType) {
+        this.botType = botType;
+        messageHelper = botType == BotType.CoolQ ? new CQMessageHelper() : new MiraiMessageHelper();
     }
 
-    public static boolean isJCQ() {
-        return CQ != null;
+    public static DataContainer getDataContainer() {
+        return dataContainer;
+    }
+
+    public static void initialize(BotType botType) {
+        if (dataContainer == null) {
+            dataContainer = new DataContainer(botType);
+        } else throw new IllegalArgumentException("Already initialized!");
+    }
+
+    public static AbstractMessageHelper getMessageHelper() {
+        return getDataContainer().messageHelper;
     }
 
     public static String getVersion() {
-        return "v2.3.5";
+        return "v2.4";
     }
 
-    public static WriteOnlyMessage getVersionMessage() {
+    public boolean isJCQ() {
+        return botType == BotType.CoolQ;
+    }
+
+    public WriteOnlyMessage getVersionMessage() {
         return new WriteOnlyMessage(String.format(versionMessage, coreVersion, coreOpenSourceLink, getHandlerInfo(), getMemoryUsage(), getRunningTime()));
     }
 
-    public static String getHandlerInfo() {
+    public String getHandlerInfo() {
         return String.format("处理数据条数：%d\n成功条数：%d\n失败条数：%d\n成功率：%.2f %%", processDataCount.get(), processDataSuccessCount.get(), processDataFailedCount.get(), (double) processDataSuccessCount.get() * 100 / (double) processDataCount.get());
 
     }
 
-    public static String getCountingData() {
+    public String getCountingData() {
         StringBuilder stringBuilder = new StringBuilder("统计信息：\n");
         List<Map.Entry<Long, AtomicLong>> list = new ArrayList<>(countingMap.entrySet());
         list.sort(Comparator.comparingLong(e -> e.getValue().get()));
@@ -89,6 +108,10 @@ public class DataContainer {
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();
+    }
+
+    public List<Long> getRukiTargetGroup() {
+        return rukiTargetGroup;
     }
 
     private static String getRunningTime() {
@@ -125,13 +148,13 @@ public class DataContainer {
         return String.format("堆内存：%.2f/%.2fMB\n堆外内存：%.2f/%dMB", heapMemoryUsage.getCommitted() / 1E6, heapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getMax());
     }
 
-    public static List<Long> getRukiTargetGroup() {
-        return rukiTargetGroup;
+    public List<Long> getTargetGroup() {
+        return targetGroup;
     }
 
 
-    public static List<Long> getTargetGroup() {
-        return targetGroup;
+    public enum BotType {
+        Mirai, CoolQ
     }
 
     public static long getMaster() {

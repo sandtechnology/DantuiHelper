@@ -10,5 +10,7 @@ import java.lang.annotation.Target;
 public @interface Ask {
     Class<? extends StringConverter> converter() default SimpleConverter.class;
 
+    String defaultValue() default "";
+
     String text() default "请输入%s的值";
 }
