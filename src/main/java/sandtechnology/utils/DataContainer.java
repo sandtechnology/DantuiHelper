@@ -52,7 +52,7 @@ public class DataContainer {
         return countingMap;
     }
 
-    private final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0-RC2-1）");
+    private final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0.0）");
     private final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
     private final AbstractMessageHelper messageHelper;
 
@@ -68,7 +68,7 @@ public class DataContainer {
     public static void initialize(BotType botType) {
         if (dataContainer == null) {
             dataContainer = new DataContainer(botType);
-        } else throw new IllegalArgumentException("Already initialized!");
+        } else throw new IllegalStateException("Already initialized!");
     }
 
     public static AbstractMessageHelper getMessageHelper() {

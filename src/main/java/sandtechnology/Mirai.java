@@ -35,11 +35,11 @@ public class Mirai {
         try {
             //bot.getCoroutineContext().plus(new ErrorHandler());
             bot.login();
+            DataContainer.initialize(DataContainer.BotType.Mirai);
             System.out.println("Registering Event....");
             Events.registerEvents(bot, MessageListener.getMessageListener());
             Start.start();
             System.out.println("Done!");
-            DataContainer.initialize(DataContainer.BotType.Mirai);
             Thread.setDefaultUncaughtExceptionHandler((t, e) -> DataContainer.getMessageHelper().sendingErrorMessage(e, t.getName() + "线程发生了异常："));
             bot.join();
         } catch (Throwable e) {

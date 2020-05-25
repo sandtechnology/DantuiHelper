@@ -1,45 +1,64 @@
 package sandtechnology.utils;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 public class Pair<V1, V2> implements Cloneable {
     private V1 v1;
     private V2 v2;
+    private ReentrantReadWriteLock v1Lock = new ReentrantReadWriteLock();
+    private ReentrantReadWriteLock v2Lock = new ReentrantReadWriteLock();
 
     public Pair(V1 v1, V2 v2) {
         this.v1 = v1;
         this.v2 = v2;
     }
 
-    synchronized public V1 getFirst() {
-        return v1;
+    public V1 getFirst() {
+        try {
+            v1Lock.readLock().lock();
+            return v1;
+        } finally {
+            v1Lock.readLock().unlock();
+        }
     }
 
-    synchronized public Pair<V1, V2> setFirst(V1 v1) {
+    public Pair<V1, V2> setFirst(V1 v1) {
+        v1Lock.writeLock().lock();
         this.v1 = v1;
+        v1Lock.writeLock().unlock();
         return this;
+
     }
 
-    synchronized public V2 getLast() {
-        return v2;
+    public V2 getLast() {
+        try {
+            v2Lock.readLock().lock();
+            return v2;
+        } finally {
+            v2Lock.readLock().unlock();
+        }
     }
 
     synchronized public Pair<V1, V2> setLast(V2 v2) {
+        v2Lock.writeLock().lock();
         this.v2 = v2;
+        v2Lock.writeLock().unlock();
         return this;
     }
 
     @Override
-    synchronized public boolean equals(Object obj) {
-        return obj instanceof Pair && v1.equals(((Pair) obj).getFirst()) && v2.equals(((Pair) obj).v2);
+    public boolean equals(Object obj) {
+        return obj instanceof Pair && getFirst().equals(((Pair<?, ?>) obj).getFirst()) && getLast().equals(((Pair<?, ?>) obj).getLast());
     }
 
     @Override
-    synchronized public int hashCode() {
-        return 31 * (super.hashCode() + v1.hashCode() + v2.hashCode());
+    public int hashCode() {
+        return 31 * (super.hashCode() + getFirst().hashCode() + getLast().hashCode());
     }
 
     @Override
-    synchronized public String toString() {
-        return super.toString() + "[V1=" + v1 + ",v2=" + v2 + "]";
+    public String toString() {
+        return super.toString() + "[V1=" + getFirst() + ",v2=" + getLast() + "]";
     }
 
 }
