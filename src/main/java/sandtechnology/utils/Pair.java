@@ -2,7 +2,7 @@ package sandtechnology.utils;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class Pair<V1, V2> implements Cloneable {
+public class Pair<V1, V2> {
     private V1 v1;
     private V2 v2;
     private ReentrantReadWriteLock v1Lock = new ReentrantReadWriteLock();

@@ -18,23 +18,19 @@ public class DataContainer {
     private final static List<Long> rukiTargetGroup = Arrays.asList(857529607L, 1005397354L, 1035554886L, 739568838L, 752224664L, 1027385586L);
     private static final String versionMessage = "机器人信息：" +
             "\n编写者：sandtechnology" +
-            "\n版本号：%s" +
+            "\n版本号：%s%s" +
             "\n开源地址（基于AGPLv3开源）：https://github.com/sandtechnology/DantuiHelper" +
             "\n%s" +
             "\n%s" +
             "\n%s" +
             "\n运行时间：%s";
     private final static Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
-    private final static AtomicLong processDataCount = new AtomicLong();
     private final static AtomicLong processDataSuccessCount = new AtomicLong();
     private final static AtomicLong processDataFailedCount = new AtomicLong();
     private final static AtomicLong sendMessageCount = new AtomicLong();
     private static DataContainer dataContainer;
     private final BotType botType;
 
-    public static AtomicLong getProcessDataCount() {
-        return processDataCount;
-    }
 
     public static AtomicLong getProcessDataFailedCount() {
         return processDataFailedCount;
@@ -52,13 +48,11 @@ public class DataContainer {
         return countingMap;
     }
 
-    private final String coreVersion = getVersion() + (isJCQ() ? "（JCQ内核）" : "（Mirai内核，版本号1.0.0）");
-    private final String coreOpenSourceLink = isJCQ() ? "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ" : "Mirai项目地址：https://github.com/mamoe/mirai";
     private final AbstractMessageHelper messageHelper;
 
     private DataContainer(BotType botType) {
         this.botType = botType;
-        messageHelper = botType == BotType.CoolQ ? new CQMessageHelper() : new MiraiMessageHelper();
+        messageHelper = botType == BotType.JCQ ? new CQMessageHelper() : new MiraiMessageHelper();
     }
 
     public static DataContainer getDataContainer() {
@@ -71,6 +65,10 @@ public class DataContainer {
         } else throw new IllegalStateException("Already initialized!");
     }
 
+    public static void sendMessageStat() {
+        getSendMessageCount().incrementAndGet();
+    }
+
     public static AbstractMessageHelper getMessageHelper() {
         return getDataContainer().messageHelper;
     }
@@ -79,17 +77,14 @@ public class DataContainer {
         return "v2.4";
     }
 
-    public boolean isJCQ() {
-        return botType == BotType.CoolQ;
-    }
 
     public WriteOnlyMessage getVersionMessage() {
-        return new WriteOnlyMessage(String.format(versionMessage, coreVersion, coreOpenSourceLink, getHandlerInfo(), getMemoryUsage(), getRunningTime()));
+        return new WriteOnlyMessage(String.format(versionMessage, getVersion(), botType.getCoreDesc(), botType.getOpenSourceLink(), getHandlerInfo(), getMemoryUsage(), getRunningTime()));
     }
 
     public String getHandlerInfo() {
-        return String.format("处理数据条数：%d\n成功条数：%d\n失败条数：%d\n成功率：%.2f %%", processDataCount.get(), processDataSuccessCount.get(), processDataFailedCount.get(), (double) processDataSuccessCount.get() * 100 / (double) processDataCount.get());
-
+        long totalProcessData = processDataFailedCount.get() + processDataSuccessCount.get();
+        return String.format("发送消息条数：%d\n处理数据条数：%d\n成功条数：%d\n失败条数：%d\n成功率：%.2f %%", sendMessageCount.get(), totalProcessData, processDataSuccessCount.get(), processDataFailedCount.get(), (double) processDataSuccessCount.get() * 100 / (double) totalProcessData);
     }
 
     public String getCountingData() {
@@ -154,7 +149,23 @@ public class DataContainer {
 
 
     public enum BotType {
-        Mirai, CoolQ
+        Mirai("（Mirai内核，版本号1.0.0）", "Mirai项目地址：https://github.com/mamoe/mirai"),
+        JCQ("（JCQ内核，版本号为1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ");
+        private final String coreDesc;
+        private final String openSourceLink;
+
+        BotType(String coreDesc, String openSourceLink) {
+            this.coreDesc = coreDesc;
+            this.openSourceLink = openSourceLink;
+        }
+
+        public String getCoreDesc() {
+            return coreDesc;
+        }
+
+        public String getOpenSourceLink() {
+            return openSourceLink;
+        }
     }
 
     public static long getMaster() {

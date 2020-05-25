@@ -3,6 +3,7 @@ package sandtechnology.utils.message;
 import sandtechnology.holder.WriteOnlyMessage;
 
 import static com.sobte.cqp.jcq.event.JcqApp.CQ;
+import static sandtechnology.utils.DataContainer.sendMessageStat;
 
 public class CQMessageHelper extends AbstractMessageHelper {
 
@@ -10,17 +11,17 @@ public class CQMessageHelper extends AbstractMessageHelper {
     }
 
     public void sendPrivateMsg(long qq, WriteOnlyMessage message) {
-        super.sendPrivateMsg(qq, message);
+        sendMessageStat();
         CQ.sendPrivateMsg(qq, message.toCQString());
     }
 
     public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
-        super.sendTempMsg(fromGroup, fromQQ, message);
+        sendMessageStat();
         CQ.sendPrivateMsg(fromQQ, message.toCQString());
     }
 
     public void sendGroupMsg(long group, WriteOnlyMessage message) {
-        super.sendGroupMsg(group, message);
+        sendMessageStat();
         CQ.sendGroupMsg(group, message.toCQString());
     }
 

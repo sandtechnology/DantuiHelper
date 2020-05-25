@@ -115,7 +115,7 @@ public class JCQ extends JcqAppAbstract implements ICQVer, IMsg, IRequest {
 
     public int enable() {
         enable = true;
-        DataContainer.initialize(DataContainer.BotType.CoolQ);
+        DataContainer.initialize(DataContainer.BotType.JCQ);
         Start.start();
         return 0;
     }

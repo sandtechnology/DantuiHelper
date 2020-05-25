@@ -161,7 +161,7 @@ public class MessageListener implements ListenerHost {
         if (!countingMap.containsKey(fromGroup)) {
             countingMap.put(fromGroup, new AtomicLong(1));
         } else {
-            countingMap.get(fromGroup).addAndGet(1);
+            countingMap.get(fromGroup).incrementAndGet();
         }
         String msg = readOnlyMessage.toString();
         if (fromGroup == 1074152108L && fromQQ == DataContainer.getMaster()) {

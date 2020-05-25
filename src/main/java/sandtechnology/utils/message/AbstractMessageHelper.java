@@ -2,13 +2,12 @@ package sandtechnology.utils.message;
 
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.DataContainer;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class AbstractMessageHelper {
+public abstract class AbstractMessageHelper {
     private final WriteOnlyMessage ERROR = new WriteOnlyMessage("[Error] ");
     private final WriteOnlyMessage DEBUG = new WriteOnlyMessage("[Debug] ");
     private final WriteOnlyMessage INFO = new WriteOnlyMessage("[Info] ");
@@ -16,17 +15,11 @@ public class AbstractMessageHelper {
     protected AbstractMessageHelper() {
     }
 
-    public void sendPrivateMsg(long qq, WriteOnlyMessage message) {
-        DataContainer.getSendMessageCount().addAndGet(1);
-    }
+    public abstract void sendPrivateMsg(long qq, WriteOnlyMessage message);
 
-    public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
-        DataContainer.getSendMessageCount().addAndGet(1);
-    }
+    public abstract void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message);
 
-    public void sendGroupMsg(long group, WriteOnlyMessage message) {
-        DataContainer.getSendMessageCount().addAndGet(1);
-    }
+    public abstract void sendGroupMsg(long group, WriteOnlyMessage message);
 
 
     public void sendingErrorMessage(Throwable e, String... msg) {

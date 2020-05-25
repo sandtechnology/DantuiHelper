@@ -84,11 +84,10 @@ public class HTTPHelper{
                 }
             }
         } finally {
-            DataContainer.getProcessDataCount().addAndGet(1);
             if (state != State.Success) {
-                DataContainer.getProcessDataFailedCount().addAndGet(1);
+                DataContainer.getProcessDataFailedCount().incrementAndGet();
             } else {
-                DataContainer.getProcessDataSuccessCount().addAndGet(1);
+                DataContainer.getProcessDataSuccessCount().incrementAndGet();
             }
         }
     }

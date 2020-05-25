@@ -38,7 +38,6 @@ public class ImageManager {
         URLConnection connection = url.openConnection();
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
         Files.createDirectories(absolutePath.getParent());
-        DataContainer.getProcessDataCount().addAndGet(1);
         try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false); BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
             int code;
             byte[] buff = new byte[1024];
@@ -46,7 +45,7 @@ public class ImageManager {
                 writer.write(buff, 0, code);
             }
         }
-        DataContainer.getProcessDataSuccessCount().addAndGet(1);
+        DataContainer.getProcessDataSuccessCount().incrementAndGet();
     }
 
     public static CacheImage getImageData(String imgURL) {
@@ -78,7 +77,7 @@ public class ImageManager {
             DataContainer.getMessageHelper().sendingErrorMessage(e, "Getting Image Data,retrying...");
             return emptyImage;
         } catch (Exception e) {
-            DataContainer.getProcessDataFailedCount().addAndGet(1);
+            DataContainer.getProcessDataFailedCount().incrementAndGet();
             if (retryCount > 3) {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "Getting Image Data,retrying...");
                 return emptyImage;
@@ -97,6 +96,7 @@ public class ImageManager {
         while (iterator.hasNext()) {
             Map.Entry<String, CacheImage> entry = iterator.next();
             if ((System.currentTimeMillis() - entry.getValue().getLastAccessed()) >= 1000 * 60 * 60 * 24) {
+                //noinspection ResultOfMethodCallIgnored
                 entry.getValue().getFile().delete();
                 iterator.remove();
             }
