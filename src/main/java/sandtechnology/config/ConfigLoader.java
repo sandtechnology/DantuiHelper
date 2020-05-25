@@ -3,6 +3,8 @@ package sandtechnology.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.config.section.SubscribeConfig;
+import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.JsonHelper;
 
 import java.io.IOException;
@@ -13,9 +15,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 public class ConfigLoader {
@@ -47,8 +47,12 @@ public class ConfigLoader {
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(Ask.class) && !field.isSynthetic()) {
                     {
-                        if (field.get(holder).toString().equals(field.getAnnotation(Ask.class).defaultValue())) {
-                            System.out.print(String.format(field.getAnnotation(Ask.class).text(), field.getName()));
+                        Ask askAnnotation = field.getAnnotation(Ask.class);
+                        if (askAnnotation.miraiOnly() && DataContainer.getDataContainer().getBotType() != DataContainer.BotType.Mirai) {
+                            continue;
+                        }
+                        if (field.get(holder).toString().equals(askAnnotation.defaultValue())) {
+                            System.out.print(String.format(askAnnotation.text(), field.getName()));
                             Class<?> type = field.getType();
 
                             if (!type.isArray()) {
@@ -72,7 +76,7 @@ public class ConfigLoader {
                             }
                             if (field.get(holder) == null) {
                                 //备用
-                                Class<? extends StringConverter> converter = field.getAnnotation(Ask.class).converter();
+                                @SuppressWarnings("rawtypes") Class<? extends StringConverter> converter = field.getAnnotation(Ask.class).converter();
                                 field.set(holder, converter.newInstance().convert(scanner.next()));
                             }
                         }
@@ -100,16 +104,31 @@ public class ConfigLoader {
     public static class ConfigHolder {
 
         @SerializedName("QQ")
-        @Ask(defaultValue = "-1", text = "请输入QQ：")
+        @Ask(defaultValue = "-1", text = "请输入QQ：", miraiOnly = true)
         long qq = -1;
         @SerializedName("Password")
-        @Ask(text = "请输入密码：")
+        @Ask(text = "请输入密码：", miraiOnly = true)
         String password = "";
+        @SerializedName("subscribeConfig")
+        SubscribeConfig subscribeNodeMap = new SubscribeConfig();
+        @Ask(defaultValue = "-1", text = "请输入主人QQ号：")
+        private long master = -1;
         @SerializedName("PasswordMD5")
         byte[] passwordMD5;
+        @Ask(defaultValue = "-1", text = "请输入管理群号：")
+        private long masterGroup = -1;
 
-        List<Long> targetLiveRooms = new ArrayList<>();
-        List<Long> targetUsers = new ArrayList<>();
+        public SubscribeConfig getSubscribeNodeMap() {
+            return subscribeNodeMap;
+        }
+
+        public long getMasterGroup() {
+            return masterGroup;
+        }
+
+        public long getMaster() {
+            return master;
+        }
 
         public long getQQ() {
             return qq;

@@ -12,5 +12,7 @@ public @interface Ask {
 
     String defaultValue() default "";
 
+    boolean miraiOnly() default false;
+
     String text() default "请输入%s的值";
 }

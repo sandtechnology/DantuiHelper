@@ -24,6 +24,7 @@ public class Mirai {
     public static void main(String[] args) {
 
         System.out.println("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
+        DataContainer.initialize(DataContainer.BotType.Mirai);
         System.out.println("Logging....");
         Bot bot = BotFactoryJvm.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
             {
@@ -33,11 +34,10 @@ public class Mirai {
         });
         ConfigLoader.save();
         try {
-            //bot.getCoroutineContext().plus(new ErrorHandler());
             bot.login();
-            DataContainer.initialize(DataContainer.BotType.Mirai);
             System.out.println("Registering Event....");
             Events.registerEvents(bot, MessageListener.getMessageListener());
+            //加载动态轮询器
             Start.start();
             System.out.println("Done!");
             Thread.setDefaultUncaughtExceptionHandler((t, e) -> DataContainer.getMessageHelper().sendingErrorMessage(e, t.getName() + "线程发生了异常："));

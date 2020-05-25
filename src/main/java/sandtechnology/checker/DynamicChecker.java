@@ -6,22 +6,19 @@ import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ThreadHelper;
 
-import java.util.Arrays;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class BiliBiliDynamicChecker implements IChecker {
+public class DynamicChecker implements IChecker {
 
     private long lastTimestamp;
-    private final Set<Long> groups = new LinkedHashSet<>();
     private final HTTPHelper httpHelper;
     private final long uid;
     private long nextPageOffsetById = 0;
 
-    public BiliBiliDynamicChecker(long uid) {
+    public DynamicChecker(long uid, Set<Long> groups) {
         this.uid = uid;
         String apiUrl = "https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0";
         Consumer<NormalResponse> handler = response -> {
@@ -55,28 +52,23 @@ public class BiliBiliDynamicChecker implements IChecker {
         httpHelper = new HTTPHelper(apiUrl, handler);
     }
 
-    public BiliBiliDynamicChecker setNextPageOffsetById(long nextPageOffsetById) {
+    public DynamicChecker(long uid, Consumer<NormalResponse> handler) {
+        this.httpHelper = new HTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0", handler);
+        this.uid = uid;
+    }
+
+    public DynamicChecker setNextPageOffsetById(long nextPageOffsetById) {
         this.nextPageOffsetById = nextPageOffsetById;
         httpHelper.setUrl("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0");
         return this;
     }
 
-    public BiliBiliDynamicChecker addGroups(Long... groups) {
-        this.groups.addAll(Arrays.asList(groups));
-        return this;
-    }
-
-    public BiliBiliDynamicChecker addGroups(List<Long> groups) {
-        this.groups.addAll(groups);
-        return this;
-    }
-
-    public BiliBiliDynamicChecker setHandler(Consumer<NormalResponse> handler) {
+    public DynamicChecker setHandler(Consumer<NormalResponse> handler) {
         this.httpHelper.setHandler(handler);
         return this;
     }
 
-    public BiliBiliDynamicChecker setLastTimestamp(long lastTimestamp) {
+    public DynamicChecker setLastTimestamp(long lastTimestamp) {
         this.lastTimestamp = lastTimestamp;
         return this;
     }

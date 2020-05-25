@@ -1,6 +1,7 @@
 package sandtechnology.utils;
 
 import sandtechnology.Mirai;
+import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.message.AbstractMessageHelper;
 import sandtechnology.utils.message.CQMessageHelper;
@@ -13,7 +14,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class DataContainer {
-    private static final long master = 1294790523;
     private final static List<Long> targetGroup = Collections.singletonList(532589427L);
     private final static List<Long> rukiTargetGroup = Arrays.asList(857529607L, 1005397354L, 1035554886L, 739568838L, 752224664L, 1027385586L);
     private static final String versionMessage = "机器人信息：" +
@@ -31,6 +31,13 @@ public class DataContainer {
     private static DataContainer dataContainer;
     private final BotType botType;
 
+    public static long getMasterGroup() {
+        return ConfigLoader.getHolder().getMasterGroup();
+    }
+
+    public static String getVersion() {
+        return "v2.5";
+    }
 
     public static AtomicLong getProcessDataFailedCount() {
         return processDataFailedCount;
@@ -73,8 +80,8 @@ public class DataContainer {
         return getDataContainer().messageHelper;
     }
 
-    public static String getVersion() {
-        return "v2.4";
+    public static long getMaster() {
+        return ConfigLoader.getHolder().getMaster();
     }
 
 
@@ -168,7 +175,7 @@ public class DataContainer {
         }
     }
 
-    public static long getMaster() {
-        return master;
+    public BotType getBotType() {
+        return botType;
     }
 }

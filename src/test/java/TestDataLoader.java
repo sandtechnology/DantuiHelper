@@ -4,13 +4,14 @@ import org.junit.jupiter.api.Test;
 import sandtechnology.JCQ;
 import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
-import sandtechnology.checker.BiliBiliDynamicChecker;
+import sandtechnology.checker.DynamicChecker;
 import sandtechnology.utils.JsonHelper;
 
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -20,7 +21,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TestDataLoader {
 
 
-    private static final BiliBiliDynamicChecker checker = new BiliBiliDynamicChecker(1).setLastTimestamp(1);
+    private static final DynamicChecker checker = new DynamicChecker(1, new HashSet<>()).setLastTimestamp(1);
     @SerializedName("typeSet")
     Map<String, DynamicData> testMap;
     @SerializedName("normalSet")

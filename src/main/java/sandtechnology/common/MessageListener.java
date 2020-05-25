@@ -8,7 +8,7 @@ import net.mamoe.mirai.message.TempMessageEvent;
 import sandtechnology.Mirai;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.live.RoomInfo;
-import sandtechnology.checker.BiliBiliDynamicChecker;
+import sandtechnology.checker.DynamicChecker;
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
@@ -128,9 +128,9 @@ public class MessageListener implements ListenerHost {
                 }
                 if (command[0].equals("fetch")) {
                     if (command.length == 2) {
-                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> messageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
+                        new DynamicChecker(Long.parseLong(command[1]), h -> messageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
                     } else if (command.length == 3) {
-                        new BiliBiliDynamicChecker(Long.parseLong(command[1])).setHandler(h -> {
+                        new DynamicChecker(Long.parseLong(command[1]), h -> {
                             for (DynamicData dynamicData : h.getDynamicsDataList().getDynamics()) {
                                 WriteOnlyMessage dynamicDataMessage = dynamicData.getMessage();
                                 messageHelper.sendingInfoMessage(dynamicDataMessage);
@@ -164,7 +164,7 @@ public class MessageListener implements ListenerHost {
             countingMap.get(fromGroup).incrementAndGet();
         }
         String msg = readOnlyMessage.toString();
-        if (fromGroup == 1074152108L && fromQQ == DataContainer.getMaster()) {
+        if (fromGroup == DataContainer.getMasterGroup() && fromQQ == DataContainer.getMaster()) {
             onPrivateMsg(fromQQ, readOnlyMessage);
             return;
         }

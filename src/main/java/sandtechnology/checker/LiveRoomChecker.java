@@ -7,19 +7,19 @@ import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 public class LiveRoomChecker implements IChecker {
 
     private final HTTPHelper httpHelper;
     private final long roomID;
     private long lastLive;
-    private final List<Long> groups = new ArrayList<>();
+    private Set<Long> groups = new LinkedHashSet<>();
 
-    public LiveRoomChecker(long roomID, List<Long> groupIDs) {
+    public LiveRoomChecker(long roomID, Set<Long> groupIDs) {
         this(roomID);
-        groups.addAll(groupIDs);
+        this.groups = groupIDs;
     }
 
     private LiveRoomChecker(long roomID) {

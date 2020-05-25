@@ -2,6 +2,7 @@ package sandtechnology.utils.message;
 
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.DataContainer;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -23,15 +24,15 @@ public abstract class AbstractMessageHelper {
 
 
     public void sendingErrorMessage(Throwable e, String... msg) {
-        sendGroupMsg(1074152108L, sendWithPrefix(ERROR, new WriteOnlyMessage(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
+        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(ERROR, new WriteOnlyMessage(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
     }
 
     public void sendingErrorMessage(Throwable e, WriteOnlyMessage... msg) {
-        sendGroupMsg(1074152108L, sendWithPrefix(ERROR, join(msg).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
+        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(ERROR, join(msg).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
     }
 
     public void sendingDebugMessage(WriteOnlyMessage... msg) {
-        sendGroupMsg(1074152108L, sendWithPrefix(DEBUG, join(msg)));
+        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(DEBUG, join(msg)));
     }
 
     public void sendPrivateMsg(long qq, String message) {
@@ -58,7 +59,7 @@ public abstract class AbstractMessageHelper {
     }
 
     public void sendingInfoMessage(WriteOnlyMessage... msg) {
-        sendingGroupMessage(1074152108L, sendWithPrefix(INFO, join(msg)));
+        sendingGroupMessage(DataContainer.getMasterGroup(), sendWithPrefix(INFO, join(msg)));
     }
 
     public void sendingInfoMessage(String... strings) {
