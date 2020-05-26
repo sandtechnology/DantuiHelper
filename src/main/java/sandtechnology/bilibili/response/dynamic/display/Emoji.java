@@ -37,7 +37,7 @@ public class Emoji {
             //末尾带有表情的识别
             int addLastCounter = 0;
             int lastWithTextIndex;
-            while (str.lastIndexOf(text) == (lastWithTextIndex = str.length() - text.length()) && lastWithTextIndex > 0) {
+            while (str.lastIndexOf(text) == (lastWithTextIndex = str.length() - text.length()) && lastWithTextIndex >= 0) {
                 str.delete(lastWithTextIndex, str.length());
                 addLastCounter++;
             }
