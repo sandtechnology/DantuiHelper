@@ -21,7 +21,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 
-import static com.sobte.cqp.jcq.event.JcqApp.CQ;
 import static sandtechnology.utils.ImageManager.getImageData;
 
 public class MessageListener implements ListenerHost {
@@ -119,7 +118,7 @@ public class MessageListener implements ListenerHost {
                 if (command[0].equals("restart")) {
                     messageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage("正在重启...."));
                     Start.exit();
-                    if (CQ == null) {
+                    if (DataContainer.getDataContainer().getBotType() == DataContainer.BotType.Mirai) {
                         Mirai.getBot().close(null);
                         System.exit(0);
                     } else {
