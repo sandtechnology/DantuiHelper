@@ -39,6 +39,7 @@ public class TestDataLoader {
     public void test() throws Exception {
         Path configPath = Paths.get("config", "config.json");
         if (!Files.exists(configPath)) {
+            Files.createDirectories(configPath);
             Files.write(configPath, Collections.singleton("{\"master\": 1111,\"masterGroup\": 1111}"));
         }
         JCQ.main(new String[0]);
