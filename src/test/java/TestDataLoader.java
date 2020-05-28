@@ -12,6 +12,10 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -33,16 +37,20 @@ public class TestDataLoader {
 
     @Test
     public void test() throws Exception {
-            JCQ.main(new String[0]);
-            //https://cloud.tencent.com/developer/ask/174364
-            //如何在java中输出unicode字符
+        Path configPath = Paths.get("config", "config.json");
+        if (!Files.exists(configPath)) {
+            Files.write(configPath, Collections.singleton("{\"master\": 1111,\"masterGroup\": 1111}"));
+        }
+        JCQ.main(new String[0]);
+        //https://cloud.tencent.com/developer/ask/174364
+        //如何在java中输出unicode字符
         ImageManager.setNoImageMode(true);
-            PrintWriter printWriter = new PrintWriter(System.out, true);
-            System.out.println("===========Test Start==========");
-            AtomicInteger atomicInteger = new AtomicInteger(0);
-            TestDataLoader loader = JsonHelper.getGsonInstance().fromJson(new InputStreamReader(new FileInputStream("testdata.json"), StandardCharsets.UTF_8), TestDataLoader.class);
-            loader.testSet.forEach(
-                    data -> {
+        PrintWriter printWriter = new PrintWriter(System.out, true);
+        System.out.println("===========Test Start==========");
+        AtomicInteger atomicInteger = new AtomicInteger(0);
+        TestDataLoader loader = JsonHelper.getGsonInstance().fromJson(new InputStreamReader(new FileInputStream("testdata.json"), StandardCharsets.UTF_8), TestDataLoader.class);
+        loader.testSet.forEach(
+                data -> {
                         printWriter.println("Test #" + atomicInteger.incrementAndGet());
                         checker.parse(data);
                     }
