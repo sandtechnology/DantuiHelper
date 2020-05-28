@@ -23,5 +23,4 @@ public class EmojiFormatTest {
         assert new EmojiChain(emojis).format(new WriteOnlyMessage(testMessage2)).toCQString().equals("[CQ:image,file=0.hdslb.com\\bfs\\emote\\bb2060c15dba7d3fd731c35079d1617f1afe3376.png@50w_50h_1e_1c.png]");
 
     }
-    }
 }
