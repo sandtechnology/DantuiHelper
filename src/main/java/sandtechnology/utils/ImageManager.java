@@ -17,6 +17,11 @@ public class ImageManager {
     private static final Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
     private static final Map<String, CacheImage> localStorageImageMap = new ConcurrentHashMap<>();
     public static final CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
+    private static boolean noImageMode = false;
+
+    public static void setNoImageMode(boolean noImageMode) {
+        ImageManager.noImageMode = noImageMode;
+    }
 
     //删除缓存文件
     static {
@@ -35,6 +40,7 @@ public class ImageManager {
     }
 
     private static void download(URL url, Path absolutePath) throws Exception {
+
         URLConnection connection = url.openConnection();
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
         Files.createDirectories(absolutePath.getParent());
@@ -53,6 +59,9 @@ public class ImageManager {
     }
 
     public static CacheImage getImageData(String imgURL, int retryCount) {
+        if (!imgURL.equals("https://static.hdslb.com/error/very_sorry.png") && noImageMode) {
+            return emptyImage;
+        }
         try {
             URL url = new URL(imgURL);
             Path path = Paths.get("data", "image", url.getHost(), url.getFile()).toAbsolutePath();

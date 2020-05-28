@@ -5,6 +5,7 @@ import sandtechnology.JCQ;
 import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.checker.DynamicChecker;
+import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.JsonHelper;
 
 import java.io.FileInputStream;
@@ -32,10 +33,10 @@ public class TestDataLoader {
 
     @Test
     public void test() throws Exception {
-        if (Tester.getTest()) {
             JCQ.main(new String[0]);
             //https://cloud.tencent.com/developer/ask/174364
             //如何在java中输出unicode字符
+        ImageManager.setNoImageMode(true);
             PrintWriter printWriter = new PrintWriter(System.out, true);
             System.out.println("===========Test Start==========");
             AtomicInteger atomicInteger = new AtomicInteger(0);
@@ -51,6 +52,5 @@ public class TestDataLoader {
                 printWriter.println(content.getMessage().toCQString());
             });
             JCQ.getDemo().exit();
-        }
     }
 }
