@@ -8,10 +8,12 @@
     <artifactId>dantui</artifactId>
     <version>2.5</version>
     <repositories>
+        <!-->
         <repository>
             <id>jcenter-ali</id>
             <url>https://maven.aliyun.com/nexus/content/repositories/jcenter</url>
         </repository>
+        <-->
         <repository>
             <id>jcenter</id>
             <url>https://jcenter.bintray.com/</url>
