@@ -6,7 +6,7 @@
 
     <groupId>sandtechnology</groupId>
     <artifactId>dantui</artifactId>
-    <version>2.5</version>
+    <version>2.5.1</version>
     <repositories>
         <!-->
         <repository>
@@ -35,7 +35,7 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-qqandroid</artifactId>
-            <version>1.0.1</version> <!-- 替换版本为最新版本 -->
+            <version>1.0.2</version> <!-- 替换版本为最新版本 -->
         </dependency>
         <dependency>
             <groupId>com.vdurmont</groupId>
