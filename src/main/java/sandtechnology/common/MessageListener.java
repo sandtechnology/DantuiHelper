@@ -130,11 +130,14 @@ public class MessageListener implements ListenerHost {
                         new DynamicChecker(Long.parseLong(command[1]), h -> messageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
                     } else if (command.length == 3) {
                         new DynamicChecker(Long.parseLong(command[1]), h -> {
+                            long lastTimestamp = Long.parseLong(command[2]);
                             for (DynamicData dynamicData : h.getDynamicsDataList().getDynamics()) {
-                                WriteOnlyMessage dynamicDataMessage = dynamicData.getMessage();
-                                messageHelper.sendingInfoMessage(dynamicDataMessage);
+                                if (dynamicData.getDesc().getTimestamp() >= lastTimestamp) {
+                                    WriteOnlyMessage dynamicDataMessage = dynamicData.getMessage();
+                                    messageHelper.sendingInfoMessage(dynamicDataMessage);
+                                }
                             }
-                        }).setLastTimestamp(Long.parseLong(command[2])).check();
+                        }).check();
                     } else {
                         messageHelper.sendingInfoMessage("/fetch [UID] [timestamp]");
                     }

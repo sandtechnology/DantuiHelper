@@ -153,6 +153,8 @@ public class WriteOnlyMessage {
                         }
                     }).collect(Collectors.toList()));
         }
+        //上传速度太快 等待QQ服务器同步
+        ThreadHelper.sleep(1000);
         return builder.asMessageChain();
     }
 

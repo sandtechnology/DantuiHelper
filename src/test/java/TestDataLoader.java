@@ -5,6 +5,7 @@ import sandtechnology.JCQ;
 import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.checker.DynamicChecker;
+import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.JsonHelper;
 
@@ -26,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TestDataLoader {
 
 
-    private static final DynamicChecker checker = new DynamicChecker(1, new HashSet<>()).setLastTimestamp(1);
+    private static final DynamicChecker checker = new DynamicChecker(1, new HashSet<>()).setHandler(res -> res.getDynamicsDataList().getDynamics().forEach(data -> DataContainer.getMessageHelper().sendingInfoMessage(data.getMessage())));
     @SerializedName("typeSet")
     Map<String, DynamicData> testMap;
     @SerializedName("normalSet")

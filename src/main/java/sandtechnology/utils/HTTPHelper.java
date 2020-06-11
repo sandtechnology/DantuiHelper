@@ -51,6 +51,7 @@ public class HTTPHelper{
         try {
             URLConnection urlConnection = new URL(url).openConnection();
             urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
+            urlConnection.setConnectTimeout(30000);
             try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 result = stream.lines().collect(Collectors.joining("\n"));
             }
