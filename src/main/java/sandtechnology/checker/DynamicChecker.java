@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * B站动态检测器
+ * B站新动态监听器
  * <p>
  * 当前检测方式适用的假设：
  * 1.审核的动态通过时在最新的第21条动态之内

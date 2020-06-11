@@ -10,6 +10,9 @@ import sandtechnology.utils.ImageManager;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+/**
+ * 通过记录开播时间和状态做到直播通知的简单直播监听器
+ */
 public class LiveRoomChecker implements IChecker {
 
     private final HTTPHelper httpHelper;
