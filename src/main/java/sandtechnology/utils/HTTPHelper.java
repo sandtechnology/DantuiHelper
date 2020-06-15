@@ -50,7 +50,7 @@ public class HTTPHelper{
         String result = "";
         try {
             URLConnection urlConnection = new URL(url).openConnection();
-            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0");
+            urlConnection.setRequestProperty("User-Agent", "DantuiHelper/2.5.2");
             urlConnection.setConnectTimeout(30000);
             try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 result = stream.lines().collect(Collectors.joining("\n"));
@@ -70,7 +70,12 @@ public class HTTPHelper{
         } catch (IOException e) {
             state = State.NetworkError;
             e.printStackTrace();
-            DataContainer.getMessageHelper().sendingErrorMessage(e, "Network Error:\n");
+            if (e.getMessage().contains("412")) {
+                DataContainer.getMessageHelper().sendingErrorMessage(e, "请求遭受Bilibili风控系统拦截，将休眠一小时\n");
+                ThreadHelper.sleep(3600000 + random.nextInt(8000));
+            } else {
+                DataContainer.getMessageHelper().sendingErrorMessage(e, "Network Error:\n");
+            }
         } catch (Exception e) {
             if (retry < 3) {
                 ThreadHelper.sleep(random.nextInt(5000) + 5000);

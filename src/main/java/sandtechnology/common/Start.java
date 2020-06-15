@@ -68,6 +68,7 @@ public class Start {
                         time++;
                     }
                     for (IChecker runnable : runnables) {
+                        Thread.sleep(2000);
                         runnable.check();
                     }
                 } catch (Throwable e) {
