@@ -9,20 +9,26 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class HTTPHelper{
+public class HTTPHelper {
 
-   public enum State{
-        Init,Success,BiliBiliError,NetworkError,Error
-    }
+    private static Map<String, Long> bannedURL = new HashMap<>(2);
 
     private String url;
     private Consumer<NormalResponse> handler;
     private State state;
+    private String originURL;
+    private String referer;
     private final Random random = new Random();
+
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
 
     public HTTPHelper(String url, Consumer<NormalResponse> handler) {
         this.url = url;
@@ -38,19 +44,24 @@ public class HTTPHelper{
         return state;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setHandler(Consumer<NormalResponse> handler) {
-        this.handler = handler;
+    public void setOriginURL(String originURL) {
+        this.originURL = originURL;
     }
 
     public void execute(int retry) {
         String result = "";
+        if (bannedURL.containsKey(originURL)) {
+            if (bannedURL.get(originURL) <= System.currentTimeMillis()) {
+                bannedURL.remove(originURL);
+            } else {
+                return;
+            }
+        }
         try {
             URLConnection urlConnection = new URL(url).openConnection();
             urlConnection.setRequestProperty("User-Agent", "DantuiHelper/2.5.2");
+            urlConnection.setRequestProperty("Origin", originURL);
+            urlConnection.setRequestProperty("Referer", referer);
             urlConnection.setConnectTimeout(30000);
             try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 result = stream.lines().collect(Collectors.joining("\n"));
@@ -72,7 +83,8 @@ public class HTTPHelper{
             e.printStackTrace();
             if (e.getMessage().contains("412")) {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "请求遭受Bilibili风控系统拦截，将休眠一小时\n");
-                ThreadHelper.sleep(3600000 + random.nextInt(8000));
+                state = State.BiliBiliBanned;
+                bannedURL.put(originURL, System.currentTimeMillis() + 3623333 + random.nextInt(8000));
             } else {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "Network Error:\n");
             }
@@ -96,6 +108,18 @@ public class HTTPHelper{
                 DataContainer.getProcessDataSuccessCount().incrementAndGet();
             }
         }
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setHandler(Consumer<NormalResponse> handler) {
+        this.handler = handler;
+    }
+
+    public enum State {
+        Init, Success, BiliBiliError, BiliBiliBanned, NetworkError, Error
     }
 
     public void execute() {

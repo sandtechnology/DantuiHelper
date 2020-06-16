@@ -10,6 +10,7 @@ import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.ThreadHelper;
 
 import java.util.*;
 
@@ -41,17 +42,24 @@ public class Start {
                 );
                 runnables.add(new IChecker() {
                     private long lastLive;
-                    final HTTPHelper httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
-                        RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                        if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
-                            lastLive = roomInfo.getStartTime();
-                            ImageManager.CacheImage image = roomInfo.getImage();
-                            DataContainer.getMessageHelper().sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
-                        }
-                    });
+                    HTTPHelper httpHelper;
+
+                    {
+                        httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
+                            RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
+                            if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
+                                lastLive = roomInfo.getStartTime();
+                                ImageManager.CacheImage image = roomInfo.getImage();
+                                DataContainer.getMessageHelper().sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
+                            }
+                        });
+                        httpHelper.setOriginURL("https://live.bilibili.com");
+                        httpHelper.setReferer("https://live.bilibili.com/21610959");
+                    }
 
                     @Override
                     public void check() {
+                        ThreadHelper.sleep(1500);
                         httpHelper.execute();
                     }
                 });
@@ -68,7 +76,6 @@ public class Start {
                         time++;
                     }
                     for (IChecker runnable : runnables) {
-                        Thread.sleep(2000);
                         runnable.check();
                     }
                 } catch (Throwable e) {

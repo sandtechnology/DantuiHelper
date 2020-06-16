@@ -4,6 +4,7 @@ import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
+import sandtechnology.utils.ThreadHelper;
 
 import java.util.HashSet;
 import java.util.List;
@@ -101,6 +102,8 @@ public class DynamicChecker implements IChecker {
             }
         };
         httpHelper = new HTTPHelper(apiUrl, handler);
+        httpHelper.setOriginURL("https://space.bilibili.com");
+        httpHelper.setReferer("https://space.bilibili.com/" + uid + "/dynamic");
     }
 
     public DynamicChecker(long uid, Consumer<NormalResponse> handler) {
@@ -126,5 +129,6 @@ public class DynamicChecker implements IChecker {
 
     public void check() {
         httpHelper.execute();
+        ThreadHelper.sleep(2000);
     }
 }

@@ -36,6 +36,8 @@ public class LiveRoomChecker implements IChecker {
                 DataContainer.getMessageHelper().sendingGroupMessage(groups, new WriteOnlyMessage(liveInfo.getAnchorInfo().getBaseInfo().getUsername()).add("开播啦！！！\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).newLine().add(image));
             }
         });
+        httpHelper.setOriginURL("https://live.bilibili.com");
+        httpHelper.setReferer("https://live.bilibili.com/" + roomID);
     }
 
     public LiveRoomChecker(long roomID, long... groupIDs) {
