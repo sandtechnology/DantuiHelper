@@ -59,7 +59,6 @@ public class Start {
 
                     @Override
                     public void check() {
-                        ThreadHelper.sleep(1500);
                         httpHelper.execute();
                     }
                 });
@@ -76,6 +75,7 @@ public class Start {
                         time++;
                     }
                     for (IChecker runnable : runnables) {
+                        ThreadHelper.sleep(1500);
                         runnable.check();
                     }
                 } catch (Throwable e) {
