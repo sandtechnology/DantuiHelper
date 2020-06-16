@@ -12,7 +12,7 @@ import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.ThreadHelper;
 
-import java.net.CookieManager;
+import java.net.*;
 import java.util.*;
 
 public class Start {
@@ -32,8 +32,16 @@ public class Start {
         }
         //设置cookies
         CookieManager.setDefault(new CookieManager());
+        CookieStore cookieStore = ((CookieManager) CookieManager.getDefault()).getCookieStore();
+        try {
+            cookieStore.add(new URI("/"), new HttpCookie("_UUID", UUID.randomUUID().toString().toUpperCase() + "infoc"));
+            cookieStore.add(new URI("/"), new HttpCookie("buvid3", UUID.randomUUID().toString().toUpperCase() + "infoc"));
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
         timer.scheduleAtFixedRate(new TimerTask() {
             private long time;
+            private Random random = new Random();
             private final List<IChecker> runnables = new ArrayList<>();
 
             {
@@ -78,7 +86,7 @@ public class Start {
                         time++;
                     }
                     for (IChecker runnable : runnables) {
-                        ThreadHelper.sleep(1500);
+                        ThreadHelper.sleep(2000 + random.nextInt(5000));
                         runnable.check();
                     }
                 } catch (Throwable e) {
