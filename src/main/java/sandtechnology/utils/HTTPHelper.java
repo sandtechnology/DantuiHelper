@@ -59,7 +59,7 @@ public class HTTPHelper {
         }
         try {
             URLConnection urlConnection = new URL(url).openConnection();
-            urlConnection.setRequestProperty("User-Agent", "DantuiHelper/2.5.2");
+            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0");
             urlConnection.setRequestProperty("Origin", originURL);
             urlConnection.setRequestProperty("Referer", referer);
             urlConnection.setConnectTimeout(30000);
