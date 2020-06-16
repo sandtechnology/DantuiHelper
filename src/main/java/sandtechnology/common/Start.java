@@ -12,6 +12,7 @@ import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.ThreadHelper;
 
+import java.net.CookieManager;
 import java.util.*;
 
 public class Start {
@@ -29,6 +30,8 @@ public class Start {
             DataContainer.getMessageHelper().sendingInfoMessage("示例已生成，请编辑配置文件");
             return;
         }
+        //设置cookies
+        CookieManager.setDefault(new CookieManager());
         timer.scheduleAtFixedRate(new TimerTask() {
             private long time;
             private final List<IChecker> runnables = new ArrayList<>();
