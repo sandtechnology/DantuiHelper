@@ -36,7 +36,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.5.3";
+        return "v2.5.4";
     }
 
     public static AtomicLong getProcessDataFailedCount() {
@@ -106,7 +106,7 @@ public class DataContainer {
             stringBuilder.append(Mirai.getBot().getGroup(group).getName());
             stringBuilder.append("(");
             stringBuilder.append(group);
-            stringBuilder.append("):");
+            stringBuilder.append(") ：");
             stringBuilder.append(member);
             stringBuilder.append("->");
             stringBuilder.append(chat);
@@ -159,7 +159,7 @@ public class DataContainer {
 
 
     public enum BotType {
-        Mirai("（Mirai内核，版本号1.0.2）", "Mirai项目地址：https://github.com/mamoe/mirai"),
+        Mirai("（Mirai内核，版本号1.1-EA）", "Mirai项目地址：https://github.com/mamoe/mirai"),
         JCQ("（JCQ内核，版本号为1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ");
         private final String coreDesc;
         private final String openSourceLink;

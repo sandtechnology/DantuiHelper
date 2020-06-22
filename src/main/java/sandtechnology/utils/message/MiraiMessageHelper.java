@@ -21,13 +21,24 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
     }
 
     public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
-        sendMessageStat();
-        Mirai.getBot().getGroup(fromGroup).get(fromQQ).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(fromQQ).fromGroup(fromGroup).type(WriteOnlyMessage.Type.Temp).build()));
+
+        try {
+            sendMessageStat();
+            Mirai.getBot().getGroup(fromGroup).get(fromQQ).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(fromQQ).fromGroup(fromGroup).type(WriteOnlyMessage.Type.Temp).build()));
+        } catch (Exception e) {
+            sendingErrorMessage(e, "Error when sending message");
+            sendTempMsg(fromGroup, fromQQ, message);
+        }
     }
 
     public void sendGroupMsg(long group, WriteOnlyMessage message) {
-        sendMessageStat();
-        Mirai.getBot().getGroup(group).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromGroup(group).type(WriteOnlyMessage.Type.Group).build()));
+        try {
+            sendMessageStat();
+            Mirai.getBot().getGroup(group).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromGroup(group).type(WriteOnlyMessage.Type.Group).build()));
+        } catch (Exception e) {
+            sendingErrorMessage(e, "Error when sending message");
+            sendGroupMsg(group, message);
+        }
     }
 
 
