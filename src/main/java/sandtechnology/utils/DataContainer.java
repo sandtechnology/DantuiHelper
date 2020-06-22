@@ -24,7 +24,7 @@ public class DataContainer {
             "\n%s" +
             "\n%s" +
             "\n运行时间：%s";
-    private final static Map<Long, AtomicLong> countingMap = new ConcurrentHashMap<>();
+    private final static Map<Long, Pair<AtomicLong, AtomicLong>> countingMap = new ConcurrentHashMap<>();
     private final static AtomicLong processDataSuccessCount = new AtomicLong();
     private final static AtomicLong processDataFailedCount = new AtomicLong();
     private final static AtomicLong sendMessageCount = new AtomicLong();
@@ -51,7 +51,7 @@ public class DataContainer {
         return sendMessageCount;
     }
 
-    public static Map<Long, AtomicLong> getCountingMap() {
+    public static Map<Long, Pair<AtomicLong, AtomicLong>> getCountingMap() {
         return countingMap;
     }
 
@@ -95,18 +95,21 @@ public class DataContainer {
     }
 
     public String getCountingData() {
-        StringBuilder stringBuilder = new StringBuilder("统计信息：\n");
-        List<Map.Entry<Long, AtomicLong>> list = new ArrayList<>(countingMap.entrySet());
-        list.sort(Comparator.comparingLong(e -> e.getValue().get()));
+        StringBuilder stringBuilder = new StringBuilder("统计信息：\n群号（群名）：活跃成员数->消息数\n");
+        List<Map.Entry<Long, Pair<AtomicLong, AtomicLong>>> list = new ArrayList<>(countingMap.entrySet());
+        list.sort(Comparator.comparingLong(e -> e.getValue().getLast().get()));
         Collections.reverse(list);
-        for (Map.Entry<Long, AtomicLong> entry : list) {
+        for (Map.Entry<Long, Pair<AtomicLong, AtomicLong>> entry : list) {
             Long group = entry.getKey();
-            AtomicLong count = entry.getValue();
+            AtomicLong member = entry.getValue().getFirst();
+            AtomicLong chat = entry.getValue().getLast();
             stringBuilder.append(Mirai.getBot().getGroup(group).getName());
             stringBuilder.append("(");
             stringBuilder.append(group);
             stringBuilder.append("):");
-            stringBuilder.append(count);
+            stringBuilder.append(member);
+            stringBuilder.append("->");
+            stringBuilder.append(chat);
             stringBuilder.append("\n");
         }
         return stringBuilder.toString();

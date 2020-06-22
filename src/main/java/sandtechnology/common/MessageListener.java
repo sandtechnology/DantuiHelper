@@ -19,6 +19,7 @@ import sandtechnology.utils.message.AbstractMessageHelper;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
 
 import static sandtechnology.utils.ImageManager.getImageData;
@@ -31,7 +32,7 @@ public class MessageListener implements ListenerHost {
     private final List<Pair<Long, Long>> waitingReplyMessageMap = new ArrayList<>(1);
     private final DataContainer dataContainer = DataContainer.getDataContainer();
     private final AbstractMessageHelper messageHelper = DataContainer.getMessageHelper();
-    private final Map<Long, AtomicLong> countingMap = DataContainer.getCountingMap();
+    private final Map<Long, Pair<AtomicLong, AtomicLong>> countingMap = DataContainer.getCountingMap();
 
     public static MessageListener getMessageListener() {
         return messageListener;
@@ -159,11 +160,18 @@ public class MessageListener implements ListenerHost {
         onGroupMsg(event.getGroup().getId(), event.getSender().getId(), new ReadOnlyMessage(event.getMessage()));
     }
 
+    private Map<Long, List<Long>> memberListMap = new ConcurrentHashMap<>();
     public void onGroupMsg(long fromGroup, long fromQQ, ReadOnlyMessage readOnlyMessage) {
         if (!countingMap.containsKey(fromGroup)) {
-            countingMap.put(fromGroup, new AtomicLong(1));
+            countingMap.put(fromGroup, new Pair<>(new AtomicLong(1), new AtomicLong(1)));
+            memberListMap.put(fromGroup, new CopyOnWriteArrayList<>(Collections.singleton(fromQQ)));
         } else {
-            countingMap.get(fromGroup).incrementAndGet();
+            List<Long> memberList = memberListMap.get(fromGroup);
+            if (!memberList.contains(fromQQ)) {
+                memberList.add(fromQQ);
+                countingMap.get(fromGroup).getFirst().incrementAndGet();
+            }
+            countingMap.get(fromGroup).getLast().incrementAndGet();
         }
         String msg = readOnlyMessage.toString();
         if (fromGroup == DataContainer.getMasterGroup() && fromQQ == DataContainer.getMaster()) {
