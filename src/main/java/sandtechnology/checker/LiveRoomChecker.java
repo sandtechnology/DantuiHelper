@@ -2,6 +2,7 @@ package sandtechnology.checker;
 
 import sandtechnology.bilibili.response.live.LiveInfo;
 import sandtechnology.bilibili.response.live.RoomInfo;
+import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.HTTPHelper;
@@ -17,7 +18,6 @@ public class LiveRoomChecker implements IChecker {
 
     private final HTTPHelper httpHelper;
     private final long roomID;
-    private long lastLive;
     private Set<Long> groups = new LinkedHashSet<>();
 
     public LiveRoomChecker(long roomID, Set<Long> groupIDs) {
@@ -30,8 +30,9 @@ public class LiveRoomChecker implements IChecker {
         httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + roomID, response -> {
             LiveInfo liveInfo = response.getLiveInfo();
             RoomInfo roomInfo = liveInfo.getRoomInfo();
+            long lastLive = ConfigLoader.getHolder().getLiveCheckerData().getLastLive(roomID);
             if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
-                lastLive = roomInfo.getStartTime();
+                ConfigLoader.getHolder().getLiveCheckerData().addLastLive(roomID, roomInfo.getStartTime());
                 ImageManager.CacheImage image = roomInfo.getImage();
                 DataContainer.getMessageHelper().sendingGroupMessage(groups, new WriteOnlyMessage(liveInfo.getAnchorInfo().getBaseInfo().getUsername()).add("开播啦！！！\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).newLine().add(image));
             }

@@ -15,7 +15,7 @@ public class Vote {
     @SerializedName("vote_id")
     long voteID;
     @SerializedName("uid")
-    long AuthorUID;
+    long authorUID;
     @SerializedName("type")
     int type;
     //总投票数

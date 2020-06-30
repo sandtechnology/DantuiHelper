@@ -9,6 +9,8 @@ import sandtechnology.Mirai;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.DynamicChecker;
+import sandtechnology.config.ConfigLoader;
+import sandtechnology.config.section.ModuleEnablerData;
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
@@ -63,7 +65,6 @@ public class MessageListener implements ListenerHost {
     }
 
     public void onPrivateMsg(long fromQQ, ReadOnlyMessage message) {
-
         String msg = message.toString();
         // 这里处理消息
         if (!waitingReplyMessageMap.isEmpty()) {
@@ -162,6 +163,7 @@ public class MessageListener implements ListenerHost {
 
     private Map<Long, List<Long>> memberListMap = new ConcurrentHashMap<>();
     public void onGroupMsg(long fromGroup, long fromQQ, ReadOnlyMessage readOnlyMessage) {
+        //回复和发送消息模块
         if (!countingMap.containsKey(fromGroup)) {
             countingMap.put(fromGroup, new Pair<>(new AtomicLong(1), new AtomicLong(1)));
             memberListMap.put(fromGroup, new CopyOnWriteArrayList<>(Collections.singleton(fromQQ)));
@@ -173,23 +175,29 @@ public class MessageListener implements ListenerHost {
             }
             countingMap.get(fromGroup).getLast().incrementAndGet();
         }
+
+        //转为string开始解析指令
         String msg = readOnlyMessage.toString();
+
+
+        //对于mirai好友会话拉跨的临时解决办法
         if (fromGroup == DataContainer.getMasterGroup() && fromQQ == DataContainer.getMaster()) {
             onPrivateMsg(fromQQ, readOnlyMessage);
             return;
         }
-        //群号
-        if (dataContainer.getTargetGroup().contains(fromGroup)) {
-            //补充群内小助手的信息
-            if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
-                new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
-                    RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                    if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
-                        messageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(getImageData(roomInfo.getCoverURL())));
-                    }
-                }).execute();
-                return;
-            }
+
+        //补充某群内小助手的信息
+        if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
+            new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
+                RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
+                if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
+                    messageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(getImageData(roomInfo.getCoverURL())));
+                }
+            }).execute();
+            return;
+        }
+        //复读模块
+        if (ConfigLoader.getHolder().getModuleEnablerData().isEnable(ModuleEnablerData.ModuleType.REPEATER, fromGroup)) {
             Pair<SeenCounter, ReadOnlyMessage> pairData;
             if (repatingMap.containsKey(fromGroup)) {
                 pairData = repatingMap.get(fromGroup);
@@ -206,7 +214,7 @@ public class MessageListener implements ListenerHost {
                 pairData.setLast(readOnlyMessage);
                 pairData.getFirst().firstSeen();
             }
-
         }
+
     }
-}
+    }

@@ -3,6 +3,8 @@ package sandtechnology.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.config.section.LiveCheckerData;
+import sandtechnology.config.section.ModuleEnablerData;
 import sandtechnology.config.section.SubscribeConfig;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.JsonHelper;
@@ -117,6 +119,18 @@ public class ConfigLoader {
         byte[] passwordMD5;
         @Ask(defaultValue = "-1", text = "请输入管理群号：")
         private long masterGroup = -1;
+        @SerializedName("liveData")
+        LiveCheckerData liveCheckerData = new LiveCheckerData();
+        @SerializedName("moduleData")
+        ModuleEnablerData moduleEnablerData = new ModuleEnablerData();
+
+        public LiveCheckerData getLiveCheckerData() {
+            return liveCheckerData;
+        }
+
+        public ModuleEnablerData getModuleEnablerData() {
+            return moduleEnablerData;
+        }
 
         public SubscribeConfig getSubscribeNodeMap() {
             return subscribeNodeMap;
