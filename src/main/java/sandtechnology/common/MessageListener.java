@@ -127,6 +127,10 @@ public class MessageListener implements ListenerHost {
                         Start.start();
                     }
                 }
+                if (command[0].equals("reload")) {
+                    ConfigLoader.load();
+                    messageHelper.sendPrivateMsg(fromQQ, "重载完成！");
+                }
                 if (command[0].equals("fetch")) {
                     if (command.length == 2) {
                         new DynamicChecker(Long.parseLong(command[1]), h -> messageHelper.sendingInfoMessage(h.getDynamicsDataList().getDynamics().get(0).getMessage())).check();
