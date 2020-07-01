@@ -29,14 +29,14 @@ public class ConfigLoader {
     private ConfigLoader() {
     }
 
-    public static ConfigHolder getHolder() {
+    synchronized public static ConfigHolder getHolder() {
         if (holder == null) {
             load();
         }
         return holder;
     }
 
-    public static ConfigHolder load() {
+    synchronized public static ConfigHolder load() {
         try {
             if (Files.exists(configPath)) {
                 holder = JsonHelper.getGsonInstance().fromJson(Files.newBufferedReader(configPath), ConfigHolder.class);
@@ -95,7 +95,7 @@ public class ConfigLoader {
         return null;
     }
 
-    public static void save() {
+    synchronized public static void save() {
         try {
             Files.write(configPath, Collections.singleton(gson.toJson(getHolder())));
         } catch (IOException e) {
