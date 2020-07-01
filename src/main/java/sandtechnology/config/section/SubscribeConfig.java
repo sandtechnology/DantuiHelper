@@ -16,7 +16,6 @@ public class SubscribeConfig {
     public Map<Long, Set<Long>> getSubscribeLiveRoom() {
         return subscribeLiveRoom;
     }
-
     public boolean isEmpty() {
         return subscribeDynamic.isEmpty() && subscribeLiveRoom.isEmpty();
     }

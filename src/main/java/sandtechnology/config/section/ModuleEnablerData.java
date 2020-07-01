@@ -1,5 +1,7 @@
 package sandtechnology.config.section;
 
+import sandtechnology.config.ConfigLoader;
+
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +22,7 @@ public class ModuleEnablerData {
 
     public void add(ModuleType moduleType, long groupID) {
         moduleEnablerMap.get(moduleType).add(groupID);
+        ConfigLoader.save();
     }
 
     public enum ModuleType {

@@ -1,6 +1,8 @@
 package sandtechnology.config.section;
 
 
+import sandtechnology.config.ConfigLoader;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -10,6 +12,7 @@ public class LiveCheckerData {
 
     public void addLastLive(long roomID, long lastLive) {
         liveStatus.put(roomID, lastLive);
+        ConfigLoader.save();
     }
 
     public long getLastLive(long roomID) {

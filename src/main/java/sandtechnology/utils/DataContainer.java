@@ -159,7 +159,7 @@ public class DataContainer {
 
 
     public enum BotType {
-        Mirai("（Mirai内核，版本号1.1-EA）", "Mirai项目地址：https://github.com/mamoe/mirai"),
+        Mirai("（Mirai内核，版本号1.0.3）", "Mirai项目地址：https://github.com/mamoe/mirai"),
         JCQ("（JCQ内核，版本号为1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ");
         private final String coreDesc;
         private final String openSourceLink;
