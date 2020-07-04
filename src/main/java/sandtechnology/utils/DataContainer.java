@@ -150,7 +150,7 @@ public class DataContainer {
     private static String getMemoryUsage() {
         MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
         MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();
-        return String.format("堆内存：%.2f/%.2fMB\n堆外内存：%.2f/%dMB", heapMemoryUsage.getCommitted() / 1E6, heapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getMax());
+        return String.format("内存情况（初始/已占用/已提交/最大）：\n堆内存：%.2f/%.2f/%.2f/%.2fMB\n堆外内存：%.2f/%.2f/%.2f/%dMB", heapMemoryUsage.getInit() / 1E6, heapMemoryUsage.getUsed() / 1E6, heapMemoryUsage.getCommitted() / 1E6, heapMemoryUsage.getMax() / 1E6, nonHeapMemoryUsage.getInit() / 1E6, nonHeapMemoryUsage.getUsed() / 1E6, nonHeapMemoryUsage.getCommitted() / 1E6, nonHeapMemoryUsage.getMax());
     }
 
     public List<Long> getTargetGroup() {
