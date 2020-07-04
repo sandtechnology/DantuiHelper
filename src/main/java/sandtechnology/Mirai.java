@@ -4,7 +4,6 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
-import net.mamoe.mirai.utils.SystemDeviceInfoKt;
 import sandtechnology.common.MessageListener;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
@@ -28,9 +27,8 @@ public class Mirai {
         System.out.println("Logging....");
         Bot bot = BotFactoryJvm.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
             {
-                setDeviceInfo(context -> SystemDeviceInfoKt.loadAsDeviceInfo(Paths.get("config", "deviceInfo.json").toFile(), context));
+                fileBasedDeviceInfo(Paths.get("config", "deviceInfo.json").toAbsolutePath().toString());
             }
-
         });
         ConfigLoader.save();
         try {
