@@ -128,7 +128,9 @@ public class MessageListener implements ListenerHost {
                     }
                 }
                 if (command[0].equals("reload")) {
+                    Start.exit();
                     ConfigLoader.load();
+                    Start.start();
                     messageHelper.sendPrivateMsg(fromQQ, "重载完成！");
                 }
                 if (command[0].equals("fetch")) {
