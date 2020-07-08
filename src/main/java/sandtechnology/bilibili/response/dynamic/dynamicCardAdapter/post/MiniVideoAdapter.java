@@ -1,7 +1,6 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.bilibili.response.user.UserProfile;
 import sandtechnology.holder.WriteOnlyMessage;
@@ -13,8 +12,13 @@ public class MiniVideoAdapter implements IAdapter {
     AuthorProfile user;
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("发了一个小视频：").add(dynamicData.getDisplayContent().getEmojiInfo().format(item.description)).newLine().add(ImageManager.getImageData(item.cover.originImgURL));
+    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+        return out.add(item.description).newLine().add(ImageManager.getImageData(item.cover.originImgURL));
+    }
+
+    @Override
+    public String getActionText() {
+        return "发了一个小视频";
     }
 
     private static class AuthorProfile extends UserProfile.Info {

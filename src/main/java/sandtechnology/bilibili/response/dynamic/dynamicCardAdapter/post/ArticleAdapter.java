@@ -1,7 +1,6 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
@@ -20,7 +19,12 @@ public class ArticleAdapter implements IAdapter {
     String text;
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("发了一篇专栏：\n").add(dynamicData.getDisplayContent().getEmojiInfo().format(text)).newLine().add("https://www.bilibili.com/read/cv").add(Long.toString(id)).newLine().add(title).newLine().add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
+    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+        return out.add(text).newLine().add("https://www.bilibili.com/read/cv").add(Long.toString(id)).newLine().add(title).newLine().add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
+    }
+
+    @Override
+    public String getActionText() {
+        return "发了一篇专栏";
     }
 }

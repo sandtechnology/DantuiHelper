@@ -1,7 +1,6 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.bilibili.response.dynamic.element.Picture;
 import sandtechnology.holder.WriteOnlyMessage;
@@ -15,10 +14,14 @@ public class TextWithPicAdapter implements IAdapter {
     private CommonItem item;
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("发了一条带图动态：\n")
-                .add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage(item.text + "\n")))
+    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+        return out.add(item.text).newLine()
                 .add(item.pictures.stream().map(Picture::getCacheImage).collect(Collectors.toList()));
+    }
+
+    @Override
+    public String getActionText() {
+        return "发了一条带图动态";
     }
 
     private static class CommonItem {

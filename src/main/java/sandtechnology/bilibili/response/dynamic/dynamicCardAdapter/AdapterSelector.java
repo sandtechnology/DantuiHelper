@@ -14,14 +14,29 @@ public class AdapterSelector {
         return getString(data, true);
     }
 
-    public static WriteOnlyMessage getString(DynamicData data, boolean withPrefix) {
-        WriteOnlyMessage message = new WriteOnlyMessage(data.getDesc().getUserProfile().getInfo().getUserName());
-        if (withPrefix) {
-            message.addFirst(new WriteOnlyMessage("动态链接：\n").add("https://t.bilibili.com/").add(data.getDesc().getDynamicID()).newLine());
+    public static WriteOnlyMessage getString(DynamicData data, boolean withLink, String... additionWord) {
+        WriteOnlyMessage message = new WriteOnlyMessage();
+        if (withLink) {
+            message.add("动态链接：\n").add("https://t.bilibili.com/").add(data.getDesc().getDynamicID()).newLine();
         }
-        return getGsonInstance().fromJson(data.getCard(), getAdapter(data.getDesc().getType()))
-                .addMessage(message, data)
-                //投票信息
+        //获取动态解析器
+        IAdapter adapter = getGsonInstance().fromJson(data.getCard(), getAdapter(data.getDesc().getType()));
+        //添加用户名
+        message.add(data.getDesc().getUserProfile().getInfo().getUserName());
+        //添加操作的文本
+        String actionText = data.getDisplayContent().getActionText();
+        message.add(actionText == null || actionText.isEmpty() ? adapter.getActionText() : actionText).add("：").add(String.join("", additionWord)).newLine();
+        //解析详细内容
+        if (adapter instanceof IRepostAdapter) {
+            message = ((IRepostAdapter) adapter).getContent(message, data);
+        } else {
+            message = adapter.getContent(message);
+        }
+        //解析表情
+        message = data.getDisplayContent().getEmojiInfo().format(message);
+
+        return message
+                //解析投票信息，转发的动态会重复解析，因此需要避免
                 .add(data.getDesc().isRepost() ? "" : data.getExtension().getVoteInfo());
     }
 

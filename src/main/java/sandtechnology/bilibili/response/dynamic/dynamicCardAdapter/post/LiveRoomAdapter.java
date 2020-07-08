@@ -1,7 +1,6 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
@@ -26,7 +25,12 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
     }
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
+    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
         return out.add("的直播间：").newLine().add(getRoomURL()).newLine().add(getTitle()).add("[").add(getStatus().getName()).add("]").newLine().add(ImageManager.getImageData(getCoverURL()));
+    }
+
+    @Override
+    public String getActionText() {
+        return "分享了直播间";
     }
 }

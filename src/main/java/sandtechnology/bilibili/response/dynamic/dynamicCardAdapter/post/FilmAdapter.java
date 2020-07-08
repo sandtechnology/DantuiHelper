@@ -1,7 +1,6 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
@@ -21,8 +20,13 @@ public class FilmAdapter implements IAdapter {
     }
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("分享了一部").add(seasonInfo.type).add("：").newLine().add(url).newLine().add(getTitle()).newLine().add(ImageManager.getImageData(coverURL));
+    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+        return out.add(url).newLine().add(getTitle()).newLine().add(ImageManager.getImageData(coverURL));
+    }
+
+    @Override
+    public String getActionText() {
+        return "分享了一部" + seasonInfo.type;
     }
 
     private static class SeasonInfo {

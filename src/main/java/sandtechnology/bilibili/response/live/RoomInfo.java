@@ -48,9 +48,9 @@ public class RoomInfo {
     }
 
     public enum Status {
-        NoStreaming("闲置"),
-        Streaming("直播"),
-        PlayingVideo("轮播"),
+        NoStreaming("闲置中"),
+        Streaming("直播中"),
+        PlayingVideo("轮播中"),
         Unknown("未知");
         final String name;
 

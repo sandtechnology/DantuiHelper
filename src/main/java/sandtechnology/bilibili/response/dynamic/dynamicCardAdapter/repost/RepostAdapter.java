@@ -3,12 +3,12 @@ package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.repost;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.AdapterSelector;
-import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
+import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IRepostAdapter;
 import sandtechnology.bilibili.response.dynamic.extension.ExtensionHolder;
 import sandtechnology.bilibili.response.user.UserProfile;
 import sandtechnology.holder.WriteOnlyMessage;
 
-public class RepostAdapter implements IAdapter {
+public class RepostAdapter implements IRepostAdapter {
 
     @SerializedName("origin")
     String originDynamic;
@@ -24,7 +24,7 @@ public class RepostAdapter implements IAdapter {
     private UserProfile.Info profile;
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
+    public WriteOnlyMessage getContent(WriteOnlyMessage out, DynamicData dynamicData) {
 
         //解析原动态部分
         WriteOnlyMessage originMessage;
@@ -32,28 +32,35 @@ public class RepostAdapter implements IAdapter {
         if (repostDynamic.isOriginDeleted()) {
             originMessage = new WriteOnlyMessage("错误：").add(repostDynamic.tips);
         } else {
-            originMessage = AdapterSelector.getString(new DynamicData(
+            //原动态解析
+            DynamicData originDynamicData = new DynamicData(
                     //补充原动态的用户信息
                     dynamicData.getDesc().getOriginDynamicDesc().setUserProfile(originUser)
                     , originDynamic
                     , originExtensionHolder
                     , originExtend
                     , dynamicData.getDisplayContent().getOriginDisplayHolder()
-            ), false);
+            );
+            if (isShareDynamic()) {
+                return new WriteOnlyMessage(dynamicData.getDesc().getUserProfile().getInfo().getUserName()).add(AdapterSelector.getString(originDynamicData, false, repostDynamic.content));
+            } else {
+                originMessage = AdapterSelector.getString(originDynamicData, false);
+            }
         }
 
-        //判断特殊动态 进行优化处理
-        //没有用户名的动态都是分享的非动态内容，如电影
-        if (!repostDynamic.isOriginDeleted() && (originUser.getInfo().getUserName() == null || originUser.getInfo().getUserName().isEmpty())) {
-            return out.add(originMessage);
-        } else {
-            return out.add("转发了一条动态：")
-                    .newLine()
-                    //解析表情
-                    .add(dynamicData.getDisplayContent().getEmojiInfo().format(new WriteOnlyMessage(repostDynamic.content)))
-                    .add("\n原动态信息：\n")
-                    .add(originMessage);
-        }
+        return out.add(repostDynamic.content)
+                .add("\n原动态信息：\n")
+                .add(originMessage);
+    }
+
+    @Override
+    public String getActionText() {
+        return "转发了一条动态";
+    }
+
+    @Override
+    public boolean isShareDynamic() {
+        return !repostDynamic.isOriginDeleted() && (originUser.getInfo().getUserName() == null || originUser.getInfo().getUserName().isEmpty());
     }
 
     private static class CommonItem {

@@ -1,7 +1,6 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
@@ -11,8 +10,13 @@ public class ShareAdapter implements IAdapter {
     Sketch sketch;
 
     @Override
-    public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("分享了以下内容：").newLine().add(dynamicData.getDisplayContent().getEmojiInfo().format(vest.content)).newLine().add(sketch.targetURL).newLine().add(sketch.title).newLine().add(ImageManager.getImageData(sketch.coverURL));
+    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+        return out.add(vest.content).newLine().add(sketch.targetURL).newLine().add(sketch.title).newLine().add(ImageManager.getImageData(sketch.coverURL));
+    }
+
+    @Override
+    public String getActionText() {
+        return "分享了以下内容";
     }
 
     static class Vest {
