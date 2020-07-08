@@ -25,7 +25,7 @@ public class AdapterSelector {
         message.add(data.getDesc().getUserProfile().getInfo().getUserName());
         //添加操作的文本
         String actionText = data.getDisplayContent().getActionText();
-        message.add(actionText == null || actionText.isEmpty() ? adapter.getActionText() : actionText).add("：").add(String.join("", additionWord)).newLine();
+        message.add(actionText == null || actionText.isEmpty() ? adapter.getActionText() : actionText).add("：").newLine().add(String.join("", additionWord));
         //解析详细内容
         if (adapter instanceof IRepostAdapter) {
             message = ((IRepostAdapter) adapter).getContent(message, data);
