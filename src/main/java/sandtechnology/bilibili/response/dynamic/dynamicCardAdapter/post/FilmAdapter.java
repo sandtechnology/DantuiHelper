@@ -17,7 +17,7 @@ public class FilmAdapter implements IAdapter {
     private String desc;
 
     public String getTitle() {
-        return desc == null ? seasonInfo.title : desc;
+        return desc == null || desc.isEmpty() ? seasonInfo.title : desc;
     }
 
     @Override
