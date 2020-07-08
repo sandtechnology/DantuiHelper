@@ -12,7 +12,7 @@ public class PlainTextAdapter implements IAdapter {
     private UserProfile.Info profile;
 
     public WriteOnlyMessage getContent(WriteOnlyMessage out) {
-        return out.newLine().add(item.content);
+        return out.add(item.content);
     }
 
     @Override
