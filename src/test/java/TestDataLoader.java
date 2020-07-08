@@ -51,16 +51,16 @@ public class TestDataLoader {
         System.out.println("===========Test Start==========");
         AtomicInteger atomicInteger = new AtomicInteger(0);
         TestDataLoader loader = JsonHelper.getGsonInstance().fromJson(new InputStreamReader(new FileInputStream("testdata.json"), StandardCharsets.UTF_8), TestDataLoader.class);
-        loader.testSet.forEach(
-                data -> {
-                        printWriter.println("Test #" + atomicInteger.incrementAndGet());
-                        checker.parse(data);
-                    }
-            );
-            loader.testMap.forEach((type, content) -> {
-                printWriter.println("===========" + "Test Type: " + type + "===========");
-                printWriter.println(content.getMessage().toCQString());
-            });
-            JCQ.getDemo().exit();
+        for (NormalResponse data : loader.testSet) {
+            printWriter.println("Test #" + atomicInteger.incrementAndGet());
+            checker.parse(data);
+        }
+        for (Map.Entry<String, DynamicData> entry : loader.testMap.entrySet()) {
+            String type = entry.getKey();
+            DynamicData content = entry.getValue();
+            printWriter.println("===========" + "Test Type: " + type + "===========");
+            printWriter.println(content.getMessage().toCQString());
+        }
+        JCQ.getDemo().exit();
     }
 }

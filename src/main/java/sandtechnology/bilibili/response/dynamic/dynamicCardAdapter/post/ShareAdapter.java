@@ -12,7 +12,7 @@ public class ShareAdapter implements IAdapter {
 
     @Override
     public WriteOnlyMessage addMessage(WriteOnlyMessage out, DynamicData dynamicData) {
-        return out.add("分享了以下内容：").add(dynamicData.getDisplayContent().getEmojiInfo().format(vest.content)).newLine().add(sketch.targetURL).newLine().add(sketch.title).newLine().add(ImageManager.getImageData(sketch.coverURL));
+        return out.add("分享了以下内容：").newLine().add(dynamicData.getDisplayContent().getEmojiInfo().format(vest.content)).newLine().add(sketch.targetURL).newLine().add(sketch.title).newLine().add(ImageManager.getImageData(sketch.coverURL));
     }
 
     static class Vest {

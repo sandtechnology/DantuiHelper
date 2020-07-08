@@ -54,7 +54,7 @@ public class Emoji {
                     if (!strings[i].isEmpty()) {
                         result.add(strings[i]);
                     }
-                    //排除末尾元素，末尾元素不需要加表情
+                    //排除末尾元素，表情是从中间加入的，末尾元素不需要加表情
                     if (i != strings.length - 1) {
                         result.add(cacheImage);
                     }
