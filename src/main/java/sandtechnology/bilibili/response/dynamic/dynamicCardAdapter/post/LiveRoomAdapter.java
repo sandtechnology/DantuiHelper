@@ -26,11 +26,11 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
 
     @Override
     public WriteOnlyMessage getContent(WriteOnlyMessage out) {
-        return out.add("的直播间：").newLine().add(getRoomURL()).newLine().add(getTitle()).add("[").add(getStatus().getName()).add("]").newLine().add(ImageManager.getImageData(getCoverURL()));
+        return out.add(getRoomURL()).newLine().add(getTitle()).add("[").add(getStatus().getName()).add("]").newLine().add(ImageManager.getImageData(getCoverURL()));
     }
 
     @Override
     public String getActionText() {
-        return "分享了直播间";
+        return "的直播间";
     }
 }

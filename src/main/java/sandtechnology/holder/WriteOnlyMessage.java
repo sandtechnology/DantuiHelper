@@ -14,10 +14,12 @@ import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
 
+
 /**
  * 发送消息的包装类
  */
 public class WriteOnlyMessage {
+
 
     private final List<Pair<StringBuilder, List<ImageManager.CacheImage>>> list = Collections.synchronizedList(new LinkedList<>());
 

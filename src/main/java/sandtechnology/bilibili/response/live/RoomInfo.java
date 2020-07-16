@@ -16,6 +16,8 @@ public class RoomInfo {
     private
     String coverURL;
 
+    @SerializedName("uname")
+    private String userName;
     @SerializedName("room_id")
     long roomID;
 
@@ -41,6 +43,10 @@ public class RoomInfo {
 
     public ImageManager.CacheImage getImage() {
         return coverURL.isEmpty() ? (keyframeURL.isEmpty() ? ImageManager.emptyImage : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public String getRoomURL() {
