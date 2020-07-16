@@ -104,14 +104,14 @@ public class DataContainer {
             AtomicLong member = entry.getValue().getFirst();
             AtomicLong chat = entry.getValue().getLast();
             stringBuilder.append(Mirai.getBot().getGroup(group).getName());
-            stringBuilder.append("(");
+            stringBuilder.append("（");
             stringBuilder.append(group);
-            stringBuilder.append("-").append(Mirai.getBot().getGroup(group).getMembers().size()).append(") ：");
+            stringBuilder.append("-").append(Mirai.getBot().getGroup(group).getMembers().size()).append("）：");
             stringBuilder.append(member);
             stringBuilder.append("->");
             stringBuilder.append(chat);
             stringBuilder.append("（");
-            stringBuilder.append(String.format(".2%f%%", (double) member.get() / Mirai.getBot().getGroup(group).getMembers().size()));
+            stringBuilder.append(String.format("%.2f%%", (double) member.get() * 100 / Mirai.getBot().getGroup(group).getMembers().size()));
             stringBuilder.append("）\n");
         }
         return stringBuilder.toString();
