@@ -95,7 +95,7 @@ public class DataContainer {
     }
 
     public String getCountingData() {
-        StringBuilder stringBuilder = new StringBuilder("统计信息：\n群号（群名）：活跃成员数->消息数\n");
+        StringBuilder stringBuilder = new StringBuilder("统计信息：\n群号（群名）：群成员总数/活跃成员数->消息数\n");
         List<Map.Entry<Long, Pair<AtomicLong, AtomicLong>>> list = new ArrayList<>(countingMap.entrySet());
         list.sort(Comparator.comparingLong(e -> e.getValue().getLast().get()));
         Collections.reverse(list);
@@ -107,7 +107,11 @@ public class DataContainer {
             stringBuilder.append("(");
             stringBuilder.append(group);
             stringBuilder.append(") ：");
+            stringBuilder.append("（");
+            stringBuilder.append(Mirai.getBot().getGroup(group).getMembers().size());
+            stringBuilder.append("/");
             stringBuilder.append(member);
+            stringBuilder.append("）");
             stringBuilder.append("->");
             stringBuilder.append(chat);
             stringBuilder.append("\n");
