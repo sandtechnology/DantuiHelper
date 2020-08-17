@@ -73,7 +73,7 @@
                 <artifactId>kotlin-maven-plugin</artifactId>
                 <version>${kotlin.version}</version>
                 <executions>
-                    <!--> <execution>
+                     <execution>
                          <id>compile</id>
                          <goals>
                              <goal>compile</goal>
@@ -84,7 +84,7 @@
                              </sourceDirs>
                          </configuration>
                      </execution>
-                    <execution>
+                    <!--<execution>
                          <id>test-compile</id>
                          <goals>
                              <goal>test-compile</goal>
@@ -94,7 +94,7 @@
                                  <sourceDir>${project.basedir}/src/test/java</sourceDir>
                              </sourceDirs>
                          </configuration>
-                     </execution><-->
+                     </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -160,7 +160,6 @@
                             <excludes>
                                 <exclude>module-info.class</exclude>
                                 <exclude>META-INF/*.kotlin_module</exclude>
-                                <exclude>META-INF/MANIFEST.MF</exclude>
                                 <exclude>META-INF/*.SF</exclude>
                                 <exclude>META-INF/*.DSA</exclude>
                                 <exclude>META-INF/*.RSA</exclude>

@@ -16,6 +16,10 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
 
     public void sendPrivateMsg(long qq, WriteOnlyMessage message, int times) {
         try {
+            if (message.isLongMessage()) {
+                sendPrivateMsg(qq, new WriteOnlyMessage("发送消息过长，已经停止发送"));
+                return;
+            }
             sendMessageStat();
             Mirai.getBot().getFriend(qq).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(qq).build()));
         } catch (Exception e) {
@@ -35,6 +39,10 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
     public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message, int times) {
 
         try {
+            if (message.isLongMessage()) {
+                sendTempMsg(fromGroup, fromQQ, new WriteOnlyMessage("发送消息过长，已经停止发送"));
+                return;
+            }
             sendMessageStat();
             Mirai.getBot().getGroup(fromGroup).get(fromQQ).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(fromQQ).fromGroup(fromGroup).type(WriteOnlyMessage.Type.Temp).build()));
         } catch (Exception e) {

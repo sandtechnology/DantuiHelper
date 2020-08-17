@@ -100,7 +100,7 @@ public class MessageListener implements ListenerHost {
                     waitingMessageMap.put(fromQQ, dataContainer.getRukiTargetGroup());
                 }
                 if (command[0].equals("stats")) {
-                    messageHelper.sendPrivateMsg(fromQQ, new WriteOnlyMessage(dataContainer.getCountingData()));
+                    messageHelper.sendingInfoMessage(new WriteOnlyMessage(dataContainer.getCountingData()));
                 }
                 if (command[0].equals("send")) {
                     if (command.length == 1) {

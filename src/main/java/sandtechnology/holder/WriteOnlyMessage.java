@@ -176,6 +176,10 @@ public class WriteOnlyMessage {
         return externalImage;
     }
 
+    public boolean isLongMessage() {
+        return list.stream().mapToInt(pair -> pair.getFirst().length() + pair.getLast().size() * 3).sum() > 300;
+    }
+
     public String toCQString() {
         trimImage();
         StringBuilder builder = new StringBuilder();
