@@ -177,7 +177,7 @@ public class WriteOnlyMessage {
     }
 
     public boolean isLongMessage() {
-        return list.stream().mapToInt(pair -> pair.getFirst().length() + pair.getLast().size() * 3).sum() > 300;
+        return list.stream().mapToInt(pair -> pair.getFirst().length() + pair.getLast().size() * 3).sum() > 500;
     }
 
     public String toCQString() {

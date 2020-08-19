@@ -1,18 +1,24 @@
 package sandtechnology.utils;
 
 
-import org.bouncycastle.util.Arrays;
-
 public class StringUtil {
     private StringUtil() {
     }
 
+    private static boolean contains(char[] array, char value) {
+        for (char v : array) {
+            if (v == value) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     public static String delete(String s, char... chars) {
         char[] originString = s.toCharArray();
         StringBuilder stringBuilder = new StringBuilder(originString.length);
         for (char c : originString) {
-            if (!Arrays.contains(chars, c)) {
+            if (!contains(chars, c)) {
                 stringBuilder.append(c);
             }
         }
