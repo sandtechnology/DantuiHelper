@@ -49,6 +49,8 @@ QQ群内B站动态/直播提醒机器人
   "PasswordMD5": [],
   //管理群号
   "masterGroup": 123456,
+  //是否使用新直播检测API 出错时可用
+  "usingLiveNewAPI": false,
   //存储的直播开播时间数据，用于防止重启后反复提醒
   "liveData": {
     "liveStatus": {

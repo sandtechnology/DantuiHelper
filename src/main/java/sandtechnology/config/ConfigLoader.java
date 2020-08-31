@@ -26,6 +26,7 @@ public class ConfigLoader {
     private static ConfigHolder holder;
     private static final Gson gson = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
 
+
     private ConfigLoader() {
     }
 
@@ -123,6 +124,12 @@ public class ConfigLoader {
         LiveCheckerData liveCheckerData = new LiveCheckerData();
         @SerializedName("moduleData")
         ModuleEnablerData moduleEnablerData = new ModuleEnablerData();
+        @SerializedName("usingLiveNewAPI")
+        boolean usingLiveNewAPI = false;
+
+        public boolean isUsingLiveNewAPI() {
+            return usingLiveNewAPI;
+        }
 
         public LiveCheckerData getLiveCheckerData() {
             return liveCheckerData;
