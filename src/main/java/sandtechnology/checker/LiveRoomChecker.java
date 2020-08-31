@@ -1,6 +1,7 @@
 package sandtechnology.checker;
 
 import sandtechnology.bilibili.response.live.LiveInfo;
+import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.WriteOnlyMessage;
@@ -31,9 +32,9 @@ public class LiveRoomChecker implements IChecker {
             LiveInfo liveInfo = response.getLiveInfo();
             RoomInfo roomInfo = liveInfo.getRoomInfo();
             long lastLive = ConfigLoader.getHolder().getLiveCheckerData().getLastLive(roomID);
-            if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
+            if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
                 ConfigLoader.getHolder().getLiveCheckerData().addLastLive(roomID, roomInfo.getStartTime());
-                ImageManager.CacheImage image = roomInfo.getImage();
+                ImageManager.CacheImage image = roomInfo.getPreview();
                 DataContainer.getMessageHelper().sendingGroupMessage(groups, new WriteOnlyMessage(liveInfo.getAnchorInfo().getBaseInfo().getUsername()).add("开播啦！！！\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).newLine().add(image));
             }
         });

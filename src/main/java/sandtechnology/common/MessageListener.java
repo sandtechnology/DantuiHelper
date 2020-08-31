@@ -7,6 +7,7 @@ import net.mamoe.mirai.message.GroupMessageEvent;
 import net.mamoe.mirai.message.TempMessageEvent;
 import sandtechnology.Mirai;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
+import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.DynamicChecker;
 import sandtechnology.config.ConfigLoader;
@@ -23,8 +24,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
-
-import static sandtechnology.utils.ImageManager.getImageData;
 
 public class MessageListener implements ListenerHost {
 
@@ -196,8 +195,8 @@ public class MessageListener implements ListenerHost {
         if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
             new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
                 RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                if (roomInfo.getStatus() == RoomInfo.Status.Streaming) {
-                    messageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(getImageData(roomInfo.getCoverURL())));
+                if (roomInfo.getStatus() == LiveStatus.Streaming) {
+                    messageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getPreview()));
                 }
             }).execute();
             return;

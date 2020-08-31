@@ -1,5 +1,6 @@
 package sandtechnology.common;
 
+import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.DynamicChecker;
 import sandtechnology.checker.IChecker;
@@ -58,9 +59,9 @@ public class Start {
                     {
                         httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
                             RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                            if (roomInfo.getStatus() == RoomInfo.Status.Streaming && lastLive != roomInfo.getStartTime()) {
+                            if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
                                 lastLive = roomInfo.getStartTime();
-                                ImageManager.CacheImage image = roomInfo.getImage();
+                                ImageManager.CacheImage image = roomInfo.getPreview();
                                 DataContainer.getMessageHelper().sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
                             }
                         });

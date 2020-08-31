@@ -2,9 +2,9 @@ package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
+import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.ImageManager;
 
 public class LiveRoomAdapter extends RoomInfo implements IAdapter {
 
@@ -20,13 +20,13 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
     }
 
     @Override
-    public Status getStatus() {
-        return getStatus(roundStatus);
+    public LiveStatus getStatus() {
+        return LiveStatus.getStatus(roundStatus);
     }
 
     @Override
     public WriteOnlyMessage getContent(WriteOnlyMessage out) {
-        return out.add(getRoomURL()).newLine().add(getTitle()).add("[").add(getStatus().getName()).add("]").newLine().add(ImageManager.getImageData(getCoverURL()));
+        return out.add(getRoomURL()).newLine().add(getTitle()).add("[").add(getStatus().getName()).add("]").newLine().add(getPreview());
     }
 
     @Override
