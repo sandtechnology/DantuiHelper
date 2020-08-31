@@ -67,6 +67,9 @@ public class AdapterSelector {
             case 2048:
                 adapterClass = ShareAdapter.class;
                 break;
+            case 4308:
+                adapterClass = StreamingAdapter.class;
+                break;
             case 4098:
             case 4099:
             case 512:
