@@ -30,7 +30,7 @@ public class RepostAdapter implements IRepostAdapter {
         WriteOnlyMessage originMessage;
         //判断是否已被删除
         if (repostDynamic.isOriginDeleted()) {
-            originMessage = new WriteOnlyMessage(" ❕ ").add(repostDynamic.tips);
+            originMessage = new WriteOnlyMessage(" ❗ ").add(repostDynamic.tips);
         } else {
             //原动态解析
             DynamicData originDynamicData = new DynamicData(
