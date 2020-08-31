@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import sandtechnology.utils.ImageManager;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 
@@ -42,7 +43,7 @@ public class RoomStaticInfo implements IRoomInfo {
 
     @Override
     public long getStartTime() {
-        return LocalDateTime.parse(liveTime, biliBiliDateTimeFormatter).getSecond();
+        return LocalDateTime.parse(liveTime, biliBiliDateTimeFormatter).toInstant(ZoneOffset.ofHours(8)).getEpochSecond();
     }
 
     @Override
