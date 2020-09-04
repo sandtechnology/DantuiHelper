@@ -30,8 +30,8 @@ public class LiveRoomChecker implements IChecker {
     private LiveRoomChecker(long roomID) {
         this.roomID = roomID;
         if (ConfigLoader.getHolder().isUsingLiveNewAPI()) {
-            httpHelper = new HTTPHelper("https://api.live.bilibili.com/room/v1/RoomStatic/get_room_static_info?room_id=" + roomID, response -> {
-                IRoomInfo roomInfo = response.getLiveRoomStaticInfo();
+            httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getH5InfoByRoom?room_id=" + roomID, response -> {
+                IRoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                 long lastLive = ConfigLoader.getHolder().getLiveCheckerData().getLastLive(roomID);
                 if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
                     ConfigLoader.getHolder().getLiveCheckerData().updateLastLive(roomID, roomInfo.getStartTime());

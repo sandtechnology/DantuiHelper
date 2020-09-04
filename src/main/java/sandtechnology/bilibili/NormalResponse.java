@@ -3,9 +3,7 @@ package sandtechnology.bilibili;
 import com.google.gson.JsonObject;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.DynamicsDataList;
-import sandtechnology.bilibili.response.live.IRoomInfo;
 import sandtechnology.bilibili.response.live.LiveInfo;
-import sandtechnology.bilibili.response.live.RoomStaticInfo;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
@@ -18,10 +16,6 @@ public class NormalResponse extends SafeResponse {
 
     public LiveInfo getLiveInfo() {
         return getGsonInstance().fromJson(data, LiveInfo.class);
-    }
-
-    public IRoomInfo getLiveRoomStaticInfo() {
-        return getGsonInstance().fromJson(data, RoomStaticInfo.class);
     }
 
     public DynamicsDataList getDynamicsDataList() {

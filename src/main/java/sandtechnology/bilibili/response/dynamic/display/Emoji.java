@@ -34,7 +34,7 @@ public class Emoji {
         WriteOnlyMessage result = new WriteOnlyMessage();
         for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : out.getContent()) {
             StringBuilder str = pair.getFirst();
-            //末尾带有表情的识别
+            //末尾表情的识别
             int addLastCounter = 0;
             int lastWithTextIndex;
             while (str.lastIndexOf(text) == (lastWithTextIndex = str.length() - text.length()) && lastWithTextIndex >= 0) {
@@ -43,8 +43,10 @@ public class Emoji {
             }
 
 
+            //按表情分隔
             String[] strings = str.toString().split
                     (
+                            //正则生成：
                             //"[表情]"->"表情"->"\[表情\]"（语法糖的原因后面的]不需要再次加入转义符号）
                             "\\[" + text.substring(1, text.length() - 1) + "]?"
                     );
@@ -54,16 +56,20 @@ public class Emoji {
                     if (!strings[i].isEmpty()) {
                         result.add(strings[i]);
                     }
-                    //排除末尾元素，表情是从中间加入的，末尾元素不需要加表情
+                    //排除末尾元素，因使用表情作为分隔符
+                    //表情必须从中间加入，末尾元素会在后面处理
                     if (i != strings.length - 1) {
                         result.add(cacheImage);
                     }
                 }
             } else {
+                //添加原有的字符串
                 result.add(str.toString());
             }
+            //添加原有的图片
             result.add(pair.getLast());
 
+            //处理末尾图片
             while (addLastCounter > 0) {
                 result.add(cacheImage);
                 addLastCounter--;

@@ -60,6 +60,7 @@ public class RoomInfo implements IRoomInfo {
 
     @Override
     public String getParentArea() {
+
         return parentArea;
     }
 
