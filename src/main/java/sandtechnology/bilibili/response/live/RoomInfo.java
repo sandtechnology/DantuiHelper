@@ -44,7 +44,7 @@ public class RoomInfo implements IRoomInfo {
 
     @Override
     public ImageManager.CacheImage getPreview() {
-        return coverURL.isEmpty() ? (keyframeURL.isEmpty() ? ImageManager.emptyImage : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
+        return coverURL.isEmpty() ? (keyframeURL == null || keyframeURL.isEmpty() ? ImageManager.emptyImage : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
     }
 
     @Override

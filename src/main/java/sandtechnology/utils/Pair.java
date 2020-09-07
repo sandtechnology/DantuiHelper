@@ -5,8 +5,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class Pair<V1, V2> {
     private V1 v1;
     private V2 v2;
-    private ReentrantReadWriteLock v1Lock = new ReentrantReadWriteLock();
-    private ReentrantReadWriteLock v2Lock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock v1Lock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock v2Lock = new ReentrantReadWriteLock();
 
     public Pair(V1 v1, V2 v2) {
         this.v1 = v1;
@@ -39,7 +39,7 @@ public class Pair<V1, V2> {
         }
     }
 
-    synchronized public Pair<V1, V2> setLast(V2 v2) {
+    public Pair<V1, V2> setLast(V2 v2) {
         v2Lock.writeLock().lock();
         this.v2 = v2;
         v2Lock.writeLock().unlock();
