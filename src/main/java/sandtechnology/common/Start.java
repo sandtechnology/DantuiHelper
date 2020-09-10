@@ -42,7 +42,7 @@ public class Start {
         }
         timer.scheduleAtFixedRate(new TimerTask() {
             private long time;
-            private Random random = new Random();
+            private final Random random = new Random();
             private final List<IChecker> runnables = new ArrayList<>();
 
             {
@@ -54,7 +54,7 @@ public class Start {
                 );
                 runnables.add(new IChecker() {
                     private long lastLive;
-                    HTTPHelper httpHelper;
+                    final HTTPHelper httpHelper;
 
                     {
                         httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
@@ -87,7 +87,7 @@ public class Start {
                         time++;
                     }
                     for (IChecker runnable : runnables) {
-                        ThreadHelper.sleep(2000 + random.nextInt(5000));
+                        ThreadHelper.sleep(3500 + random.nextInt(5000));
                         runnable.check();
                     }
                 } catch (Throwable e) {

@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 public class HTTPHelper {
 
-    private static Map<String, Long> bannedURL = new HashMap<>(2);
+    private static final Map<String, Long> bannedURL = new HashMap<>(2);
 
     private String url;
     private Consumer<NormalResponse> handler;
@@ -70,7 +70,12 @@ public class HTTPHelper {
             long code = safeResponse.getCode();
             if (code != 0) {
                 if (code != 600005 && code != -22 && code != 19002003) {
-                    DataContainer.getMessageHelper().sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error " + code), "content" + result);
+                    //请求过于频繁，请稍后再试
+                    if (code != -509) {
+                        DataContainer.getMessageHelper().sendingErrorMessage(new RuntimeException("Unexpected BiliBili Error " + code), "content" + result);
+                    } else {
+                        ThreadHelper.sleep(20000);
+                    }
                 }
                 state = State.BiliBiliError;
                 ThreadHelper.sleep(random.nextInt(10000) + 5000);
