@@ -61,6 +61,9 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
 
     public void sendGroupMsg(long group, WriteOnlyMessage message, int times) {
         try {
+            if (!Mirai.getBot().getGroups().contains(group)) {
+                return;
+            }
             sendMessageStat();
             Mirai.getBot().getGroup(group).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromGroup(group).type(WriteOnlyMessage.Type.Group).build()));
         } catch (Exception e) {
