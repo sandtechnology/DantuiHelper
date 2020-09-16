@@ -45,6 +45,7 @@ public class ImageManager {
         connection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0");
         Files.createDirectories(absolutePath.getParent());
         connection.setConnectTimeout(30000);
+        connection.setReadTimeout(30000);
         try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false); BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
             int code;
             byte[] buff = new byte[1024];

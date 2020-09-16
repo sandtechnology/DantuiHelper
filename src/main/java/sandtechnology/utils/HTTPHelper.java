@@ -63,6 +63,7 @@ public class HTTPHelper {
             urlConnection.setRequestProperty("Origin", originURL);
             urlConnection.setRequestProperty("Referer", referer);
             urlConnection.setConnectTimeout(30000);
+            urlConnection.setReadTimeout(30000);
             try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 result = stream.lines().collect(Collectors.joining("\n"));
             }

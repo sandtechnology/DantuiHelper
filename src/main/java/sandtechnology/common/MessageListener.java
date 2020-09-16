@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class MessageListener implements ListenerHost {
 
-    private static MessageListener messageListener = new MessageListener();
+    private static final MessageListener messageListener = new MessageListener();
     private final Map<Long, Pair<SeenCounter, ReadOnlyMessage>> repatingMap = new ConcurrentHashMap<>();
     private final Map<Long, List<Long>> waitingMessageMap = new ConcurrentHashMap<>();
     private final List<Pair<Long, Long>> waitingReplyMessageMap = new ArrayList<>(1);
@@ -166,7 +166,7 @@ public class MessageListener implements ListenerHost {
         onGroupMsg(event.getGroup().getId(), event.getSender().getId(), new ReadOnlyMessage(event.getMessage()));
     }
 
-    private Map<Long, List<Long>> memberListMap = new ConcurrentHashMap<>();
+    private final Map<Long, List<Long>> memberListMap = new ConcurrentHashMap<>();
     public void onGroupMsg(long fromGroup, long fromQQ, ReadOnlyMessage readOnlyMessage) {
         //回复和发送消息模块
         if (!countingMap.containsKey(fromGroup)) {
