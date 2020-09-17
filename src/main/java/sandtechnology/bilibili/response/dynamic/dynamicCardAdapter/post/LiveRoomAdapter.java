@@ -2,14 +2,10 @@ package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
 
 public class LiveRoomAdapter extends RoomInfo implements IAdapter {
-
-    @SerializedName("round_status")
-    private int roundStatus;
 
     @SerializedName("roomid")
     private long roomID;
@@ -17,11 +13,6 @@ public class LiveRoomAdapter extends RoomInfo implements IAdapter {
     @Override
     public long getRoomID() {
         return roomID;
-    }
-
-    @Override
-    public LiveStatus getStatus() {
-        return LiveStatus.getStatus(roundStatus);
     }
 
     @Override
