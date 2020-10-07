@@ -47,7 +47,7 @@ public class DynamicChecker implements IChecker {
     private final HTTPHelper httpHelper;
     private final long uid;
     private long nextPageOffsetById = 0;
-    private Set<Long> sendDynamicIDSet = new HashSet<>();
+    private final Set<Long> sendDynamicIDSet = new HashSet<>();
     private long mostLateTimeStamp = 0;
 
     public DynamicChecker(long uid, Set<Long> groups) {
