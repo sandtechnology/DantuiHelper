@@ -93,6 +93,7 @@ public class HTTPHelper {
                 bannedURL.put(originURL, System.currentTimeMillis() + 3623333 + random.nextInt(8000));
             } else {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "Network Error:\n");
+                ThreadHelper.sleep(random.nextInt(5000) + 5000);
             }
         } catch (Exception e) {
             if (retry < 3) {
@@ -106,6 +107,7 @@ public class HTTPHelper {
                 } else {
                     DataContainer.getMessageHelper().sendingErrorMessage(e, "Unknown Error:\n");
                 }
+                ThreadHelper.sleep(random.nextInt(5000) + 5000);
             }
         } finally {
             if (state != State.Success) {
