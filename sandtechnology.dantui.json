@@ -2,51 +2,51 @@
   "ret": 1,
   "apiver": 9,
   "name": "dantui",
-  "version": "2.5.6",
+  "version": "2.6.1",
   "version_id": 1,
   "author": "sandtechnology",
-  "description": "µ¥ÍÆÐÇÉ³²å¼þ",
+  "description": "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É³ï¿½ï¿½ï¿½",
   "class": "sandtechnology.JCQ",
   "event": [
     {
       "id": 1,
       "type": 21,
-      "name": "Ë½ÁÄÏûÏ¢´¦Àí",
+      "name": "Ë½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½",
       "function": "privateMsg",
       "priority": 30000
     },
     {
       "id": 2,
       "type": 2,
-      "name": "ÈºÏûÏ¢´¦Àí",
+      "name": "Èºï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½",
       "function": "groupMsg",
       "priority": 30000
     },
     {
       "id": 1001,
       "type": 1001,
-      "name": "¿áQÆô¶¯ÊÂ¼þ",
+      "name": "ï¿½ï¿½Qï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½",
       "priority": 30000,
       "function": "startup"
     },
     {
       "id": 1002,
       "type": 1002,
-      "name": "¿áQ¹Ø±ÕÊÂ¼þ",
+      "name": "ï¿½ï¿½Qï¿½Ø±ï¿½ï¿½Â¼ï¿½",
       "priority": 30000,
       "function": "exit"
     },
     {
       "id": 1003,
       "type": 1003,
-      "name": "Ó¦ÓÃÒÑ±»ÆôÓÃ",
+      "name": "Ó¦ï¿½ï¿½ï¿½Ñ±ï¿½ï¿½ï¿½ï¿½ï¿½",
       "priority": 30000,
       "function": "enable"
     },
     {
       "id": 1004,
       "type": 1004,
-      "name": "Ó¦ÓÃ½«±»Í£ÓÃ",
+      "name": "Ó¦ï¿½Ã½ï¿½ï¿½ï¿½Í£ï¿½ï¿½",
       "priority": 30000,
       "function": "disable"
     }
