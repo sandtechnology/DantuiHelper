@@ -1,13 +1,12 @@
 package sandtechnology.bilibili.response.dynamic.extension;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.utils.TimeUtil;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Vote {
+public class VoteInfo {
     @SerializedName("desc")
     String text;
     @SerializedName("endtime")
@@ -26,16 +25,20 @@ public class Vote {
     @SerializedName("options")
     private
     List<Option> optionList;
-    private static ZoneId zoneId = ZoneId.of("UTC+8");
     //0=正常 4=未找到对应动态？
     @SerializedName("status")
     private
     int status;
 
+    public String getTitle() {
+        return text;
+    }
+
     @Override
     public String toString() {
-        return "\n投票信息：" +
-                "\n状态：" + (endTime >= Instant.now().atZone(zoneId).toEpochSecond() ? "进行中" : "已结束")
+        return "\n===\n投票信息：" +
+                "\n名称：" + text +
+                "\n状态：" + (endTime >= TimeUtil.nowSec() ? "进行中，剩余" + TimeUtil.getFormattedTimeSec(TimeUtil.offsetFromNowSec(endTime)) : "已结束")
                 + "\n总投票人数：" + count
                 + "\n投票选项：\n" +
                 optionList.stream().map(Option::toString).collect(Collectors.joining("\n"));

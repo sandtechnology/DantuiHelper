@@ -14,6 +14,10 @@ public class NormalResponse extends SafeResponse {
 
     private JsonObject data;
 
+    public JsonObject getRawData() {
+        return data;
+    }
+
     public LiveInfo getLiveInfo() {
         return getGsonInstance().fromJson(data, LiveInfo.class);
     }

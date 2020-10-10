@@ -23,7 +23,7 @@ public class VideoAdapter implements IAdapter {
 
     @Override
     public String getActionText() {
-        return "发布了一个视频";
+        return "投稿了视频";
     }
 
     private String getVideoLink() {

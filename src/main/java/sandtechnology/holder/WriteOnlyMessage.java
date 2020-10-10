@@ -74,8 +74,14 @@ public class WriteOnlyMessage {
         if (str == null || str.isEmpty()) {
             return this;
         }
-        //移除识别的特殊字符
-        str = StringUtil.delete(str, '\u200B', '\u200D');
+        //替换原先用于符号替换的特殊字符:
+        // \u200B为投票或互动抽奖->\ud83d\udcca（unicode柱形图符号）或\ud83c\udf81（unicode礼物符号）
+        // \u200D为话题识别符->直接移除
+        str = StringUtil.delete(str, '\u200D');
+        str = str.replace("\u200B互动抽奖", "\uD83C\uDF81互动抽奖");
+        str = str.replace("\u200B", "\ud83d\udcca");
+
+        //自动合并
         if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
             list.get(list.size() - 1).getFirst().append(str);
         } else {

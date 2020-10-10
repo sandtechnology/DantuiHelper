@@ -19,8 +19,8 @@ public class HTTPHelper {
 
     private static final Map<String, Long> bannedURL = new HashMap<>(2);
 
-    private String url;
-    private Consumer<NormalResponse> handler;
+    protected String url;
+    protected Consumer<NormalResponse> handler;
     private State state;
     private String originURL;
     private String referer;

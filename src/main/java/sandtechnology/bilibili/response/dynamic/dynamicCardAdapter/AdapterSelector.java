@@ -1,14 +1,26 @@
 package sandtechnology.bilibili.response.dynamic.dynamicCardAdapter;
 
+import com.google.gson.reflect.TypeToken;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.*;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.repost.RepostAdapter;
+import sandtechnology.bilibili.response.dynamic.extension.VoteInfo;
+import sandtechnology.bilibili.response.dynamic.lottery.LotteryData;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.DataGetter;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
 public class AdapterSelector {
 
+
+    private final static DataGetter<LotteryData> lotteryInfoGetter = new DataGetter<>("https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice", new TypeToken<LotteryData>() {
+    }, "dynamic_id");
+
+    static {
+        lotteryInfoGetter.setOriginURL("https://t.bilibili.com");
+        lotteryInfoGetter.setReferer("https://t.bilibili.com/lottery/h5/index/");
+    }
 
     public static WriteOnlyMessage getString(DynamicData data) {
         return getString(data, true);
@@ -35,9 +47,20 @@ public class AdapterSelector {
         //解析表情
         message = data.getDisplayContent().getEmojiInfo().format(message);
 
-        return message
-                //解析投票信息，转发的动态会重复解析，因此需要避免
-                .add(data.getDesc().isRepost() ? "" : data.getExtension().getVoteInfo());
+        if (data.getRichMessageInfo().getLotteryInfo() != null) {
+            lotteryInfoGetter.query(data.getDesc().getDynamicID());
+            message.add(lotteryInfoGetter.getData().toWriteOnlyMessage());
+        }
+
+        //解析投票信息
+        VoteInfo voteInfo = data.getExtension().getVoteInfo();
+        if (voteInfo != null) {
+            //转发的动态会重复解析，因此需要避免
+            if (!data.getDesc().isRepost()) {
+                message.add(voteInfo.toString());
+            }
+        }
+        return message;
     }
 
     public static Class<? extends IAdapter> getAdapter(int type) {

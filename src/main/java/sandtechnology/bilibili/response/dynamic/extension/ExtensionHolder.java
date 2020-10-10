@@ -1,13 +1,15 @@
 package sandtechnology.bilibili.response.dynamic.extension;
 
+import com.google.gson.annotations.SerializedName;
 import sandtechnology.utils.JsonHelper;
 
 public class ExtensionHolder {
 
-    private String vote;
+    @SerializedName("vote")
+    private String voteInfo;
 
 
-    public String getVoteInfo() {
-        return vote == null ? "" : JsonHelper.getGsonInstance().fromJson(vote, Vote.class).toString();
+    public VoteInfo getVoteInfo() {
+        return voteInfo == null ? null : JsonHelper.getGsonInstance().fromJson(voteInfo, VoteInfo.class);
     }
 }

@@ -123,32 +123,8 @@ public class DataContainer {
 
     private static String getRunningTime() {
         long offset = ManagementFactory.getRuntimeMXBean().getUptime();
-        //秒
-        long sec = offset / 1000;
-        //毫秒
-        long millsec = offset - sec * 1000;
-        //分钟
-        long minutes = 0;
-        //小时
-        long hours = 0;
-        //天
-        long day = 0;
-        if (sec >= 60) {
-            minutes = sec / 60;
-            sec -= minutes * 60;
-            if (minutes >= 60) {
-                hours = minutes / 60;
-                minutes -= hours * 60;
-                if (hours >= 24) {
-                    day = hours / 24;
-                    hours -= day * 24;
-                }
-            }
-
-        }
-        return String.format("%d天%d时%d分%d秒%d毫秒", day, hours, minutes, sec, millsec);
+        return TimeUtil.getFormattedTimeMS(offset);
     }
-
     private static String getMemoryUsage() {
         MemoryUsage heapMemoryUsage = ManagementFactory.getMemoryMXBean().getHeapMemoryUsage();
         MemoryUsage nonHeapMemoryUsage = ManagementFactory.getMemoryMXBean().getNonHeapMemoryUsage();

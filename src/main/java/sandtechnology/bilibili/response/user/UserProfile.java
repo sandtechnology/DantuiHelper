@@ -13,7 +13,7 @@ public class UserProfile {
     }
 
     public static class Info {
-        int uid;
+        long uid;
         @SerializedName("uname")
         String userName;
         @SerializedName("face")
@@ -27,7 +27,7 @@ public class UserProfile {
             return userName;
         }
 
-        public int getUid() {
+        public long getUid() {
             return uid;
         }
     }

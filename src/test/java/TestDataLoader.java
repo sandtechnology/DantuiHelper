@@ -27,14 +27,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TestDataLoader {
 
 
-    private static final DynamicChecker checker = new DynamicChecker(1, new HashSet<>()).setHandler(res -> res.getDynamicsDataList().getDynamics().forEach(data -> DataContainer.getMessageHelper().sendingInfoMessage(data.getMessage())));
+    private static final DynamicChecker checker = new DynamicChecker(1, new HashSet<>()).setHandler(res ->
+
+
+            res.getDynamicsDataList().getDynamics().forEach(data -> DataContainer.getMessageHelper().sendingInfoMessage(data.getMessage())));
     @SerializedName("typeSet")
     Map<String, DynamicData> testMap;
     @SerializedName("normalSet")
     private
     List<NormalResponse> testSet;
-    @SerializedName("kaomojiTest")
-    String kaomojiTest;
 
     @Test
     public void test() throws Exception {
