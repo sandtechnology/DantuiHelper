@@ -18,7 +18,10 @@ public class VideoAdapter implements IAdapter {
 
     @Override
     public WriteOnlyMessage getContent(WriteOnlyMessage out) {
-        return out.add(dynamic).newLine().add(getVideoLink()).newLine().add(title).newLine().add(ImageManager.getImageData(picURL));
+        if (!dynamic.isEmpty()) {
+            out.add(dynamic).newLine();
+        }
+        return out.add(getVideoLink()).newLine().add(title).newLine().add(ImageManager.getImageData(picURL));
     }
 
     @Override
