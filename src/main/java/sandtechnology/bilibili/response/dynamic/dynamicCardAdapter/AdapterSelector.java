@@ -48,6 +48,8 @@ public class AdapterSelector {
         message = data.getDisplayContent().getEmojiInfo().format(message);
 
         if (data.getRichMessageInfo().getLotteryInfo() != null) {
+            //解析阿B的特殊字符
+            message.replace("\u200B互动抽奖", "\uD83C\uDF81互动抽奖");
             lotteryInfoGetter.query(data.getDesc().getDynamicID());
             message.add(lotteryInfoGetter.getData().toWriteOnlyMessage());
         }
@@ -55,11 +57,15 @@ public class AdapterSelector {
         //解析投票信息
         VoteInfo voteInfo = data.getExtension().getVoteInfo();
         if (voteInfo != null) {
+            //解析阿B的特殊字符
+            message.replace("\u200B" + voteInfo.getTitle(), "\ud83d\udcca" + voteInfo.getTitle());
             //转发的动态会重复解析，因此需要避免
             if (!data.getDesc().isRepost()) {
                 message.add(voteInfo.toString());
             }
         }
+        //移除多余的特殊字符
+        message.replace("\u200B", "").replace("\u200D", "");
         return message;
     }
 

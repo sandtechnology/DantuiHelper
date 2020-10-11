@@ -70,17 +70,24 @@ public class WriteOnlyMessage {
         return this;
     }
 
+    public WriteOnlyMessage replace(String str, String replacement) {
+        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+            StringBuilder stringBuilder = pair.getFirst();
+            int index = stringBuilder.indexOf(str);
+            if (index != -1) {
+                stringBuilder.delete(index, index + str.length());
+                if (!replacement.isEmpty()) {
+                    stringBuilder.insert(index, replacement);
+                }
+            }
+        }
+        return this;
+    }
+
     public WriteOnlyMessage add(String str) {
         if (str == null || str.isEmpty()) {
             return this;
         }
-        //替换原先用于符号替换的特殊字符:
-        // \u200B为投票或互动抽奖->\ud83d\udcca（unicode柱形图符号）或\ud83c\udf81（unicode礼物符号）
-        // \u200D为话题识别符->直接移除
-        str = StringUtil.delete(str, '\u200D');
-        str = str.replace("\u200B互动抽奖", "\uD83C\uDF81互动抽奖");
-        str = str.replace("\u200B", "\ud83d\udcca");
-
         //自动合并
         if (!list.isEmpty() && getLastElement(list).getLast().isEmpty()) {
             list.get(list.size() - 1).getFirst().append(str);
