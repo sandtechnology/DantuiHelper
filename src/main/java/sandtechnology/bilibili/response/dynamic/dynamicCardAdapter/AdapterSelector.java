@@ -6,6 +6,7 @@ import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.post.*;
 import sandtechnology.bilibili.response.dynamic.dynamicCardAdapter.repost.RepostAdapter;
 import sandtechnology.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.bilibili.response.dynamic.lottery.LotteryData;
+import sandtechnology.bilibili.response.dynamic.rich.DisputeInfo;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataGetter;
 
@@ -38,6 +39,13 @@ public class AdapterSelector {
         //添加操作的文本
         String actionText = data.getDisplayContent().getActionText();
         message.add(actionText == null || actionText.isEmpty() ? adapter.getActionText() : actionText).add("：").newLine().add(String.join("", additionWord));
+
+        //解析提醒信息
+        DisputeInfo disputeInfo = data.getRichMessageInfo().getDisputeInfo();
+        if (disputeInfo != null) {
+            message.add("⚠").add(disputeInfo.getContent()).newLine();
+        }
+
         //解析详细内容
         if (adapter instanceof IRepostAdapter) {
             message = ((IRepostAdapter) adapter).getContent(message, data);

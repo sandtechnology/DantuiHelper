@@ -1,5 +1,6 @@
 package sandtechnology.utils.message;
 
+import net.mamoe.mirai.message.data.MessageChain;
 import sandtechnology.Mirai;
 import sandtechnology.holder.WriteOnlyMessage;
 
@@ -59,13 +60,18 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
         sendGroupMsg(group, message, 1);
     }
 
+
     public void sendGroupMsg(long group, WriteOnlyMessage message, int times) {
         try {
             if (!Mirai.getBot().getGroups().contains(group)) {
                 return;
             }
+            MessageChain messageChain = message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromGroup(group).type(WriteOnlyMessage.Type.Group).build());
+            if (messageChain.isEmpty()) {
+                return;
+            }
             sendMessageStat();
-            Mirai.getBot().getGroup(group).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromGroup(group).type(WriteOnlyMessage.Type.Group).build()));
+            Mirai.getBot().getGroup(group).sendMessage(messageChain);
         } catch (Exception e) {
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");

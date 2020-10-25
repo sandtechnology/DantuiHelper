@@ -19,6 +19,13 @@ public class RichMessageInfo {
     //投票信息
     @SerializedName("vote")
     VoteInfo voteInfo;
+    //警告信息
+    @SerializedName("dispute")
+    DisputeInfo disputeInfo;
+
+    public DisputeInfo getDisputeInfo() {
+        return disputeInfo;
+    }
 
     public LotteryInfo getLotteryInfo() {
         return lotteryInfo;

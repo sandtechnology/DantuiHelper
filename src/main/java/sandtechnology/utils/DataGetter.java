@@ -18,6 +18,7 @@ public class DataGetter<T> extends HTTPHelper {
         originURL = url;
         this.perms = perms;
         this.typeToken = typeToken;
+        handler = normalResponse -> data = JsonHelper.getGsonInstance().fromJson(normalResponse.getRawData(), typeToken.getType());
     }
 
     public T getData() {
@@ -25,12 +26,6 @@ public class DataGetter<T> extends HTTPHelper {
     }
 
     public void query(String... values) {
-        //Java limit, lazy initialize
-        if (getHandler() == null) {
-            setHandler(normalResponse -> {
-                data = JsonHelper.getGsonInstance().fromJson(normalResponse.getRawData(), typeToken.getType());
-            });
-        }
         if (perms.length != values.length) {
             throw new IllegalStateException("Perm length mismatch!");
         }
