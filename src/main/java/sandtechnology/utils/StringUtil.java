@@ -14,6 +14,40 @@ public class StringUtil {
         return false;
     }
 
+    public static class DelimitedStringBuilder {
+        private final String[] delimiter;
+        private final StringBuilder stringBuilder = new StringBuilder();
+
+        public DelimitedStringBuilder(String... delimiter) {
+            this.delimiter = delimiter;
+        }
+
+        public DelimitedStringBuilder append(String str) {
+            if (stringBuilder.length() != 0) {
+                stringBuilder.append(delimiter[0]);
+            }
+            stringBuilder.append(str);
+            return this;
+        }
+
+        public DelimitedStringBuilder append(int i) {
+            stringBuilder.append(i);
+            return this;
+        }
+
+        public DelimitedStringBuilder append(String str, int delimiterIndex) {
+            if (stringBuilder.length() != 0) {
+                stringBuilder.append(delimiter[delimiterIndex]);
+            }
+            stringBuilder.append(str);
+            return this;
+        }
+
+        public String build() {
+            return stringBuilder.toString();
+        }
+    }
+
     public static String delete(String s, char... chars) {
         char[] originString = s.toCharArray();
         StringBuilder stringBuilder = new StringBuilder(originString.length);

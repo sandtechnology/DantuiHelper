@@ -2,6 +2,7 @@ package sandtechnology.bilibili.response.dynamic.lottery;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.StringUtil;
 import sandtechnology.utils.TimeUtil;
 
 import java.time.Instant;
@@ -16,8 +17,9 @@ public class LotteryData {
     int requiredATCount;
     @SerializedName("lottery_feed_limit")
     int isFeedNeeded;
+    //是否需要发货地址
     @SerializedName("need_post")
-    int isRePostNeeded;
+    int isPostNeeded;
     @SerializedName("first_prize")
     int firstPrizeCount;
     @SerializedName("first_prize_cmt")
@@ -43,34 +45,37 @@ public class LotteryData {
 
     private String getJoinLotteryCondition() {
 
-        StringBuilder stringBuilder = new StringBuilder();
-        if (isRePostNeeded == 1 && isFeedNeeded == 1) {
-            stringBuilder.append("关注并转发本动态");
-        } else if (isRePostNeeded == 1) {
+        StringUtil.DelimitedStringBuilder stringBuilder = new StringUtil.DelimitedStringBuilder("并");
+        if (isFeedNeeded == 1) {
+            stringBuilder.append("关注");
+        }
+        if (type == 9) {
+            stringBuilder.append("在本动态下评论");
+        } else {
             stringBuilder.append("转发本动态");
         }
         if (requiredATCount != 0) {
-            stringBuilder.append("，并同时@").append(requiredATCount).append("个人");
+            stringBuilder.append("同时@").append(requiredATCount).append("个人");
         }
-        return stringBuilder.toString();
+        return stringBuilder.build();
     }
 
     private String getPrizeInfo() {
         StringBuilder stringBuilder = new StringBuilder();
         if (firstPrizeCount != 0) {
-            stringBuilder.append(" 一等奖：").append(firstPrizeName);
+            stringBuilder.append(" 一等奖：").append(firstPrizeName).append(" x").append(firstPrizeCount);
             if (lotteryResult != null) {
                 stringBuilder.append("\n 中奖者：").append(lotteryResult.firstPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
             }
         }
         if (secondPrizeCount != 0) {
-            stringBuilder.append("\n 二等奖：").append(secondPrizeName);
+            stringBuilder.append("\n 二等奖：").append(secondPrizeName).append(" x").append(secondPrizeCount);
             if (lotteryResult != null) {
                 stringBuilder.append("\n 中奖者：").append(lotteryResult.secondPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
             }
         }
         if (thirdPrizeCount != 0) {
-            stringBuilder.append("\n 三等奖：").append(thirdPrizeName);
+            stringBuilder.append("\n 三等奖：").append(thirdPrizeName).append(" x").append(thirdPrizeCount);
             if (lotteryResult != null) {
                 stringBuilder.append("\n 中奖者：\n").append(lotteryResult.thirdPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
             }
@@ -83,10 +88,10 @@ public class LotteryData {
     }
 
     public WriteOnlyMessage toWriteOnlyMessage() {
-        return new WriteOnlyMessage("===\n互动抽奖信息：").newLine()
+        return new WriteOnlyMessage("\n===\n互动抽奖信息：").newLine()
                 .add("状态：").add(getStatus().getName()).newLine()
                 .add("条件：").add(getJoinLotteryCondition()).newLine()
-                .add(getStatus() == Status.Ended ? "" : "开奖时间：剩余" + TimeUtil.getFormattedTimeSec(endTime - Instant.now().getEpochSecond() * 1000) + "\n")
+                .add(getStatus() == Status.Ended ? "" : "开奖时间：剩余" + TimeUtil.getFormattedTimeSec(endTime - Instant.now().getEpochSecond()) + "\n")
                 .add("奖品：").newLine().add(getPrizeInfo());
     }
 
@@ -97,7 +102,7 @@ public class LotteryData {
                 ", endTime=" + endTime +
                 ", requiredATCount=" + requiredATCount +
                 ", isFeedNeeded=" + isFeedNeeded +
-                ", isRePostNeeded=" + isRePostNeeded +
+                ", isRePostNeeded=" + isPostNeeded +
                 ", firstPrizeCount='" + firstPrizeCount + '\'' +
                 ", firstPrizeName='" + firstPrizeName + '\'' +
                 ", firstPrizePicURL='" + firstPrizePicURL + '\'' +
