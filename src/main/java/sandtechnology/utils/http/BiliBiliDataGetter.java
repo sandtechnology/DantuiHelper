@@ -1,6 +1,7 @@
-package sandtechnology.utils;
+package sandtechnology.utils.http;
 
 import com.google.gson.reflect.TypeToken;
+import sandtechnology.utils.JsonHelper;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;

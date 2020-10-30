@@ -8,7 +8,7 @@ import sandtechnology.data.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.data.bilibili.response.dynamic.lottery.LotteryData;
 import sandtechnology.data.bilibili.response.dynamic.rich.DisputeInfo;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.BiliBiliDataGetter;
+import sandtechnology.utils.http.BiliBiliDataGetter;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 

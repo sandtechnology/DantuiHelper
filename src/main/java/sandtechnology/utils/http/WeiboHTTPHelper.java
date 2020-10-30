@@ -1,6 +1,8 @@
-package sandtechnology.utils;
+package sandtechnology.utils.http;
 
 import sandtechnology.data.weibo.Response;
+import sandtechnology.utils.DataContainer;
+import sandtechnology.utils.JsonHelper;
 
 import java.util.function.Consumer;
 

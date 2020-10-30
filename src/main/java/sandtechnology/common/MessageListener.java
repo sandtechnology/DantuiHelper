@@ -14,10 +14,10 @@ import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.data.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.Pair;
 import sandtechnology.utils.SeenCounter;
+import sandtechnology.utils.http.BiliBiliHTTPHelper;
 import sandtechnology.utils.message.AbstractMessageHelper;
 
 import java.util.*;

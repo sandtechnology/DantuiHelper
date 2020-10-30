@@ -4,7 +4,7 @@ import sandtechnology.data.weibo.ResponseData;
 import sandtechnology.data.weibo.card.Card;
 import sandtechnology.data.weibo.card.CardDetail;
 import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.WeiboHTTPHelper;
+import sandtechnology.utils.http.WeiboHTTPHelper;
 
 import java.util.LinkedHashSet;
 import java.util.List;

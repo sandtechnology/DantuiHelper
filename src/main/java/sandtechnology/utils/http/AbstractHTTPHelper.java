@@ -1,4 +1,7 @@
-package sandtechnology.utils;
+package sandtechnology.utils.http;
+
+import sandtechnology.utils.DataContainer;
+import sandtechnology.utils.ThreadHelper;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -9,10 +9,10 @@ import sandtechnology.config.section.SubscribeConfig;
 import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.data.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.ThreadHelper;
+import sandtechnology.utils.http.BiliBiliHTTPHelper;
 
 import java.net.*;
 import java.util.*;

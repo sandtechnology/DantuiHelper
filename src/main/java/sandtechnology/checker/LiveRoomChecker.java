@@ -5,9 +5,9 @@ import sandtechnology.data.bilibili.response.live.IRoomInfo;
 import sandtechnology.data.bilibili.response.live.LiveInfo;
 import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.http.BiliBiliHTTPHelper;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
