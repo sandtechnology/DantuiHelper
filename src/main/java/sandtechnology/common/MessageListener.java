@@ -14,8 +14,8 @@ import sandtechnology.config.ConfigLoader;
 import sandtechnology.config.section.ModuleEnablerData;
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.Pair;
 import sandtechnology.utils.SeenCounter;
 import sandtechnology.utils.message.AbstractMessageHelper;
@@ -151,7 +151,7 @@ public class MessageListener implements ListenerHost {
                 }
                 if (command[0].equals("get")) {
                     if (command.length == 2) {
-                        new HTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Long.parseLong(command[1]), rep -> messageHelper.sendingInfoMessage(rep.getDynamicData().getMessage())).execute();
+                        new BiliBiliHTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/get_dynamic_detail?dynamic_id=" + Long.parseLong(command[1]), rep -> messageHelper.sendingInfoMessage(rep.getDynamicData().getMessage())).execute();
                     }
                 }
                 if (command[0].equals("info")) {
@@ -193,7 +193,7 @@ public class MessageListener implements ListenerHost {
 
         //补充某群内小助手的信息
         if (fromQQ == 3351265297L && msg.startsWith("Ruki 开播啦啦啦！！！")) {
-            new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
+            new BiliBiliHTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21403609", response -> {
                 RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                 if (roomInfo.getStatus() == LiveStatus.Streaming) {
                     messageHelper.sendingGroupMessage(532589427L, new WriteOnlyMessage("这个小助手还是不太聪明的样子，我来补上：\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getPreview()));

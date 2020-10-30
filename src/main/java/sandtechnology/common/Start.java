@@ -8,10 +8,7 @@ import sandtechnology.checker.LiveRoomChecker;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.config.section.SubscribeConfig;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.HTTPHelper;
-import sandtechnology.utils.ImageManager;
-import sandtechnology.utils.ThreadHelper;
+import sandtechnology.utils.*;
 
 import java.net.*;
 import java.util.*;
@@ -54,10 +51,10 @@ public class Start {
                 );
                 runnables.add(new IChecker() {
                     private long lastLive;
-                    final HTTPHelper httpHelper;
+                    final AbstractHTTPHelper httpHelper;
 
                     {
-                        httpHelper = new HTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
+                        httpHelper = new BiliBiliHTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
                             RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                             if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
                                 lastLive = roomInfo.getStartTime();

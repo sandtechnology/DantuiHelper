@@ -5,6 +5,7 @@ import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.message.AbstractMessageHelper;
 import sandtechnology.utils.message.CQMessageHelper;
+import sandtechnology.utils.message.DebugMessageHelper;
 import sandtechnology.utils.message.MiraiMessageHelper;
 
 import java.lang.management.ManagementFactory;
@@ -59,7 +60,17 @@ public class DataContainer {
 
     private DataContainer(BotType botType) {
         this.botType = botType;
-        messageHelper = botType == BotType.JCQ ? new CQMessageHelper() : new MiraiMessageHelper();
+        switch (botType) {
+            case JCQ:
+                messageHelper = new CQMessageHelper();
+                break;
+            case Mirai:
+                messageHelper = new MiraiMessageHelper();
+                break;
+            default:
+                messageHelper = new DebugMessageHelper();
+
+        }
     }
 
     public static DataContainer getDataContainer() {
@@ -138,7 +149,8 @@ public class DataContainer {
 
     public enum BotType {
         Mirai("（Mirai内核，版本1.3.0）", "Mirai项目地址：https://github.com/mamoe/mirai"),
-        JCQ("（JCQ内核，版本1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ");
+        JCQ("（JCQ内核，版本1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ"),
+        Debug("null", "null");
         private final String coreDesc;
         private final String openSourceLink;
 

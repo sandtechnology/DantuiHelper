@@ -2,8 +2,9 @@ package sandtechnology.checker;
 
 import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
+import sandtechnology.utils.AbstractHTTPHelper;
+import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.HTTPHelper;
 import sandtechnology.utils.ThreadHelper;
 
 import java.util.HashSet;
@@ -44,7 +45,7 @@ import java.util.stream.Collectors;
  */
 public class DynamicChecker implements IChecker {
 
-    private final HTTPHelper httpHelper;
+    private final AbstractHTTPHelper httpHelper;
     private final long uid;
     private long nextPageOffsetById = 0;
     private final Set<Long> sendDynamicIDSet = new HashSet<>();
@@ -101,13 +102,13 @@ public class DynamicChecker implements IChecker {
                 }
             }
         };
-        httpHelper = new HTTPHelper(apiUrl, handler);
+        httpHelper = new BiliBiliHTTPHelper(apiUrl, handler);
         httpHelper.setOriginURL("https://space.bilibili.com");
         httpHelper.setReferer("https://space.bilibili.com/" + uid + "/dynamic");
     }
 
     public DynamicChecker(long uid, Consumer<NormalResponse> handler) {
-        this.httpHelper = new HTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0", handler);
+        this.httpHelper = new BiliBiliHTTPHelper("https://api.vc.bilibili.com/dynamic_svr/v1/dynamic_svr/space_history?visitor_uid=0&host_uid=" + uid + "&offset_dynamic_id=" + nextPageOffsetById + "&need_top=0", handler);
         this.uid = uid;
     }
 
