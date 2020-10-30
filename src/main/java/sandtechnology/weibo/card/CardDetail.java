@@ -3,6 +3,7 @@ package sandtechnology.weibo.card;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.HTMLUtils;
+import sandtechnology.utils.ImageManager;
 import sandtechnology.weibo.image.WeiboImage;
 import sandtechnology.weibo.user.UserInfo;
 
@@ -21,14 +22,18 @@ public class CardDetail {
     String sourceDevice;
     @SerializedName("created_at")
     String time;
-    long id;
+    long CachedID;
     @SerializedName("user")
     UserInfo userInfo;
     @SerializedName("pics")
     List<WeiboImage> images;
+    @SerializedName("retweeted_status")
+    CardDetail repostCardDetails;
+    @SerializedName("bid")
+    String bid;
 
-    public long getId() {
-        return id == 0 ? id = Long.parseLong(idStr) : id;
+    public long getID() {
+        return CachedID == 0 ? CachedID = Long.parseLong(idStr) : CachedID;
     }
 
     public String getHtmlText() {
@@ -40,7 +45,7 @@ public class CardDetail {
     }
 
     public String getUrl() {
-        return url;
+        return "https://m.weibo.cn/status/" + bid;
     }
 
     public String getSourceDevice() {
@@ -59,12 +64,28 @@ public class CardDetail {
         return images;
     }
 
+    private void parse(WriteOnlyMessage writeOnlyMessage) {
+        HTMLUtils.parse(htmlText, writeOnlyMessage);
+        if (images != null) {
+            writeOnlyMessage.newLine();
+            for (WeiboImage image : images) {
+                writeOnlyMessage.add(ImageManager.getImageData(image.getOriginURL()));
+            }
+        }
+    }
+
     public WriteOnlyMessage toWriteOnlyMessage() {
         WriteOnlyMessage writeOnlyMessage = new WriteOnlyMessage();
         writeOnlyMessage
-                .add("微博链接：").add(url).newLine()
-                .add(userInfo.getNickName()).add("发了一条微博：").newLine();
-        HTMLUtils.parse(htmlText, writeOnlyMessage);
+                .add("微博链接：").add(getUrl()).newLine()
+                .add(userInfo.getNickName()).add(repostCardDetails != null ? "转发了一条微博：" : "发了一条微博：").newLine();
+        parse(writeOnlyMessage);
+        if (repostCardDetails != null) {
+            writeOnlyMessage
+                    .add("原微博信息：").newLine()
+                    .add(repostCardDetails.userInfo.getNickName()).add("发了一条微博：").newLine();
+            repostCardDetails.parse(writeOnlyMessage);
+        }
         return writeOnlyMessage;
     }
 

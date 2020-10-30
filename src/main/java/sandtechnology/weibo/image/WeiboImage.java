@@ -12,7 +12,8 @@ public class WeiboImage extends Image {
         return pid;
     }
 
-    public Image getLargeSize() {
-        return largeSize;
+
+    public String getOriginURL() {
+        return largeSize == null ? url : largeSize.url;
     }
 }

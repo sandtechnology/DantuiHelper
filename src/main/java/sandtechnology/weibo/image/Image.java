@@ -7,4 +7,8 @@ public class Image {
     protected String url;
     @SerializedName("geo")
     protected Dimension dimension;
+
+    public String getUrl() {
+        return url;
+    }
 }
