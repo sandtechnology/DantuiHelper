@@ -8,14 +8,14 @@ import sandtechnology.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.bilibili.response.dynamic.lottery.LotteryData;
 import sandtechnology.bilibili.response.dynamic.rich.DisputeInfo;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.DataGetter;
+import sandtechnology.utils.BiliBiliDataGetter;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
 public class AdapterSelector {
 
 
-    private final static DataGetter<LotteryData> lotteryInfoGetter = new DataGetter<>("https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice", new TypeToken<LotteryData>() {
+    private final static BiliBiliDataGetter<LotteryData> lotteryInfoGetter = new BiliBiliDataGetter<>("https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice", new TypeToken<LotteryData>() {
     }, "dynamic_id");
 
     static {
@@ -42,7 +42,7 @@ public class AdapterSelector {
 
         //解析提醒信息
         DisputeInfo disputeInfo = data.getRichMessageInfo().getDisputeInfo();
-        if (disputeInfo != null) {
+        if (disputeInfo != null && !disputeInfo.getContent().isEmpty()) {
             message.add("⚠").add(disputeInfo.getContent()).newLine();
         }
 
