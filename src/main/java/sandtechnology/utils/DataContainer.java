@@ -37,7 +37,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.6.2";
+        return "v2.7.0";
     }
 
     public static AtomicLong getProcessDataFailedCount() {
