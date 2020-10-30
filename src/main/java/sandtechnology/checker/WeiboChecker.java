@@ -1,0 +1,57 @@
+package sandtechnology.checker;
+
+import sandtechnology.utils.DataContainer;
+import sandtechnology.utils.WeiboHTTPHelper;
+import sandtechnology.weibo.card.Card;
+import sandtechnology.weibo.card.CardDetail;
+
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+public class WeiboChecker implements IChecker {
+    private final Set<Long> sendWeiboIDSet = new LinkedHashSet<>();
+    private final WeiboHTTPHelper weiboHTTPHelper;
+
+    public WeiboChecker(long containerID, Set<Long> groupIDs) {
+        weiboHTTPHelper = new WeiboHTTPHelper("https://m.weibo.cn/api/container/getIndex?is_all[]=1&containerid=" + containerID, response -> {
+            if (!response.getCardList().isEmpty()) {
+
+                List<CardDetail> cardDetails = response.getCardList().stream().filter(resp -> {
+                            CardDetail cardDetail = resp.getCardDetail();
+                            return cardDetail != null && !sendWeiboIDSet.contains(cardDetail.getId());
+                        }
+                ).map(Card::getCardDetail).collect(Collectors.toList());
+
+                if (cardDetails.isEmpty()) {
+                    return;
+                }
+
+                if (sendWeiboIDSet.isEmpty()) {
+                    sendWeiboIDSet.addAll(cardDetails.stream().map(CardDetail::getId).collect(Collectors.toList()));
+                    for (long groupID : groupIDs) {
+                        DataContainer.getMessageHelper().sendGroupMsg(groupID, cardDetails.get(0).toWriteOnlyMessage());
+                    }
+                    return;
+                } else {
+                    for (CardDetail cardDetail : cardDetails) {
+                        for (long groupID : groupIDs) {
+                            DataContainer.getMessageHelper().sendGroupMsg(groupID, cardDetail.toWriteOnlyMessage());
+                        }
+                    }
+                }
+
+                if (sendWeiboIDSet.size() > 200) {
+                    sendWeiboIDSet.clear();
+                    sendWeiboIDSet.addAll(cardDetails.stream().map(CardDetail::getId).collect(Collectors.toList()));
+                }
+            }
+        });
+    }
+
+    @Override
+    public void check() {
+        weiboHTTPHelper.execute();
+    }
+}

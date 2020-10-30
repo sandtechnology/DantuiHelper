@@ -5,7 +5,6 @@ import sandtechnology.bilibili.response.live.LiveInfo;
 import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.AbstractHTTPHelper;
 import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ImageManager;
@@ -18,7 +17,7 @@ import java.util.Set;
  */
 public class LiveRoomChecker implements IChecker {
 
-    private final AbstractHTTPHelper httpHelper;
+    private final BiliBiliHTTPHelper httpHelper;
     private final long roomID;
     private Set<Long> groups = new LinkedHashSet<>();
 

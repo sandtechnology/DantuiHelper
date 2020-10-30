@@ -5,10 +5,14 @@ import sandtechnology.bilibili.response.live.RoomInfo;
 import sandtechnology.checker.DynamicChecker;
 import sandtechnology.checker.IChecker;
 import sandtechnology.checker.LiveRoomChecker;
+import sandtechnology.checker.WeiboChecker;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.config.section.SubscribeConfig;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.*;
+import sandtechnology.utils.BiliBiliHTTPHelper;
+import sandtechnology.utils.DataContainer;
+import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.ThreadHelper;
 
 import java.net.*;
 import java.util.*;
@@ -22,6 +26,7 @@ public class Start {
         SubscribeConfig subscribeConfig = ConfigLoader.getHolder().getSubscribeNodeMap();
         if (subscribeConfig.isEmpty()) {
             //生成示例
+            subscribeConfig.getSubscribeWeiboContainer().put(123456L, Collections.singleton(123456L));
             subscribeConfig.getSubscribeDynamic().put(123456L, Collections.singleton(123456L));
             subscribeConfig.getSubscribeLiveRoom().put(123456L, Collections.singleton(123456L));
             ConfigLoader.save();
@@ -49,9 +54,12 @@ public class Start {
                 subscribeConfig.getSubscribeDynamic().forEach(
                         (uid, groupID) -> runnables.add(new DynamicChecker(uid, groupID))
                 );
+                subscribeConfig.getSubscribeWeiboContainer().forEach(
+                        (containerID, groupID) -> runnables.add(new WeiboChecker(containerID, groupID))
+                );
                 runnables.add(new IChecker() {
                     private long lastLive;
-                    final AbstractHTTPHelper httpHelper;
+                    final BiliBiliHTTPHelper httpHelper;
 
                     {
                         httpHelper = new BiliBiliHTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {

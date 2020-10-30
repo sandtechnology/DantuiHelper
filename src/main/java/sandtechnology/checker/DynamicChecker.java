@@ -2,7 +2,6 @@ package sandtechnology.checker;
 
 import sandtechnology.bilibili.NormalResponse;
 import sandtechnology.bilibili.response.dynamic.DynamicData;
-import sandtechnology.utils.AbstractHTTPHelper;
 import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ThreadHelper;
@@ -45,7 +44,7 @@ import java.util.stream.Collectors;
  */
 public class DynamicChecker implements IChecker {
 
-    private final AbstractHTTPHelper httpHelper;
+    private final BiliBiliHTTPHelper httpHelper;
     private final long uid;
     private long nextPageOffsetById = 0;
     private final Set<Long> sendDynamicIDSet = new HashSet<>();
