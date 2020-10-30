@@ -5,6 +5,7 @@ import com.vdurmont.emoji.EmojiParser;
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
+import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.utils.ExternalImage;
 import net.mamoe.mirai.utils.ExternalImageJvmKt;
 import sandtechnology.Mirai;
@@ -156,15 +157,19 @@ public class WriteOnlyMessage {
 
             builder.addAll(pair.getLast().stream().map(
                     img -> {
-                        switch (data.getType()) {
-                            case Friend:
-                                return data.getBot().getFriend(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
-                            case Group:
-                                return data.getBot().getGroup(data.getFromGroup()).uploadImage(getExternalImage(img.getFile()));
-                            case Temp:
-                                return data.getBot().getGroup(data.getFromGroup()).get(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
-                            default:
-                                throw new IllegalArgumentException("类型不存在");
+                        try {
+                            switch (data.getType()) {
+                                case Friend:
+                                    return data.getBot().getFriend(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
+                                case Group:
+                                    return data.getBot().getGroup(data.getFromGroup()).uploadImage(getExternalImage(img.getFile()));
+                                case Temp:
+                                    return data.getBot().getGroup(data.getFromGroup()).get(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
+                                default:
+                                    throw new IllegalArgumentException("类型不存在");
+                            }
+                        } catch (Exception e) {
+                            return new PlainText("[图片上传失败]");
                         }
                     }).collect(Collectors.toList()));
         }
