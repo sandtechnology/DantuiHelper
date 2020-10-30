@@ -225,6 +225,17 @@ public class WriteOnlyMessage {
     }
 
     @Override
+    public String toString() {
+        trimImage();
+        StringBuilder builder = new StringBuilder();
+        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+            builder.append(pair.getFirst().toString());
+            builder.append(pair.getLast().stream().map(ImageManager.CacheImage::toString).collect(Collectors.joining()));
+        }
+        return builder.toString();
+    }
+
+    @Override
     public WriteOnlyMessage clone() {
         List<Pair<StringBuilder, List<ImageManager.CacheImage>>> tempList = new ArrayList<>(list.size());
         for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {

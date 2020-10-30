@@ -152,6 +152,11 @@ public class ImageManager {
         }
 
         @Override
+        public String toString() {
+            return "CacheImage{" + "path=" + path + '}';
+        }
+
+        @Override
         public int hashCode() {
             return Objects.hash(path, CQCode);
         }

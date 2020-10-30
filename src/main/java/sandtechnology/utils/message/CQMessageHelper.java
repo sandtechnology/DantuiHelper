@@ -12,17 +12,17 @@ public class CQMessageHelper extends AbstractMessageHelper {
 
     public void sendPrivateMsg(long qq, WriteOnlyMessage message) {
         sendMessageStat();
-        CQ.sendPrivateMsg(qq, message.toCQString());
+        CQ.sendPrivateMsg(qq, message.toString());
     }
 
     public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
         sendMessageStat();
-        CQ.sendPrivateMsg(fromQQ, message.toCQString());
+        CQ.sendPrivateMsg(fromQQ, message.toString());
     }
 
     public void sendGroupMsg(long group, WriteOnlyMessage message) {
         sendMessageStat();
-        CQ.sendGroupMsg(group, message.toCQString());
+        CQ.sendGroupMsg(group, message.toString());
     }
 
 

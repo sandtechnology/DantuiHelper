@@ -28,7 +28,7 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
                 sendingErrorMessage(e, "Error when sending message");
                 sendPrivateMsg(qq, message, ++times);
             } else {
-                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toCQString());
+                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toString());
             }
         }
     }
@@ -51,7 +51,7 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
                 sendingErrorMessage(e, "Error when sending message");
                 sendTempMsg(fromGroup, fromQQ, message, ++times);
             } else {
-                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toCQString());
+                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toString());
             }
         }
     }
@@ -77,7 +77,7 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
                 sendingErrorMessage(e, "Error when sending message");
                 sendGroupMsg(group, message, ++times);
             } else {
-                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toCQString());
+                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toString());
             }
         }
     }
