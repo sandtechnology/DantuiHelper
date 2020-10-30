@@ -1,9 +1,9 @@
 package sandtechnology.checker;
 
-import sandtechnology.bilibili.response.live.IRoomInfo;
-import sandtechnology.bilibili.response.live.LiveInfo;
-import sandtechnology.bilibili.response.live.LiveStatus;
 import sandtechnology.config.ConfigLoader;
+import sandtechnology.data.bilibili.response.live.IRoomInfo;
+import sandtechnology.data.bilibili.response.live.LiveInfo;
+import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;

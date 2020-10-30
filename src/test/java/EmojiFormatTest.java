@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
-import sandtechnology.bilibili.response.dynamic.display.Emoji;
-import sandtechnology.bilibili.response.dynamic.display.EmojiChain;
+import sandtechnology.data.bilibili.response.dynamic.display.Emoji;
+import sandtechnology.data.bilibili.response.dynamic.display.EmojiChain;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 

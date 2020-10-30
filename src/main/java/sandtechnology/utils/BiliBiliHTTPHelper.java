@@ -1,7 +1,7 @@
 package sandtechnology.utils;
 
-import sandtechnology.bilibili.NormalResponse;
-import sandtechnology.bilibili.SafeResponse;
+import sandtechnology.data.bilibili.NormalResponse;
+import sandtechnology.data.bilibili.SafeResponse;
 
 import java.io.IOException;
 import java.util.function.Consumer;

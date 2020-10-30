@@ -1,6 +1,6 @@
 package sandtechnology.utils;
 
-import sandtechnology.weibo.Response;
+import sandtechnology.data.weibo.Response;
 
 import java.util.function.Consumer;
 

@@ -1,7 +1,7 @@
 package sandtechnology.checker;
 
-import sandtechnology.bilibili.NormalResponse;
-import sandtechnology.bilibili.response.dynamic.DynamicData;
+import sandtechnology.data.bilibili.NormalResponse;
+import sandtechnology.data.bilibili.response.dynamic.DynamicData;
 import sandtechnology.utils.BiliBiliHTTPHelper;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ThreadHelper;

@@ -1,10 +1,10 @@
 package sandtechnology.checker;
 
+import sandtechnology.data.weibo.ResponseData;
+import sandtechnology.data.weibo.card.Card;
+import sandtechnology.data.weibo.card.CardDetail;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.WeiboHTTPHelper;
-import sandtechnology.weibo.ResponseData;
-import sandtechnology.weibo.card.Card;
-import sandtechnology.weibo.card.CardDetail;
 
 import java.util.LinkedHashSet;
 import java.util.List;
