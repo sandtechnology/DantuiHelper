@@ -102,6 +102,7 @@ public abstract class AbstractHTTPHelper<T> {
             if (!handleException(e)) {
                 if (retry < 3) {
                     ThreadHelper.sleep(random.nextInt(5000) + 5000);
+                    e.printStackTrace();
                     execute(++retry);
                 } else {
                     state = State.Error;

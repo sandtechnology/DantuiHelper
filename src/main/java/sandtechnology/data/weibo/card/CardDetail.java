@@ -82,7 +82,7 @@ public class CardDetail {
         parse(writeOnlyMessage);
         if (repostCardDetails != null) {
             writeOnlyMessage
-                    .add("原微博信息：").newLine()
+                    .newLine().add("原微博信息：").newLine()
                     .add(repostCardDetails.userInfo.getNickName()).add("发了一条微博：").newLine();
             repostCardDetails.parse(writeOnlyMessage);
         }

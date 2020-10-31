@@ -37,6 +37,7 @@ public class WeiboChecker implements IChecker {
                     return;
                 } else {
                     for (CardDetail cardDetail : cardDetails) {
+                        sendWeiboIDSet.add(cardDetail.getID());
                         for (long groupID : groupIDs) {
                             DataContainer.getMessageHelper().sendGroupMsg(groupID, cardDetail.toWriteOnlyMessage());
                         }
