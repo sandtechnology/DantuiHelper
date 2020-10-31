@@ -14,13 +14,14 @@ public class WeiboHTTPHelper extends AbstractHTTPHelper<Response> {
     }
 
     @Override
-    void handleResult(String result) {
+    boolean handleResult(String result) {
         Response response = JsonHelper.fromJson(result, Response.class);
         if (response.isOk()) {
             handler.accept(response);
-            state = State.DecodeSuccess;
+            return true;
         } else {
             DataContainer.getMessageHelper().sendingErrorMessage(new IllegalStateException("请求失败，错误信息：" + response.getMessage()), "");
+            return false;
         }
     }
 

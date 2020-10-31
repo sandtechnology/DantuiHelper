@@ -62,8 +62,9 @@ public abstract class AbstractHTTPHelper<T> {
      * 处理返回的结果
      *
      * @param result 结果
+     * @return 是否处理成功
      */
-    abstract void handleResult(String result);
+    abstract boolean handleResult(String result);
 
     /***
      * 处理异常
@@ -95,8 +96,7 @@ public abstract class AbstractHTTPHelper<T> {
             try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 result = stream.lines().collect(Collectors.joining("\n"));
             }
-            state = State.QuerySuccess;
-            handleResult(result);
+            state = handleResult(result) ? State.DecodeSuccess : State.DecodeFailed;
         } catch (Exception e) {
             state = e instanceof IOException ? State.NetworkError : State.Error;
             if (!handleException(e)) {
@@ -125,7 +125,7 @@ public abstract class AbstractHTTPHelper<T> {
     }
 
     public enum State {
-        Init, QuerySuccess, DecodeSuccess, BiliBiliError, BiliBiliBanned, NetworkError, Error
+        Init, DecodeFailed, DecodeSuccess, Banned, NetworkError, Error
     }
 
     public void execute() {

@@ -14,7 +14,7 @@ public class BiliBiliHTTPHelper extends AbstractHTTPHelper<NormalResponse> {
         super(url, handler);
     }
 
-    protected void handleResult(String result) {
+    protected boolean handleResult(String result) {
         SafeResponse safeResponse = JsonHelper.getGsonInstance().fromJson(result, SafeResponse.class);
         long code = safeResponse.getCode();
         if (code != 0) {
@@ -26,12 +26,12 @@ public class BiliBiliHTTPHelper extends AbstractHTTPHelper<NormalResponse> {
                     ThreadHelper.sleep(20000);
                 }
             }
-            state = State.BiliBiliError;
             ThreadHelper.sleep(random.nextInt(10000) + 5000);
-            return;
+            return false;
+        } else {
+            handler.accept(JsonHelper.getGsonInstance().fromJson(result, NormalResponse.class));
+            return true;
         }
-        handler.accept(JsonHelper.getGsonInstance().fromJson(result, NormalResponse.class));
-        state = State.DecodeSuccess;
     }
 
     protected boolean handleException(Exception e) {
@@ -39,7 +39,7 @@ public class BiliBiliHTTPHelper extends AbstractHTTPHelper<NormalResponse> {
             e.printStackTrace();
             if (e.getMessage().contains("412")) {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "请求遭受Bilibili风控系统拦截，将休眠一小时\n");
-                state = State.BiliBiliBanned;
+                state = State.Banned;
                 bannedURL.put(originURL, System.currentTimeMillis() + 3623333 + random.nextInt(8000));
             } else {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "Network Error:\n");
