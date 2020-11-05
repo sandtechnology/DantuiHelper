@@ -4,12 +4,15 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactoryJvm;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
+import net.mamoe.mirai.utils.MiraiLogger;
+import org.jetbrains.annotations.Nullable;
 import sandtechnology.common.MessageListener;
 import sandtechnology.common.Start;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ThreadHelper;
 
+import java.io.PrintStream;
 import java.nio.file.Paths;
 
 
@@ -22,9 +25,16 @@ public class Mirai {
 
     public static void main(String[] args) {
 
-        System.out.println("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
+        MiraiLogger.Companion.info("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
         DataContainer.initialize(DataContainer.BotType.Mirai);
-        System.out.println("Logging....");
+        MiraiLogger.Companion.info("Logging....");
+        //接管Println
+        System.setOut(new PrintStream(System.out) {
+            @Override
+            public void println(@Nullable String x) {
+                MiraiLogger.Companion.info(x);
+            }
+        });
         Bot bot = BotFactoryJvm.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Paths.get("config", "deviceInfo.json").toAbsolutePath().toString());
@@ -33,7 +43,7 @@ public class Mirai {
         ConfigLoader.save();
         try {
             bot.login();
-            System.out.println("Registering Event....");
+            bot.getLogger().info("Registering Event....");
             Events.registerEvents(bot, MessageListener.getMessageListener());
             //加载动态轮询器
             Start.start();

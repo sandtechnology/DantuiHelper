@@ -3,9 +3,8 @@ package sandtechnology.utils.http;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ThreadHelper;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -22,28 +21,43 @@ public abstract class AbstractHTTPHelper<T> {
 
     protected String url;
     protected final Random random = new Random();
+    protected Map<String, String> header;
     protected Consumer<T> handler;
     protected State state;
     protected String originURL;
-    protected String referer;
-
-    public void setReferer(String referer) {
-        this.referer = referer;
-    }
+    private RequestMethod requestMethod = RequestMethod.GET;
+    private String requestData = "";
 
     public AbstractHTTPHelper(String url, Consumer<T> handler) {
         this.url = url;
         try {
-            this.originURL = new URL(url).getHost();
+            originURL = new URL(url).getHost();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
+        header = new ConcurrentHashMap<>(2);
+        header.put("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0");
+        header.put("Origin", originURL);
         this.handler = handler;
         state = State.Init;
     }
 
+    public void setReferer(String referer) {
+        header.put("Referer", referer);
+    }
+
     public Consumer<T> getHandler() {
         return handler;
+    }
+
+    /**
+     * 自定义请求头，将会覆盖所有信息
+     *
+     * @param header 请求头
+     */
+    public void setHeader(Map<String, String> header) {
+        this.header.clear();
+        this.header.putAll(header);
     }
 
     public State getState() {
@@ -51,7 +65,11 @@ public abstract class AbstractHTTPHelper<T> {
     }
 
     public void setOriginURL(String originURL) {
-        this.originURL = originURL;
+        header.put("Origin", originURL);
+    }
+
+    public void setRequestData(String requestData) {
+        this.requestData = requestData;
     }
 
     public void setHandler(Consumer<T> handler) {
@@ -59,22 +77,12 @@ public abstract class AbstractHTTPHelper<T> {
     }
 
     /**
-     * 处理返回的结果
+     * 设置请求方式（如果可能）
      *
-     * @param result 结果
-     * @return 是否处理成功
+     * @param requestMethod 请求方式
      */
-    abstract boolean handleResult(String result);
-
-    /***
-     * 处理异常
-     * @param e 异常
-     * @return 是否已处理，未处理时使用默认逻辑
-     */
-    abstract boolean handleException(Exception e);
-
-    public void setUrl(String url) {
-        this.url = url;
+    public void setRequestMethod(RequestMethod requestMethod) {
+        this.requestMethod = requestMethod;
     }
 
     public void execute(int retry) {
@@ -88,11 +96,24 @@ public abstract class AbstractHTTPHelper<T> {
         String result = "";
         try {
             URLConnection urlConnection = new URL(url).openConnection();
-            urlConnection.setRequestProperty("User-Agent", "Mozilla/5.0 (X11; Linux x86_64; rv:75.0) Gecko/20100101 Firefox/75.0");
-            urlConnection.setRequestProperty("Origin", originURL);
-            urlConnection.setRequestProperty("Referer", referer);
+            for (Map.Entry<String, String> entry : header.entrySet()) {
+                urlConnection.setRequestProperty(entry.getKey(), entry.getValue());
+            }
+            if (requestMethod == RequestMethod.POST && urlConnection instanceof HttpURLConnection) {
+                ((HttpURLConnection) urlConnection).setRequestMethod("POST");
+            }
+
             urlConnection.setConnectTimeout(30000);
             urlConnection.setReadTimeout(30000);
+            if (!requestData.isEmpty() && requestMethod == RequestMethod.POST) {
+                urlConnection.setDoOutput(true);
+                urlConnection.setRequestProperty("Content-Length", Integer.toString(requestData.length()));
+                urlConnection.connect();
+                try (BufferedWriter out = new BufferedWriter(new OutputStreamWriter(urlConnection.getOutputStream()))) {
+                    out.write(requestData);
+                    out.flush();
+                }
+            }
             try (BufferedReader stream = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), StandardCharsets.UTF_8))) {
                 result = stream.lines().collect(Collectors.joining("\n"));
             }
@@ -122,6 +143,29 @@ public abstract class AbstractHTTPHelper<T> {
                 DataContainer.getProcessDataSuccessCount().incrementAndGet();
             }
         }
+    }
+
+    /**
+     * 处理返回的结果
+     *
+     * @param result 结果
+     * @return 是否处理成功
+     */
+    abstract boolean handleResult(String result);
+
+    /***
+     * 处理异常
+     * @param e 异常
+     * @return 是否已处理，未处理时使用默认逻辑
+     */
+    abstract boolean handleException(Exception e);
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public enum RequestMethod {
+        POST, GET
     }
 
     public enum State {

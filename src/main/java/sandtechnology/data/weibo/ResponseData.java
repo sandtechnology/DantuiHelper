@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.weibo.card.Card;
 import sandtechnology.data.weibo.card.CardListInfo;
 
+import java.util.Collections;
 import java.util.List;
 
 public class ResponseData {
@@ -13,7 +14,7 @@ public class ResponseData {
     private CardListInfo info;
 
     public List<Card> getCardList() {
-        return cardList;
+        return cardList != null ? cardList : Collections.emptyList();
     }
 
     public CardListInfo getInfo() {
