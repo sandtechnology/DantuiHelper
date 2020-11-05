@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class WeiboChecker implements IChecker {
     private final Set<Long> sendWeiboIDSet = new LinkedHashSet<>();
-    private final WeiboHTTPHelper weiboHTTPHelper;
+    private WeiboHTTPHelper weiboHTTPHelper = null;
 
     public WeiboChecker(long containerID, Set<Long> groupIDs) {
         weiboHTTPHelper = new WeiboHTTPHelper("https://m.weibo.cn/api/container/getIndex?is_all[]=1&containerid=" + containerID, response -> {
@@ -32,7 +32,11 @@ public class WeiboChecker implements IChecker {
                 if (sendWeiboIDSet.isEmpty()) {
                     sendWeiboIDSet.addAll(cardDetails.stream().map(CardDetail::getID).collect(Collectors.toList()));
                     for (long groupID : groupIDs) {
-                        DataContainer.getMessageHelper().sendGroupMsg(groupID, cardDetails.get(0).toWriteOnlyMessage());
+                        CardDetail firstDetail = cardDetails.get(0);
+                        if (weiboHTTPHelper != null) {
+                            weiboHTTPHelper.setReferer("https://m.weibo.cn/u/" + firstDetail.getUserInfo().getId() + "?is_all=1");
+                        }
+                        DataContainer.getMessageHelper().sendGroupMsg(groupID, firstDetail.toWriteOnlyMessage());
                     }
                     return;
                 } else {
@@ -50,6 +54,7 @@ public class WeiboChecker implements IChecker {
                 }
             }
         });
+        weiboHTTPHelper.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1");
     }
 
     @Override

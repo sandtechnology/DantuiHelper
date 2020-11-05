@@ -35,6 +35,7 @@ public class LiveRoomChecker implements IChecker {
             });
             httpHelper.setOriginURL("https://live.bilibili.com");
             httpHelper.setReferer("https://live.bilibili.com/h5/" + roomID);
+            httpHelper.setUserAgent("Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1");
         } else {
             httpHelper = new BiliBiliHTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=" + roomID, response -> {
                 LiveInfo liveInfo = response.getLiveInfo();

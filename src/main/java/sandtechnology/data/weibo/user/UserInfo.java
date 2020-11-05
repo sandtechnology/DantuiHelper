@@ -9,6 +9,10 @@ public class UserInfo {
     @SerializedName("description")
     private String description;
 
+    public long getId() {
+        return id;
+    }
+
     public String getNickName() {
         return nickName;
     }

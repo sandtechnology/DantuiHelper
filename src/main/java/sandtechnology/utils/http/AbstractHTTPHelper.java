@@ -51,6 +51,15 @@ public abstract class AbstractHTTPHelper<T> {
     }
 
     /**
+     * 设置请求UA
+     *
+     * @param userAgent 目标UA
+     */
+    public void setUserAgent(String userAgent) {
+        header.put("User-Agent", userAgent);
+    }
+
+    /**
      * 自定义请求头，将会覆盖所有信息
      *
      * @param header 请求头
