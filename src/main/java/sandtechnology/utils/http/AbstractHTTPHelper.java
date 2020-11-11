@@ -28,6 +28,10 @@ public abstract class AbstractHTTPHelper<T> {
     private RequestMethod requestMethod = RequestMethod.GET;
     private String requestData = "";
 
+    public String getUrl() {
+        return url;
+    }
+
     public AbstractHTTPHelper(String url, Consumer<T> handler) {
         this.url = url;
         try {

@@ -1,6 +1,7 @@
 package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter;
 
 import com.google.gson.reflect.TypeToken;
+import sandtechnology.data.bilibili.NormalResponse;
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post.*;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.repost.RepostAdapter;
@@ -8,19 +9,23 @@ import sandtechnology.data.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.data.bilibili.response.dynamic.lottery.LotteryData;
 import sandtechnology.data.bilibili.response.dynamic.rich.DisputeInfo;
 import sandtechnology.holder.WriteOnlyMessage;
-import sandtechnology.utils.http.BiliBiliDataGetter;
+import sandtechnology.utils.http.BiliBiliHTTPHelper;
+import sandtechnology.utils.http.DataGetter;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
 public class AdapterSelector {
 
 
-    private final static BiliBiliDataGetter<LotteryData> lotteryInfoGetter = new BiliBiliDataGetter<>("https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice", new TypeToken<LotteryData>() {
-    }, "dynamic_id");
+    private final static DataGetter<NormalResponse, LotteryData> lotteryInfoGetter;
 
     static {
-        lotteryInfoGetter.setOriginURL("https://t.bilibili.com");
-        lotteryInfoGetter.setReferer("https://t.bilibili.com/lottery/h5/index/");
+        BiliBiliHTTPHelper biliBiliHTTPHelper = new BiliBiliHTTPHelper("https://api.vc.bilibili.com/lottery_svr/v1/lottery_svr/lottery_notice", null);
+        biliBiliHTTPHelper.setOriginURL("https://t.bilibili.com");
+        biliBiliHTTPHelper.setReferer("https://t.bilibili.com/lottery/h5/index/");
+        lotteryInfoGetter = new DataGetter<>(biliBiliHTTPHelper, new TypeToken<LotteryData>() {
+        }, "dynamic_id");
+
     }
 
     public static WriteOnlyMessage getString(DynamicData data) {

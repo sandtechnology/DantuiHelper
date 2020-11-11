@@ -1,15 +1,22 @@
 package sandtechnology.data.weibo.card;
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
+import sandtechnology.data.weibo.Response;
 import sandtechnology.data.weibo.image.WeiboImage;
 import sandtechnology.data.weibo.user.UserInfo;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.HTMLUtils;
 import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.http.DataGetter;
+import sandtechnology.utils.http.WeiboHTTPHelper;
 
 import java.util.List;
 
 public class CardDetail {
+
+    private static final DataGetter<Response, LongTextCard> longTextCardDataGetter = new DataGetter<>(new WeiboHTTPHelper("https://m.weibo.cn/statuses/extend", null), new TypeToken<LongTextCard>() {
+    }, "id");
     @SerializedName("id")
     String idStr;
     @SerializedName("text")
@@ -31,12 +38,38 @@ public class CardDetail {
     CardDetail repostCardDetails;
     @SerializedName("bid")
     String bid;
+    @SerializedName("page_info")
+    PageInfo pageInfo;
+    @SerializedName("isLongText")
+    boolean isLongText;
+    @SerializedName("title")
+    CardTitle title;
+
+
+    public boolean isOnTop() {
+        return title != null && title.text != null && title.text.equals("置顶");
+    }
+
+    public boolean isLongText() {
+        return isLongText;
+    }
 
     public long getID() {
         return CachedID == 0 ? CachedID = Long.parseLong(idStr) : CachedID;
     }
 
     public String getHtmlText() {
+        if (isLongText()) {
+            synchronized (longTextCardDataGetter) {
+                longTextCardDataGetter.getHttpHelper().setReferer(getUrl());
+                longTextCardDataGetter.query(Long.toString(getID()));
+                if (longTextCardDataGetter.getData().isOk()) {
+                    htmlText = longTextCardDataGetter.getData().getLongTextContent();
+                } else {
+                    htmlText = "长文本获取失败，原文本：" + htmlText;
+                }
+            }
+        }
         return htmlText;
     }
 
@@ -65,12 +98,15 @@ public class CardDetail {
     }
 
     private void parse(WriteOnlyMessage writeOnlyMessage) {
-        HTMLUtils.parse(htmlText, writeOnlyMessage);
+        HTMLUtils.parse(getHtmlText(), writeOnlyMessage);
         if (images != null) {
             writeOnlyMessage.newLine();
             for (WeiboImage image : images) {
                 writeOnlyMessage.add(ImageManager.getImageData(image.getOriginURL()));
             }
+        }
+        if (pageInfo != null) {
+            writeOnlyMessage.newLine().add(pageInfo.getTitle()).newLine().add(ImageManager.getImageData(pageInfo.getImage().getUrl()));
         }
     }
 

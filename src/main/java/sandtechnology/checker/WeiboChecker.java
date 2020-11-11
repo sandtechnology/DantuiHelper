@@ -21,7 +21,7 @@ public class WeiboChecker implements IChecker {
             if (responseData != null && !responseData.getCardList().isEmpty()) {
                 List<CardDetail> cardDetails = responseData.getCardList().stream().filter(resp -> {
                             CardDetail cardDetail = resp.getCardDetail();
-                            return cardDetail != null && !sendWeiboIDSet.contains(cardDetail.getID());
+                            return cardDetail != null && !sendWeiboIDSet.contains(cardDetail.getID()) && !cardDetail.isOnTop();
                         }
                 ).map(Card::getCardDetail).collect(Collectors.toList());
 
@@ -36,6 +36,7 @@ public class WeiboChecker implements IChecker {
                         if (weiboHTTPHelper != null) {
                             weiboHTTPHelper.setReferer("https://m.weibo.cn/u/" + firstDetail.getUserInfo().getId() + "?is_all=1");
                         }
+
                         DataContainer.getMessageHelper().sendGroupMsg(groupID, firstDetail.toWriteOnlyMessage());
                     }
                     return;

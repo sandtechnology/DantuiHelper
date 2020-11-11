@@ -2,6 +2,7 @@ package sandtechnology.utils;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
 import sandtechnology.holder.WriteOnlyMessage;
@@ -23,10 +24,34 @@ public class HTMLUtils {
         List<Node> nodeList = flatNodes(document.body().childNodes());
         for (Node node : nodeList) {
             if (node instanceof TextNode) {
-                writeOnlyMessage.add(((TextNode) node).text());
+                String text = ((TextNode) node).text();
+                if (!text.isEmpty()) {
+                    //过滤网页链接文本
+                    if (!(node.parent() instanceof Element) || !(((Element) node.parent()).tagName().equals("span") && text.equals("网页链接"))) {
+                        writeOnlyMessage.add(((TextNode) node).text());
+                    }
+                }
+
             } else {
+                //处理换行
+                if (node instanceof Element) {
+                    if (((Element) node).tagName().equals("br")) {
+                        writeOnlyMessage.newLine();
+                    }
+                }
+                //解析链接
+                writeOnlyMessage.add(node.attr("data-url"));
+
+                //不解析链接图标
+                if (node.hasParent() && node.parent().attr("class").equals("url-icon")) {
+                    continue;
+                }
+                //解析可能的图片
                 String src = node.attributes().get("src");
                 if (!src.isEmpty()) {
+                    if (src.startsWith("//")) {
+                        src = "https:" + src;
+                    }
                     writeOnlyMessage.add(ImageManager.getImageData(src));
                 }
             }

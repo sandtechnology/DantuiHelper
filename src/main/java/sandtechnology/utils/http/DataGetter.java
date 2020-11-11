@@ -1,23 +1,29 @@
 package sandtechnology.utils.http;
 
 import com.google.gson.reflect.TypeToken;
+import sandtechnology.data.IResponse;
 import sandtechnology.utils.JsonHelper;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class BiliBiliDataGetter<T> extends BiliBiliHTTPHelper {
+public class DataGetter<R extends IResponse, T> {
 
 
+    AbstractHTTPHelper<R> httpHelper;
     private final String[] perms;
     private final String originURL;
     private T data;
 
-    public BiliBiliDataGetter(String url, TypeToken<T> typeToken, String... perms) {
-        super(url, null);
-        originURL = url;
+    public DataGetter(AbstractHTTPHelper<R> httpHelper, TypeToken<T> typeToken, String... perms) {
+        this.httpHelper = httpHelper;
+        originURL = httpHelper.getUrl();
         this.perms = perms;
-        handler = normalResponse -> data = JsonHelper.getGsonInstance().fromJson(normalResponse.getRawData(), typeToken.getType());
+        httpHelper.setHandler(normalResponse -> data = JsonHelper.getGsonInstance().fromJson(normalResponse.getRawData(), typeToken.getType()));
+    }
+
+    public AbstractHTTPHelper<R> getHttpHelper() {
+        return httpHelper;
     }
 
     public T getData() {
@@ -40,7 +46,7 @@ public class BiliBiliDataGetter<T> extends BiliBiliHTTPHelper {
             }
         }
 
-        url = stringBuilder.toString();
-        execute();
+        httpHelper.setUrl(stringBuilder.toString());
+        httpHelper.execute();
     }
 }
