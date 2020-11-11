@@ -117,11 +117,11 @@ public class ConfigLoader {
         @SerializedName("subscribeConfig")
         SubscribeConfig subscribeNodeMap = new SubscribeConfig();
         @Ask(defaultValue = "-1", text = "请输入主人QQ号：")
-        private final long master = -1;
+        long master = -1;
         @SerializedName("PasswordMD5")
         byte[] passwordMD5;
         @Ask(defaultValue = "-1", text = "请输入管理群号：")
-        private final long masterGroup = -1;
+        long masterGroup = -1;
         @SerializedName("liveData")
         LiveCheckerData liveCheckerData = new LiveCheckerData();
         @SerializedName("moduleData")
