@@ -39,11 +39,13 @@ public class ConfigLoader {
 
     synchronized public static ConfigHolder load() {
         try {
-            if (Files.exists(configPath)) {
-                holder = JsonHelper.getGsonInstance().fromJson(Files.newBufferedReader(configPath), ConfigHolder.class);
-            } else {
+            if (!Files.exists(configPath)) {
                 Files.createDirectories(configPath.getParent());
                 Files.createFile(configPath);
+            }
+            holder = JsonHelper.getGsonInstance().fromJson(Files.newBufferedReader(configPath), ConfigHolder.class);
+            //防止NPE
+            if (holder == null) {
                 holder = JsonHelper.getGsonInstance().fromJson("{}", ConfigHolder.class);
             }
             for (Field field : holder.getClass().getDeclaredFields()) {
@@ -115,11 +117,11 @@ public class ConfigLoader {
         @SerializedName("subscribeConfig")
         SubscribeConfig subscribeNodeMap = new SubscribeConfig();
         @Ask(defaultValue = "-1", text = "请输入主人QQ号：")
-        private long master = -1;
+        private final long master = -1;
         @SerializedName("PasswordMD5")
         byte[] passwordMD5;
         @Ask(defaultValue = "-1", text = "请输入管理群号：")
-        private long masterGroup = -1;
+        private final long masterGroup = -1;
         @SerializedName("liveData")
         LiveCheckerData liveCheckerData = new LiveCheckerData();
         @SerializedName("moduleData")
