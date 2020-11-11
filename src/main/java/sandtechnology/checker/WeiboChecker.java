@@ -31,14 +31,11 @@ public class WeiboChecker implements IChecker {
 
                 if (sendWeiboIDSet.isEmpty()) {
                     sendWeiboIDSet.addAll(cardDetails.stream().map(CardDetail::getID).collect(Collectors.toList()));
-                    for (long groupID : groupIDs) {
                         CardDetail firstDetail = cardDetails.get(0);
                         if (weiboHTTPHelper != null) {
                             weiboHTTPHelper.setReferer("https://m.weibo.cn/u/" + firstDetail.getUserInfo().getId() + "?is_all=1");
                         }
-
-                        DataContainer.getMessageHelper().sendGroupMsg(groupID, firstDetail.toWriteOnlyMessage());
-                    }
+                        DataContainer.getMessageHelper().sendGroupMsg(DataContainer.getMasterGroup(), firstDetail.toWriteOnlyMessage());
                     return;
                 } else {
                     for (CardDetail cardDetail : cardDetails) {
