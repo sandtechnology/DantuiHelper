@@ -27,7 +27,7 @@ public class HTMLUtils {
                 String text = ((TextNode) node).text();
                 if (!text.isEmpty()) {
                     //过滤网页链接文本
-                    if (!(node.parent() instanceof Element) || !(((Element) node.parent()).tagName().equals("span") && text.equals("网页链接"))) {
+                    if (!node.hasParent() && !(node.parent().parent() instanceof Element) || !(((Element) node.parent().parent()).tagName().equals("a"))) {
                         writeOnlyMessage.add(((TextNode) node).text());
                     }
                 }

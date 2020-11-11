@@ -25,7 +25,7 @@ public class PageInfo {
     private String subTitle;
 
     public String getTitle() {
-        return title == null ? subTitle : title;
+        return title == null ? mainTitle + '：' + subTitle : title;
     }
 
     public PageImage getImage() {
