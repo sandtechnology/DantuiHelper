@@ -43,7 +43,7 @@ public class HTMLUtils {
                 writeOnlyMessage.add(node.attr("data-url"));
 
                 //不解析链接图标
-                if (node.hasParent() && node.parent().attr("class").equals("url-icon")) {
+                if (!node.hasAttr("alt")) {
                     continue;
                 }
                 //解析可能的图片
