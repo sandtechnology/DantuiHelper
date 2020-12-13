@@ -4,8 +4,8 @@ public interface IndexIterator {
     int next();
 
     class RangeIndexIterator implements IndexIterator {
-        private int min;
-        private int max;
+        private final int min;
+        private final int max;
         private int now;
         private boolean first = true;
 
@@ -42,7 +42,7 @@ public interface IndexIterator {
 
     class IndexIteratorBuilder {
         private int min = 0;
-        private int max;
+        private final int max;
         private boolean includeMin = true;
         private boolean includeMax = true;
 
