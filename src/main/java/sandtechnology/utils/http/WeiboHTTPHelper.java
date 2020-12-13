@@ -14,7 +14,7 @@ public class WeiboHTTPHelper extends AbstractHTTPHelper<Response> {
     }
 
     @Override
-    boolean handleResult(String result) {
+    protected boolean handleResult(String result) {
         Response response = JsonHelper.fromJson(result, Response.class);
         if (response.isOk()) {
             handler.accept(response);
@@ -26,7 +26,7 @@ public class WeiboHTTPHelper extends AbstractHTTPHelper<Response> {
     }
 
     @Override
-    boolean handleException(Exception e) {
+    protected boolean handleException(Exception e) {
         return false;
     }
 }
