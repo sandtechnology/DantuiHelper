@@ -1,8 +1,9 @@
 package sandtechnology.holder;
 
-import kotlin.Unit;
 import net.mamoe.mirai.message.data.MessageChain;
+import net.mamoe.mirai.message.data.MessageSource;
 import net.mamoe.mirai.message.data.MessageUtils;
+import net.mamoe.mirai.message.data.PlainText;
 
 /**
  * 接收消息的包装类
@@ -17,7 +18,7 @@ public class ReadOnlyMessage {
     }
 
     public ReadOnlyMessage(String msg) {
-        this.chain = MessageUtils.newChain(msg);
+        this.chain = MessageUtils.newChain(new PlainText(msg));
     }
 
     public MessageChain get() {
@@ -27,9 +28,10 @@ public class ReadOnlyMessage {
     public String toString(boolean miraiCode) {
         if (miraiCode) {
             StringBuilder stringBuilder = new StringBuilder();
-            chain.forEachContent((x) -> {
-                stringBuilder.append(x.toString());
-                return Unit.INSTANCE;
+            chain.forEach((x) -> {
+                if (!(x instanceof MessageSource)) {
+                    stringBuilder.append(x.toString());
+                }
             });
             return stringBuilder.toString();
         } else {

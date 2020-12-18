@@ -2,9 +2,10 @@ package sandtechnology.common;
 
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListenerHost;
-import net.mamoe.mirai.message.FriendMessageEvent;
-import net.mamoe.mirai.message.GroupMessageEvent;
-import net.mamoe.mirai.message.TempMessageEvent;
+import net.mamoe.mirai.event.events.BotNudgedEvent;
+import net.mamoe.mirai.event.events.FriendMessageEvent;
+import net.mamoe.mirai.event.events.GroupMessageEvent;
+import net.mamoe.mirai.event.events.TempMessageEvent;
 import sandtechnology.Mirai;
 import sandtechnology.checker.DynamicChecker;
 import sandtechnology.config.ConfigLoader;

@@ -1,7 +1,7 @@
 package sandtechnology;
 
 import net.mamoe.mirai.Bot;
-import net.mamoe.mirai.BotFactoryJvm;
+import net.mamoe.mirai.BotFactory;
 import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.MiraiLogger;
@@ -23,27 +23,30 @@ public class Mirai {
         return Bot.getInstance(ConfigLoader.getHolder().getQQ());
     }
 
+    private static final MiraiLogger logger = MiraiLogger.create("Mirai");
+
     public static void main(String[] args) {
 
-        MiraiLogger.Companion.info("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
+        logger.info("Welcome to Love-TokimoriSeisa-Forever system! (Mirai version)");
         DataContainer.initialize(DataContainer.BotType.Mirai);
-        MiraiLogger.Companion.info("Logging....");
+        logger.info("Logging....");
         //接管Println
         System.setOut(new PrintStream(System.out) {
             @Override
             public void println(@Nullable String x) {
-                MiraiLogger.Companion.info(x);
+                logger.info(x);
             }
         });
-        Bot bot = BotFactoryJvm.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
+        Bot bot = BotFactory.INSTANCE.newBot(ConfigLoader.getHolder().getQQ(), ConfigLoader.getHolder().getPasswordMD5(), new BotConfiguration() {
             {
                 fileBasedDeviceInfo(Paths.get("config", "deviceInfo.json").toAbsolutePath().toString());
+                setBotLoggerSupplier(bot -> logger);
             }
         });
         ConfigLoader.save();
         try {
             bot.login();
-            bot.getLogger().info("Registering Event....");
+            logger.info("Registering Event....");
             Events.registerEvents(bot, MessageListener.getMessageListener());
             //加载动态轮询器
             Start.start();
@@ -58,5 +61,9 @@ public class Mirai {
             main(args);
         }
 
+    }
+
+    public MiraiLogger getLogger() {
+        return logger;
     }
 }
