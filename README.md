@@ -6,7 +6,7 @@ QQ群内B站动态/直播提醒机器人
 - Mirai：https://github.com/mamoe/mirai
 
 ### 构建
-在确保拥有maven环境之后使用`mvn build`构建，输出的构建jar位于`target`文件夹内，文件名为`sandtechnology.dantui.jar`
+在确保拥有maven环境之后使用`mvn build`构建，输出的构建jar位于`target`文件夹内，文件名为`sandtechnology.dantui.jar`，然后将构建得到的jar**和lib文件夹**一起复制到某个文件夹下运行
 
 ### 开始使用
 构建之后在命令行中以此命令运行：
