@@ -6,8 +6,7 @@ import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.message.data.PlainText;
-import net.mamoe.mirai.utils.ExternalImage;
-import net.mamoe.mirai.utils.ExternalImageJvmKt;
+import net.mamoe.mirai.utils.ExternalResource;
 import sandtechnology.Mirai;
 import sandtechnology.utils.*;
 
@@ -180,13 +179,13 @@ public class WriteOnlyMessage {
 
     public enum Type {Friend, Group, Temp}
 
-    private ExternalImage getExternalImage(File file) {
-        ExternalImage externalImage;
+    private ExternalResource getExternalImage(File file) {
+        ExternalResource externalImage;
         if (!file.exists()) {
             return getExternalImage(ImageManager.emptyImage.getFile());
         }
         try {
-            externalImage = ExternalImageJvmKt.toExternalImage(file, false);
+            externalImage = ExternalResource.Companion.create(file);
         } catch (Exception e) {
             DataContainer.getMessageHelper().sendingErrorMessage(e, "在转换图片为ExternalImage时出错");
             return getExternalImage(ImageManager.emptyImage.getFile());

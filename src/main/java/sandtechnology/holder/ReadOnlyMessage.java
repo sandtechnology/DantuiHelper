@@ -48,8 +48,7 @@ public class ReadOnlyMessage {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ReadOnlyMessage that = (ReadOnlyMessage) o;
-        return that.chain.contentEquals(chain, false);
+        return ((ReadOnlyMessage) o).chain.contentEquals(chain, false, true);
     }
 
     public WriteOnlyMessage toWriteOnlyMessage() {
