@@ -9,7 +9,6 @@ import net.mamoe.mirai.event.events.GroupMessageEvent;
 import net.mamoe.mirai.event.events.GroupTempMessageEvent;
 import net.mamoe.mirai.event.events.NudgeEvent;
 import sandtechnology.Mirai;
-import sandtechnology.checker.AutoCardingChecker;
 import sandtechnology.checker.DynamicChecker;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.config.section.ModuleEnablerData;
