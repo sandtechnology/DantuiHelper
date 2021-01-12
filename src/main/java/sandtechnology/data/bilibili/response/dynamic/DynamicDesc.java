@@ -1,6 +1,7 @@
 package sandtechnology.data.bilibili.response.dynamic;
 
 import com.google.gson.annotations.SerializedName;
+import org.jetbrains.annotations.NotNull;
 import sandtechnology.data.bilibili.response.user.UserProfile;
 
 public class DynamicDesc {
@@ -17,7 +18,12 @@ public class DynamicDesc {
     @SerializedName("user_profile")
     private
     UserProfile userProfile;
-
+    @SerializedName("pre_dy_id_str")
+    private
+    String preDynamicID;
+    @SerializedName("orig_dy_id_str")
+    private
+    String originDynamicID;
     @SerializedName("bvid")
     String bvid;
     @SerializedName("origin")
@@ -55,8 +61,19 @@ public class DynamicDesc {
         return originDynamicDesc != null;
     }
 
+    @NotNull
     public String getDynamicID() {
-        return dynamicID;
+        if (dynamicID != null) {
+            return dynamicID;
+        }
+        if (preDynamicID != null) {
+            return preDynamicID;
+        }
+        if (originDynamicID != null) {
+            return originDynamicID;
+        }
+        //wtf
+        return "0";
     }
 
     public int getType() {
