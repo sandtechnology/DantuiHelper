@@ -163,7 +163,7 @@ public abstract class AbstractHTTPHelper<T> {
         } catch (Exception e) {
             state = e instanceof IOException ? State.NetworkError : State.Error;
             if (!handleException(e)) {
-                if (retry < 3) {
+                if (retry < 3 && e instanceof IOException) {
                     ThreadHelper.sleep(random.nextInt(5000) + 5000);
                     e.printStackTrace();
                     execute(++retry);
@@ -176,7 +176,7 @@ public abstract class AbstractHTTPHelper<T> {
                         if (result.length() <= 500) {
                             DataContainer.getMessageHelper().sendingErrorMessage(e, "Unknown Error:\ncontent:\n" + result);
                         } else {
-                            DataContainer.getMessageHelper().sendingErrorMessage(e, "Unknown Error:\n");
+                            DataContainer.getMessageHelper().sendingErrorMessage(e, "Unknown Error when parsing URL content from " + url + ":\n");
                         }
                     }
                     ThreadHelper.sleep(random.nextInt(5000) + 5000);
