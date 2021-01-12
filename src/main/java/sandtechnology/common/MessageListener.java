@@ -2,11 +2,12 @@ package sandtechnology.common;
 
 import net.mamoe.mirai.event.EventHandler;
 import net.mamoe.mirai.event.ListenerHost;
-import net.mamoe.mirai.event.events.BotNudgedEvent;
 import net.mamoe.mirai.event.events.FriendMessageEvent;
 import net.mamoe.mirai.event.events.GroupMessageEvent;
-import net.mamoe.mirai.event.events.TempMessageEvent;
+import net.mamoe.mirai.event.events.GroupTempMessageEvent;
+import net.mamoe.mirai.event.events.NudgeEvent;
 import sandtechnology.Mirai;
+import sandtechnology.checker.AutoCardingChecker;
 import sandtechnology.checker.DynamicChecker;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.config.section.ModuleEnablerData;
@@ -41,7 +42,7 @@ public class MessageListener implements ListenerHost {
     }
 
     @EventHandler
-    public void onTempMsg(TempMessageEvent event) {
+    public void onTempMsg(GroupTempMessageEvent event) {
         onTempMsg(event.getGroup().getId(), event.getSender().getId(), new ReadOnlyMessage(event.getMessage()));
     }
 

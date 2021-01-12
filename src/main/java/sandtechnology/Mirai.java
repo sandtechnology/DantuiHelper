@@ -2,7 +2,6 @@ package sandtechnology;
 
 import net.mamoe.mirai.Bot;
 import net.mamoe.mirai.BotFactory;
-import net.mamoe.mirai.event.Events;
 import net.mamoe.mirai.utils.BotConfiguration;
 import net.mamoe.mirai.utils.MiraiLogger;
 import org.jetbrains.annotations.Nullable;
@@ -47,7 +46,7 @@ public class Mirai {
         try {
             bot.login();
             logger.info("Registering Event....");
-            Events.registerEvents(bot, MessageListener.getMessageListener());
+            bot.getEventChannel().registerListenerHost(MessageListener.getMessageListener());
             //加载动态轮询器
             Start.start();
             System.out.println("Done!");
