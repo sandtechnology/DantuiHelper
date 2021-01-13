@@ -49,6 +49,7 @@ public class DynamicChecker implements IChecker {
     private long nextPageOffsetById = 0;
     private final Set<Long> sendDynamicIDSet = new HashSet<>();
     private long mostLateTimeStamp = 0;
+    private boolean init = false;
 
     public DynamicChecker(long uid, Set<Long> groups) {
         this.uid = uid;
@@ -56,17 +57,19 @@ public class DynamicChecker implements IChecker {
         Consumer<NormalResponse> handler = response -> {
             List<DynamicData> dynamicDataList = response.getDynamicsDataList().getDynamics();
             if (dynamicDataList == null || dynamicDataList.isEmpty()) {
+                init = true;
                 return;
             }
 
             DynamicData firstCard = dynamicDataList.get(0);
-            if (sendDynamicIDSet.isEmpty()) {
+            if (!init && sendDynamicIDSet.isEmpty()) {
                 //初始化 同时发出最新的一条动态确保运行正常
                 DataContainer.getMessageHelper().sendingInfoMessage(firstCard.getMessage());
                 //记录最晚的动态时间
                 mostLateTimeStamp = dynamicDataList.get(dynamicDataList.size() - 1).getDesc().getTimestamp();
                 //记录当前的动态ID以便检测新动态
                 sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> Long.parseLong(dynamicData.getDesc().getDynamicID())).collect(Collectors.toList()));
+                init = true;
                 return;
             } else {
                 if (firstCard.getDesc().getTimestamp() <= mostLateTimeStamp) {
