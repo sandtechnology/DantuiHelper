@@ -71,18 +71,22 @@ public class DynamicChecker implements IChecker {
                 return;
             }
 
-            List<DynamicData> list = response.getDynamicsDataList().getDynamics().stream().filter(rawDynamicData -> !sendDynamicIDSet.contains(rawDynamicData.getDesc().getDynamicIdentifyNumber()).filter(d -> {
-
-                //动态ID未找到
-                if (d.getDesc().getDynamicID() == null) {
-                    return false;
-                }
-                //阿B有的时候会拉跨把其他人的动态混进去，特此过滤
-                if (d.getDesc().getUserProfile().getInfo().getUid() == uid) {
-                    return true;
-                } else {
-                    DataContainer.getMessageHelper().sendingDebugMessage(d.getMessage().addFirst("blocked:"));
-                    return false;
+            List<DynamicData> list = response.getDynamicsDataList().getDynamics().stream()
+                    .filter(d -> {
+                        //动态已发送
+                        if (sendDynamicIDSet.contains(d.getDesc().getDynamicIdentifyNumber())) {
+                            return false;
+                        }
+                        //动态ID未找到
+                        if (d.getDesc().getDynamicID() == null) {
+                            return false;
+                        }
+                        //阿B有的时候会拉跨把其他人的动态混进去，特此过滤
+                        if (d.getDesc().getUserProfile().getInfo().getUid() == uid) {
+                            return true;
+                        } else {
+                            DataContainer.getMessageHelper().sendingDebugMessage(d.getMessage().addFirst("blocked:"));
+                            return false;
                 }
             }).filter(d -> d.getDesc().getTimestamp() > mostLateTimeStamp).collect(Collectors.toList());
 
