@@ -31,11 +31,9 @@ import java.util.stream.Collectors;
  * <p>
  * 2.检测并发送
  * <p>
- * a.将上一次的最晚动态时间与现有的最新动态比较，
- * 如果全部小于动态时间，直接进入下一个检测间隔
- * b.以记录的动态ID对后端返回的动态取补集，初步取得新动态
- * c.排除与用户UID不一致的动态
- * d.发送新动态，并记录新增动态ID和最晚动态的时间
+ * a.以记录的动态ID对后端返回的动态取补集，初步取得新动态
+ * b.排除与用户UID不一致的动态和找不到动态id的动态
+ * c.发送新动态，并记录新增动态ID和最晚动态的时间
  * <p>
  * Note：最晚指后端返回最晚动态的时间，最大为最新动态的第21条
  *
@@ -68,16 +66,17 @@ public class DynamicChecker implements IChecker {
                 //记录最晚的动态时间
                 mostLateTimeStamp = dynamicDataList.get(dynamicDataList.size() - 1).getDesc().getTimestamp();
                 //记录当前的动态ID以便检测新动态
-                sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> Long.parseLong(dynamicData.getDesc().getDynamicID())).collect(Collectors.toList()));
+                sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> dynamicData.getDesc().getDynamicIdentifyNumber()).collect(Collectors.toList()));
                 init = true;
                 return;
-            } else {
-                if (firstCard.getDesc().getTimestamp() <= mostLateTimeStamp) {
-                    return;
-                }
             }
 
-            List<DynamicData> list = response.getDynamicsDataList().getDynamics().stream().filter(rawDynamicData -> !sendDynamicIDSet.contains(Long.parseLong(rawDynamicData.getDesc().getDynamicID()))).filter(d -> {
+            List<DynamicData> list = response.getDynamicsDataList().getDynamics().stream().filter(rawDynamicData -> !sendDynamicIDSet.contains(rawDynamicData.getDesc().getDynamicIdentifyNumber()).filter(d -> {
+
+                //动态ID未找到
+                if (d.getDesc().getDynamicID() == null) {
+                    return false;
+                }
                 //阿B有的时候会拉跨把其他人的动态混进去，特此过滤
                 if (d.getDesc().getUserProfile().getInfo().getUid() == uid) {
                     return true;
@@ -94,10 +93,10 @@ public class DynamicChecker implements IChecker {
                 if (sendDynamicIDSet.size() >= 500) {
                     //清除并初始化记忆的动态ID
                     sendDynamicIDSet.clear();
-                    sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> Long.parseLong(dynamicData.getDesc().getDynamicID())).collect(Collectors.toList()));
+                    sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> dynamicData.getDesc().getDynamicIdentifyNumber()).collect(Collectors.toList()));
                 } else {
                     //添加新动态ID
-                    sendDynamicIDSet.addAll(list.stream().map(data -> Long.parseLong(data.getDesc().getDynamicID())).collect(Collectors.toList()));
+                    sendDynamicIDSet.addAll(list.stream().map(data -> data.getDesc().getDynamicIdentifyNumber()).collect(Collectors.toList()));
                 }
                 for (DynamicData d : list) {
                     DataContainer.getMessageHelper().sendingGroupMessage(groups, d.getMessage());
