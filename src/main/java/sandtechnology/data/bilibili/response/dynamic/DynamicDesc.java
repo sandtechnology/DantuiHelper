@@ -50,7 +50,7 @@ public class DynamicDesc {
     }
 
     public String getOriginDynamicID() {
-        return originDynamicDesc.dynamicID;
+        return originDynamicDesc.getDynamicID();
     }
 
     public DynamicDesc getOriginDynamicDesc() {

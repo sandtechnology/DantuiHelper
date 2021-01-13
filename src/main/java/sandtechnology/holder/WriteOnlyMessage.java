@@ -156,14 +156,14 @@ public class WriteOnlyMessage {
 
             builder.addAll(pair.getLast().stream().map(
                     img -> {
-                        try {
+                        try (ExternalResource resource = getExternalImage(img.getFile())) {
                             switch (data.getType()) {
                                 case Friend:
-                                    return data.getBot().getFriend(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
+                                    return data.getBot().getFriend(data.getFromQQ()).uploadImage(resource);
                                 case Group:
-                                    return data.getBot().getGroup(data.getFromGroup()).uploadImage(getExternalImage(img.getFile()));
+                                    return data.getBot().getGroup(data.getFromGroup()).uploadImage(resource);
                                 case Temp:
-                                    return data.getBot().getGroup(data.getFromGroup()).get(data.getFromQQ()).uploadImage(getExternalImage(img.getFile()));
+                                    return data.getBot().getGroup(data.getFromGroup()).get(data.getFromQQ()).uploadImage(resource);
                                 default:
                                     throw new IllegalArgumentException("类型不存在");
                             }

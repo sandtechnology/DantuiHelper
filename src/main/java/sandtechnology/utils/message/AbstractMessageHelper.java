@@ -6,6 +6,7 @@ import sandtechnology.utils.DataContainer;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 public abstract class AbstractMessageHelper {
@@ -24,7 +25,18 @@ public abstract class AbstractMessageHelper {
 
 
     public void sendingErrorMessage(Throwable e, String... msg) {
-        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(ERROR, new WriteOnlyMessage(String.join("\n", msg)).add(":" + e.toString() + "\n" + Arrays.stream(e.getStackTrace()).map(StackTraceElement::toString).collect(Collectors.joining("\n")))));
+        StringJoiner joiner = new StringJoiner("\n");
+        //错误信息
+        for (String s : msg) {
+            joiner.add(s);
+        }
+        //异常名称
+        joiner.add(":").add(e.toString());
+        //stacktrace
+        for (StackTraceElement stackTraceElement : e.getStackTrace()) {
+            joiner.add(stackTraceElement.toString());
+        }
+        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(ERROR, new WriteOnlyMessage(joiner.toString())));
     }
 
     public void sendingErrorMessage(Throwable e, WriteOnlyMessage... msg) {
