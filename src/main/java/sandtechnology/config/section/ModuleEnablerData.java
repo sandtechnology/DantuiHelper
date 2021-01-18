@@ -8,7 +8,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ModuleEnablerData {
-    private Map<ModuleType, Set<Long>> moduleEnablerMap = new ConcurrentHashMap<>();
+    private final Map<ModuleType, Set<Long>> moduleEnablerMap = new ConcurrentHashMap<>();
 
     public ModuleEnablerData() {
         for (ModuleType type : ModuleType.values()) {
@@ -26,6 +26,7 @@ public class ModuleEnablerData {
     }
 
     public enum ModuleType {
-        REPEATER
+        REPEATER,
+        NUDGE_RESPONSE
     }
 }

@@ -42,6 +42,42 @@ public class MessageListener implements ListenerHost {
         return messageListener;
     }
 
+    private final Map<Long, Pair<Long, SeenCounter>> nudgedCounterMap = new HashMap<>();
+
+    @EventHandler
+    public void onNudge(NudgeEvent event) {
+        if (!(event.getFrom() instanceof Member)) {
+            return;
+        }
+
+        Group group = ((Member) event.getFrom()).getGroup();
+        if (ConfigLoader.getHolder().getModuleEnablerData().isEnable(ModuleEnablerData.ModuleType.NUDGE_RESPONSE, group.getId())) {
+            SeenCounter counter = nudgedCounterMap.merge(group.getId(), new Pair<>(System.currentTimeMillis(), new SeenCounter()),
+
+                    (oldPair, newPair) -> {
+                        //10分钟
+                        if (System.currentTimeMillis() - oldPair.getFirst() >= 10 * 60 * 60 * 1000) {
+                            return newPair;
+                        } else {
+                            oldPair.getLast().seenAgain();
+                            return oldPair;
+                        }
+                    }
+            ).getLast();
+            if (counter.now() == 1) {
+                group.sendMessage("你们是憨憨吗？为啥戳我！");
+            } else if (counter.now() == 3) {
+                group.sendMessage("你们好烦...不要怪我戳你哦！");
+            } else if (counter.now() == 10) {
+                group.sendMessage("不理你们了，哼！");
+            }
+            if (counter.now() >= 3 && counter.now() < 10) {
+                event.getFrom().nudge().sendTo(event.getSubject());
+            }
+        }
+
+    }
+
     @EventHandler
     public void onTempMsg(GroupTempMessageEvent event) {
         onTempMsg(event.getGroup().getId(), event.getSender().getId(), new ReadOnlyMessage(event.getMessage()));
@@ -225,4 +261,4 @@ public class MessageListener implements ListenerHost {
         }
 
     }
-    }
+}
