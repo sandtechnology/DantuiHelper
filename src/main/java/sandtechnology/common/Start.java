@@ -61,13 +61,13 @@ public class Start {
                     private long lastLive;
                     final BiliBiliHTTPHelper httpHelper;
 
-                    {
-                        httpHelper = new BiliBiliHTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
-                            RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
-                            if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
-                                lastLive = roomInfo.getStartTime();
-                                ImageManager.CacheImage image = roomInfo.getPreview();
-                                DataContainer.getMessageHelper().sendingGroupMessage(532589427L, new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
+                {
+                    httpHelper = new BiliBiliHTTPHelper("https://api.live.bilibili.com/xlive/web-room/v1/index/getInfoByRoom?room_id=21610959", response -> {
+                        RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
+                        if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
+                            lastLive = roomInfo.getStartTime();
+                            ImageManager.CacheImage image = roomInfo.getPreview();
+                            DataContainer.getMessageHelper().sendingInfoMessage(new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
                             }
                         });
                         httpHelper.setOriginURL("https://live.bilibili.com");

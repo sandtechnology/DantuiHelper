@@ -49,7 +49,7 @@ public class Mirai {
             bot.getEventChannel().registerListenerHost(MessageListener.getMessageListener());
             //加载动态轮询器
             Start.start();
-            System.out.println("Done!");
+            logger.info("Done!");
             Thread.setDefaultUncaughtExceptionHandler((t, e) -> DataContainer.getMessageHelper().sendingErrorMessage(e, t.getName() + "线程发生了异常："));
             bot.join();
         } catch (Throwable e) {
