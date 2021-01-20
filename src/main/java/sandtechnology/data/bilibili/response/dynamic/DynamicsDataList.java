@@ -18,6 +18,10 @@ public class DynamicsDataList {
     private
     List<DynamicData> dynamics;
 
+    public boolean hasMore() {
+        return hasMore == 1;
+    }
+
     public List<DynamicData> getDynamics() {
         return dynamics;
     }
