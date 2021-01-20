@@ -31,8 +31,12 @@ public abstract class AbstractMessageHelper {
         for (String s : msg) {
             joiner.add(s);
         }
+        //当存在错误信息时添加错误详情
+        if (joiner.length() != 0) {
+            joiner.add("错误详情：");
+        }
         //异常名称
-        joiner.add(":").add(e.toString());
+        joiner.add(e.toString());
         //stacktrace
         for (StackTraceElement stackTraceElement : e.getStackTrace()) {
             joiner.add(stackTraceElement.toString());
