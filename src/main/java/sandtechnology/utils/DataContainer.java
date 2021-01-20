@@ -2,6 +2,7 @@ package sandtechnology.utils;
 
 import sandtechnology.Mirai;
 import sandtechnology.config.ConfigLoader;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.message.AbstractMessageHelper;
 import sandtechnology.utils.message.CQMessageHelper;
@@ -96,7 +97,7 @@ public class DataContainer {
     }
 
 
-    public WriteOnlyMessage getVersionMessage() {
+    public IWriteOnlyMessage getVersionMessage() {
         return new WriteOnlyMessage(String.format(versionMessage, getVersion(), botType.getCoreDesc(), botType.getOpenSourceLink(), getHandlerInfo(), getMemoryUsage(), getRunningTime()));
     }
 

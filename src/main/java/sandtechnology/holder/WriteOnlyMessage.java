@@ -8,6 +8,7 @@ import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.message.data.PlainText;
 import net.mamoe.mirai.utils.ExternalResource;
+import org.jetbrains.annotations.Nullable;
 import sandtechnology.Mirai;
 import sandtechnology.utils.*;
 
@@ -19,10 +20,87 @@ import java.util.stream.Collectors;
 /**
  * 发送消息的包装类
  */
-public class WriteOnlyMessage {
+public class WriteOnlyMessage implements IWriteOnlyMessage {
 
+    private static final IWriteOnlyMessage EMPTY_MESSAGE = new IWriteOnlyMessage() {
 
-    private final List<Pair<StringBuilder, List<ImageManager.CacheImage>>> list = Collections.synchronizedList(new LinkedList<>());
+        @Override
+        public IWriteOnlyMessage add(CacheImage image) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage add(List<CacheImage> image) {
+            return this;
+        }
+
+        @Override
+        public List<Pair<StringBuilder, List<CacheImage>>> getContent() {
+            return Collections.emptyList();
+        }
+
+        @Override
+        public IWriteOnlyMessage addFirst(String str) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage addFirst(IWriteOnlyMessage str) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage replace(String str, String replacement) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage add(Object obj) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage add(String str) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage add(IWriteOnlyMessage msg) {
+            return this;
+        }
+
+        @Override
+        public IWriteOnlyMessage newLine() {
+            return this;
+        }
+
+        @Override
+        public void trimImage() {
+
+        }
+
+        @Override
+        public MessageChain toMessageChain(ExtraData data) {
+            return EmptyMessageChain.INSTANCE;
+        }
+
+        @Override
+        public boolean isLongMessage() {
+            return false;
+        }
+
+        @Override
+        public String toCQString() {
+            return "";
+        }
+
+        @Override
+        public IWriteOnlyMessage clone() {
+            return this;
+        }
+    };
+    private static final PlainText failedText = new PlainText("[图片上传失败]");
+    private final List<Pair<StringBuilder, List<CacheImage>>> list = Collections.synchronizedList(new LinkedList<>());
 
     public WriteOnlyMessage() {
     }
@@ -31,11 +109,16 @@ public class WriteOnlyMessage {
         add(s);
     }
 
-    public WriteOnlyMessage(List<Pair<StringBuilder, List<ImageManager.CacheImage>>> list) {
+    public WriteOnlyMessage(List<Pair<StringBuilder, List<CacheImage>>> list) {
         this.list.addAll(list);
     }
 
-    public WriteOnlyMessage add(ImageManager.CacheImage image) {
+    public static IWriteOnlyMessage emptyMessage() {
+        return EMPTY_MESSAGE;
+    }
+
+    @Override
+    public IWriteOnlyMessage add(CacheImage image) {
         if (list.isEmpty()) {
             list.add(new Pair<>(new StringBuilder(), new ArrayList<>(Collections.singleton(image))));
         } else {
@@ -44,7 +127,8 @@ public class WriteOnlyMessage {
         return this;
     }
 
-    public WriteOnlyMessage add(List<ImageManager.CacheImage> image) {
+    @Override
+    public IWriteOnlyMessage add(List<CacheImage> image) {
         if (list.isEmpty()) {
             list.add(new Pair<>(new StringBuilder(), new ArrayList<>(image)));
         } else {
@@ -53,26 +137,30 @@ public class WriteOnlyMessage {
         return this;
     }
 
-    public List<Pair<StringBuilder, List<ImageManager.CacheImage>>> getContent() {
-        return list;
-    }
-
     private <T> T getLastElement(List<T> list) {
         return list.isEmpty() ? null : list.get(list.size() - 1);
     }
 
-    public WriteOnlyMessage addFirst(String str) {
+    @Override
+    public List<Pair<StringBuilder, List<CacheImage>>> getContent() {
+        return list;
+    }
+
+    @Override
+    public IWriteOnlyMessage addFirst(String str) {
         list.get(0).getFirst().insert(0, str);
         return this;
     }
 
-    public WriteOnlyMessage addFirst(WriteOnlyMessage str) {
+    @Override
+    public IWriteOnlyMessage addFirst(IWriteOnlyMessage str) {
         list.addAll(0, str.getContent());
         return this;
     }
 
-    public WriteOnlyMessage replace(String str, String replacement) {
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+    @Override
+    public IWriteOnlyMessage replace(String str, String replacement) {
+        for (Pair<StringBuilder, List<CacheImage>> pair : list) {
             StringBuilder stringBuilder = pair.getFirst();
             int index = stringBuilder.indexOf(str);
             if (index != -1) {
@@ -85,7 +173,8 @@ public class WriteOnlyMessage {
         return this;
     }
 
-    public WriteOnlyMessage add(String str) {
+    @Override
+    public IWriteOnlyMessage add(String str) {
         if (str == null || str.isEmpty()) {
             return this;
         }
@@ -98,21 +187,24 @@ public class WriteOnlyMessage {
         return this;
     }
 
-    public WriteOnlyMessage add(WriteOnlyMessage msg) {
+    @Override
+    public IWriteOnlyMessage add(IWriteOnlyMessage msg) {
         list.addAll(msg.getContent());
         return this;
     }
 
-    public WriteOnlyMessage newLine() {
+    @Override
+    public IWriteOnlyMessage newLine() {
         return add("\n");
     }
 
     /**
      * 将多个相同的图片合并
      */
+    @Override
     public void trimImage() {
         String nextAdd = null;
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> entry : list) {
+        for (Pair<StringBuilder, List<CacheImage>> entry : list) {
             if (nextAdd != null) {
                 entry.getFirst().insert(0, nextAdd);
                 nextAdd = null;
@@ -202,10 +294,12 @@ public class WriteOnlyMessage {
         return externalImage;
     }
 
+    @Override
     public boolean isLongMessage() {
         return list.stream().mapToInt(pair -> pair.getFirst().length() + pair.getLast().size() * 3).sum() > 500;
     }
 
+    @Override
     public String toCQString() {
         trimImage();
         StringBuilder builder = new StringBuilder();
@@ -244,9 +338,9 @@ public class WriteOnlyMessage {
     }
 
     @Override
-    public WriteOnlyMessage clone() {
-        List<Pair<StringBuilder, List<ImageManager.CacheImage>>> tempList = new ArrayList<>(list.size());
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+    public IWriteOnlyMessage clone() {
+        List<Pair<StringBuilder, List<CacheImage>>> tempList = new ArrayList<>(list.size());
+        for (Pair<StringBuilder, List<CacheImage>> pair : list) {
             tempList.add(new Pair<>(new StringBuilder(pair.getFirst()), new ArrayList<>(pair.getLast())));
         }
         return new WriteOnlyMessage(tempList);

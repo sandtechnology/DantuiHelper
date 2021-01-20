@@ -5,6 +5,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.nodes.TextNode;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 
 import java.util.LinkedList;
@@ -15,11 +16,11 @@ public class HTMLUtils {
     private HTMLUtils() {
     }
 
-    public static WriteOnlyMessage parse(String html) {
+    public static IWriteOnlyMessage parse(String html) {
         return parse(html, new WriteOnlyMessage());
     }
 
-    public static WriteOnlyMessage parse(String html, WriteOnlyMessage writeOnlyMessage) {
+    public static IWriteOnlyMessage parse(String html, IWriteOnlyMessage IWriteOnlyMessage) {
         Document document = Jsoup.parse(html);
         List<Node> nodeList = flatNodes(document.body().childNodes());
         for (Node node : nodeList) {
@@ -28,7 +29,7 @@ public class HTMLUtils {
                 if (!text.isEmpty()) {
                     //过滤网页链接文本
                     if (!node.hasParent() && !(node.parent().parent() instanceof Element) || !(((Element) node.parent().parent()).tagName().equals("a"))) {
-                        writeOnlyMessage.add(((TextNode) node).text());
+                        IWriteOnlyMessage.add(((TextNode) node).text());
                     }
                 }
 
@@ -36,11 +37,11 @@ public class HTMLUtils {
                 //处理换行
                 if (node instanceof Element) {
                     if (((Element) node).tagName().equals("br")) {
-                        writeOnlyMessage.newLine();
+                        IWriteOnlyMessage.newLine();
                     }
                 }
                 //解析链接
-                writeOnlyMessage.add(node.attr("data-url"));
+                IWriteOnlyMessage.add(node.attr("data-url"));
 
                 //不解析链接图标
                 if (!node.hasAttr("alt")) {
@@ -52,12 +53,12 @@ public class HTMLUtils {
                     if (src.startsWith("//")) {
                         src = "https:" + src;
                     }
-                    writeOnlyMessage.add(ImageManager.getImageData(src));
+                    IWriteOnlyMessage.add(ImageManager.getImageData(src));
                 }
             }
 
         }
-        return writeOnlyMessage;
+        return IWriteOnlyMessage;
     }
 
     private static List<Node> flatNodes(List<Node> nodes) {

@@ -2,6 +2,7 @@ package sandtechnology.utils.message;
 
 import net.mamoe.mirai.message.data.MessageChain;
 import sandtechnology.Mirai;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 
 import static sandtechnology.utils.DataContainer.sendMessageStat;
@@ -11,11 +12,11 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
     public MiraiMessageHelper() {
     }
 
-    public void sendPrivateMsg(long qq, WriteOnlyMessage message) {
+    public void sendPrivateMsg(long qq, IWriteOnlyMessage message) {
         sendPrivateMsg(qq, message, 1);
     }
 
-    public void sendPrivateMsg(long qq, WriteOnlyMessage message, int times) {
+    public void sendPrivateMsg(long qq, IWriteOnlyMessage message, int times) {
         try {
             sendMessageStat();
             Mirai.getBot().getFriendOrFail(qq).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(qq).build()));
@@ -29,11 +30,11 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
         }
     }
 
-    public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message) {
+    public void sendTempMsg(long fromGroup, long fromQQ, IWriteOnlyMessage message) {
         sendTempMsg(fromGroup, fromQQ, message, 1);
     }
 
-    public void sendTempMsg(long fromGroup, long fromQQ, WriteOnlyMessage message, int times) {
+    public void sendTempMsg(long fromGroup, long fromQQ, IWriteOnlyMessage message, int times) {
 
         try {
             if (message.isLongMessage()) {
@@ -53,12 +54,12 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
         }
     }
 
-    public void sendGroupMsg(long group, WriteOnlyMessage message) {
+    public void sendGroupMsg(long group, IWriteOnlyMessage message) {
         sendGroupMsg(group, message, 1);
     }
 
 
-    public void sendGroupMsg(long group, WriteOnlyMessage message, int times) {
+    public void sendGroupMsg(long group, IWriteOnlyMessage message, int times) {
         try {
             if (!Mirai.getBot().getGroups().contains(group)) {
                 return;

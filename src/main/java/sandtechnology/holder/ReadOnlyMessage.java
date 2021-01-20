@@ -51,7 +51,7 @@ public class ReadOnlyMessage {
         return ((ReadOnlyMessage) o).chain.contentEquals(chain, false, true);
     }
 
-    public WriteOnlyMessage toWriteOnlyMessage() {
+    public IWriteOnlyMessage toWriteOnlyMessage() {
         return new WriteOnlyMessage() {
             @Override
             public MessageChain toMessageChain(ExtraData data) {
