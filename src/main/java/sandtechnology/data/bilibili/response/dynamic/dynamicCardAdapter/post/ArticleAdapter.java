@@ -20,7 +20,10 @@ public class ArticleAdapter implements IAdapter {
 
     @Override
     public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
-        return out.add(text).newLine().add("https://www.bilibili.com/read/cv").add(Long.toString(id)).newLine().add(title).newLine().add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
+        if (text != null) {
+            out.add(text).newLine();
+        }
+        return out.add("https://www.bilibili.com/read/cv").add(Long.toString(id)).newLine().add(title).newLine().add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
     }
 
     @Override
