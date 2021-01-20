@@ -9,6 +9,7 @@ import sandtechnology.config.section.SubscribeConfig;
 import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.data.bilibili.response.live.RoomInfo;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.CacheImage;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.ThreadHelper;
@@ -66,7 +67,7 @@ public class Start {
                         RoomInfo roomInfo = response.getLiveInfo().getRoomInfo();
                         if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
                             lastLive = roomInfo.getStartTime();
-                            ImageManager.CacheImage image = roomInfo.getPreview();
+                            CacheImage image = roomInfo.getPreview();
                             DataContainer.getMessageHelper().sendingInfoMessage(new WriteOnlyMessage("星沙姐播了！！！！她播了她播了她播了！！！！！").newLine().add(roomInfo.getRoomURL()).add("\n直播标题：" + roomInfo.getTitle()).add("\n直播封面").add(image));
                             }
                         });

@@ -5,8 +5,8 @@ import sandtechnology.data.bilibili.response.live.IRoomInfo;
 import sandtechnology.data.bilibili.response.live.LiveInfo;
 import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.CacheImage;
 import sandtechnology.utils.DataContainer;
-import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.http.BiliBiliHTTPHelper;
 
 import java.util.LinkedHashSet;
@@ -51,7 +51,7 @@ public class LiveRoomChecker implements IChecker {
         long lastLive = ConfigLoader.getHolder().getLiveCheckerData().getLastLive(roomID);
         if (roomInfo.getStatus() == LiveStatus.Streaming && lastLive != roomInfo.getStartTime()) {
             ConfigLoader.getHolder().getLiveCheckerData().updateLastLive(roomID, roomInfo.getStartTime());
-            ImageManager.CacheImage image = roomInfo.getPreview();
+            CacheImage image = roomInfo.getPreview();
             DataContainer.getMessageHelper().sendingGroupMessage(groups, new WriteOnlyMessage(username).add("开播啦！！！\n").add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).newLine().add(image));
         }
     }

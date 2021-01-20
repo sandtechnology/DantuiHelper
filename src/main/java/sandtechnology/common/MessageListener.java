@@ -15,6 +15,7 @@ import sandtechnology.config.section.ModuleEnablerData;
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
 import sandtechnology.data.bilibili.response.live.LiveStatus;
 import sandtechnology.data.bilibili.response.live.RoomInfo;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.ReadOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.DataContainer;
@@ -179,7 +180,7 @@ public class MessageListener implements ListenerHost {
                             long lastTimestamp = Long.parseLong(command[2]);
                             for (DynamicData dynamicData : h.getDynamicsDataList().getDynamics()) {
                                 if (dynamicData.getDesc().getTimestamp() >= lastTimestamp) {
-                                    WriteOnlyMessage dynamicDataMessage = dynamicData.getMessage();
+                                    IWriteOnlyMessage dynamicDataMessage = dynamicData.getMessage();
                                     messageHelper.sendingInfoMessage(dynamicDataMessage);
                                 }
                             }

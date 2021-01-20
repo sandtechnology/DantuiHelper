@@ -3,6 +3,7 @@ package sandtechnology.holder;
 import com.vdurmont.emoji.EmojiManager;
 import com.vdurmont.emoji.EmojiParser;
 import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.message.data.EmptyMessageChain;
 import net.mamoe.mirai.message.data.MessageChain;
 import net.mamoe.mirai.message.data.MessageChainBuilder;
 import net.mamoe.mirai.message.data.PlainText;
@@ -116,11 +117,11 @@ public class WriteOnlyMessage {
                 entry.getFirst().insert(0, nextAdd);
                 nextAdd = null;
             }
-            ImageManager.CacheImage lastImage = null;
+            CacheImage lastImage = null;
             SeenCounter seenCounter = new SeenCounter();
-            Iterator<ImageManager.CacheImage> iterator = entry.getLast().iterator();
+            Iterator<CacheImage> iterator = entry.getLast().iterator();
             while (iterator.hasNext()) {
-                ImageManager.CacheImage image = iterator.next();
+                CacheImage image = iterator.next();
                 if (lastImage == null) {
                     lastImage = image;
                     seenCounter.firstSeen();
@@ -148,27 +149,34 @@ public class WriteOnlyMessage {
         }
     }
 
+    @Override
     public MessageChain toMessageChain(ExtraData data) {
         trimImage();
         MessageChainBuilder builder = new MessageChainBuilder();
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+        for (Pair<StringBuilder, List<CacheImage>> pair : list) {
             builder.add(pair.getFirst().toString());
 
             builder.addAll(pair.getLast().stream().map(
                     img -> {
+                        if (img instanceof CacheImage.ImagePlaceHolder) {
+                            return new PlainText(img.toString());
+                        }
                         try (ExternalResource resource = getExternalImage(img.getFile())) {
+                            if (resource == null) {
+                                return failedText;
+                            }
                             switch (data.getType()) {
                                 case Friend:
-                                    return data.getBot().getFriend(data.getFromQQ()).uploadImage(resource);
+                                    return data.getBot().getFriendOrFail(data.getFromQQ()).uploadImage(resource);
                                 case Group:
-                                    return data.getBot().getGroup(data.getFromGroup()).uploadImage(resource);
+                                    return data.getBot().getGroupOrFail(data.getFromGroup()).uploadImage(resource);
                                 case Temp:
-                                    return data.getBot().getGroup(data.getFromGroup()).get(data.getFromQQ()).uploadImage(resource);
+                                    return data.getBot().getGroupOrFail(data.getFromGroup()).getOrFail(data.getFromQQ()).uploadImage(resource);
                                 default:
                                     throw new IllegalArgumentException("类型不存在");
                             }
                         } catch (Exception e) {
-                            return new PlainText("[图片上传失败]");
+                            return failedText;
                         }
                     }).collect(Collectors.toList()));
         }
@@ -179,16 +187,17 @@ public class WriteOnlyMessage {
 
     public enum Type {Friend, Group, Temp}
 
+    @Nullable
     private ExternalResource getExternalImage(File file) {
         ExternalResource externalImage;
         if (!file.exists()) {
-            return getExternalImage(ImageManager.emptyImage.getFile());
+            return null;
         }
         try {
             externalImage = ExternalResource.Companion.create(file);
         } catch (Exception e) {
             DataContainer.getMessageHelper().sendingErrorMessage(e, "在转换图片为ExternalImage时出错");
-            return getExternalImage(ImageManager.emptyImage.getFile());
+            return null;
         }
         return externalImage;
     }
@@ -200,9 +209,9 @@ public class WriteOnlyMessage {
     public String toCQString() {
         trimImage();
         StringBuilder builder = new StringBuilder();
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+        for (Pair<StringBuilder, List<CacheImage>> pair : list) {
             builder.append(toCQEmoji(pair.getFirst().toString()));
-            builder.append(pair.getLast().stream().map(ImageManager.CacheImage::toCQCode).collect(Collectors.joining()));
+            builder.append(pair.getLast().stream().map(CacheImage::toCQCode).collect(Collectors.joining()));
         }
         return builder.toString();
     }
@@ -227,9 +236,9 @@ public class WriteOnlyMessage {
     public String toString() {
         trimImage();
         StringBuilder builder = new StringBuilder();
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : list) {
+        for (Pair<StringBuilder, List<CacheImage>> pair : list) {
             builder.append(pair.getFirst().toString());
-            builder.append(pair.getLast().stream().map(ImageManager.CacheImage::toString).collect(Collectors.joining()));
+            builder.append(pair.getLast().stream().map(CacheImage::toString).collect(Collectors.joining()));
         }
         return builder.toString();
     }

@@ -1,7 +1,6 @@
 package sandtechnology.utils;
 
 import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.URL;
@@ -10,13 +9,12 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ImageManager {
     private static final Map<String, CacheImage> cacheImageMap = new ConcurrentHashMap<>();
     private static final Map<String, CacheImage> localStorageImageMap = new ConcurrentHashMap<>();
-    public static final CacheImage emptyImage = getImageData("https://static.hdslb.com/error/very_sorry.png");
+    public static final CacheImage emptyImage = new CacheImage.ImagePlaceHolder("", CacheImage.ImagePlaceHolder.Reason.Null);
     private static boolean noImageMode = false;
 
     public static void setNoImageMode(boolean noImageMode) {
@@ -61,8 +59,8 @@ public class ImageManager {
     }
 
     public static CacheImage getImageData(String imgURL, int retryCount) {
-        if (!imgURL.equals("https://static.hdslb.com/error/very_sorry.png") && noImageMode) {
-            return emptyImage;
+        if (noImageMode) {
+            return new CacheImage.ImagePlaceHolder(imgURL);
         }
         try {
             URL url = new URL(imgURL);
@@ -86,12 +84,12 @@ public class ImageManager {
             }
         } catch (FileNotFoundException e) {
             DataContainer.getMessageHelper().sendingErrorMessage(e, "Getting Image Data,retrying...");
-            return emptyImage;
+            return new CacheImage.ImagePlaceHolder(imgURL, CacheImage.ImagePlaceHolder.Reason.Image_Not_Found);
         } catch (Exception e) {
             DataContainer.getProcessDataFailedCount().incrementAndGet();
             if (retryCount > 3) {
                 DataContainer.getMessageHelper().sendingErrorMessage(e, "Getting Image Data,retrying...");
-                return emptyImage;
+                return new CacheImage.ImagePlaceHolder(imgURL, CacheImage.ImagePlaceHolder.Reason.Download_Failed);
             }
             ThreadHelper.sleep(1000);
             return getImageData(imgURL, ++retryCount);
@@ -114,51 +112,4 @@ public class ImageManager {
         }
     }
 
-    public static class CacheImage {
-        private final File path;
-        private final String CQCode;
-        private long lastAccessed = System.currentTimeMillis();
-
-        public CacheImage(File absolutePath, String relativePath) {
-            this.path = absolutePath;
-            CQCode = "[CQ:image,file=" + relativePath.substring(1).replace('/', '\\') + "]";
-        }
-
-
-        public String toCQCode() {
-            return CQCode;
-        }
-
-        CacheImage markAccessed() {
-            this.lastAccessed = System.currentTimeMillis();
-            return this;
-        }
-
-        public long getLastAccessed() {
-            return lastAccessed;
-        }
-
-        public File getFile() {
-            return path;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (!(o instanceof CacheImage)) return false;
-            CacheImage image = (CacheImage) o;
-            return path.equals(image.path) &&
-                    CQCode.equals(image.CQCode);
-        }
-
-        @Override
-        public String toString() {
-            return "CacheImage{" + "path=" + path + '}';
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(path, CQCode);
-        }
-    }
 }
