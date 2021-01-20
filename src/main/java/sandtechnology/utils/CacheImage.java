@@ -7,15 +7,19 @@ import java.util.Objects;
 
 public class CacheImage {
     private final File path;
-    private final String CQCode;
+    private final String relativePath;
+    private String CQCode;
     private long lastAccessed = System.currentTimeMillis();
 
     public CacheImage(File absolutePath, String relativePath) {
         this.path = absolutePath;
-        CQCode = "[CQ:image,file=" + relativePath.substring(1).replace('/', '\\') + "]";
+        this.relativePath = relativePath;
     }
 
     public String toCQCode() {
+        if (CQCode == null) {
+            CQCode = "[CQ:image,file=" + relativePath.substring(1).replace('/', '\\') + "]";
+        }
         return CQCode;
     }
 
