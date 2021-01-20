@@ -3,6 +3,7 @@ package sandtechnology.data.bilibili.response.dynamic.lottery;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.StringUtil;
 import sandtechnology.utils.TimeUtil;
 
@@ -61,27 +62,36 @@ public class LotteryData {
         return stringBuilder.build();
     }
 
-    private String getPrizeInfo() {
-        StringBuilder stringBuilder = new StringBuilder();
+    private IWriteOnlyMessage getPrizeInfo() {
+        WriteOnlyMessage writeOnlyMessage = new WriteOnlyMessage();
         if (firstPrizeCount != 0) {
-            stringBuilder.append(" 一等奖：").append(firstPrizeName).append(" x").append(firstPrizeCount);
+            if (firstPrizePicURL != null) {
+                writeOnlyMessage.add(ImageManager.getImageData(firstPrizePicURL));
+            }
+            writeOnlyMessage.add(" 一等奖：").add(firstPrizeName).add(" x").add(firstPrizeCount);
             if (lotteryResult != null) {
-                stringBuilder.append("\n 中奖者：").append(lotteryResult.firstPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
+                writeOnlyMessage.add("\n 中奖者：").add(lotteryResult.firstPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
             }
         }
         if (secondPrizeCount != 0) {
-            stringBuilder.append("\n 二等奖：").append(secondPrizeName).append(" x").append(secondPrizeCount);
+            if (secondPrizePicURL != null) {
+                writeOnlyMessage.add(ImageManager.getImageData(secondPrizePicURL));
+            }
+            writeOnlyMessage.add("\n 二等奖：").add(secondPrizeName).add(" x").add(secondPrizeCount);
             if (lotteryResult != null) {
-                stringBuilder.append("\n 中奖者：").append(lotteryResult.secondPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
+                writeOnlyMessage.add("\n 中奖者：").add(lotteryResult.secondPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
             }
         }
         if (thirdPrizeCount != 0) {
-            stringBuilder.append("\n 三等奖：").append(thirdPrizeName).append(" x").append(thirdPrizeCount);
+            if (thirdPrizePicURL != null) {
+                writeOnlyMessage.add(ImageManager.getImageData(thirdPrizePicURL));
+            }
+            writeOnlyMessage.add("\n 三等奖：").add(thirdPrizeName).add(" x").add(thirdPrizeCount);
             if (lotteryResult != null) {
-                stringBuilder.append("\n 中奖者：\n").append(lotteryResult.thirdPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
+                writeOnlyMessage.add("\n 中奖者：\n").add(lotteryResult.thirdPrizeResult.stream().map(LotteryUser::getUserName).collect(Collectors.joining("、")));
             }
         }
-        return stringBuilder.toString();
+        return writeOnlyMessage;
     }
 
     public Status getStatus() {
