@@ -2,7 +2,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 
 public class ShareAdapter implements IAdapter {
@@ -10,7 +10,7 @@ public class ShareAdapter implements IAdapter {
     Sketch sketch;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         return out.add(vest.content).newLine().add(sketch.targetURL).newLine().add(sketch.title).newLine().add(ImageManager.getImageData(sketch.coverURL));
     }
 

@@ -1,11 +1,11 @@
 package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 
 public class UnknownAdapter implements IAdapter {
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         return out;
     }
 

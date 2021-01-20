@@ -8,6 +8,7 @@ import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.repost.R
 import sandtechnology.data.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.data.bilibili.response.dynamic.lottery.LotteryData;
 import sandtechnology.data.bilibili.response.dynamic.rich.DisputeInfo;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.http.BiliBiliHTTPHelper;
 import sandtechnology.utils.http.DataGetter;
@@ -28,12 +29,12 @@ public class AdapterSelector {
 
     }
 
-    public static WriteOnlyMessage getString(DynamicData data) {
+    public static IWriteOnlyMessage getString(DynamicData data) {
         return getString(data, true);
     }
 
-    public static WriteOnlyMessage getString(DynamicData data, boolean withLink, String... additionWord) {
-        WriteOnlyMessage message = new WriteOnlyMessage();
+    public static IWriteOnlyMessage getString(DynamicData data, boolean withLink, String... additionWord) {
+        IWriteOnlyMessage message = new WriteOnlyMessage();
         if (withLink) {
             message.add("动态链接：\n").add("https://t.bilibili.com/").add(data.getDesc().getDynamicID()).newLine();
         }
@@ -74,7 +75,7 @@ public class AdapterSelector {
             message.replace("\u200B" + voteInfo.getTitle(), "\ud83d\udcca" + voteInfo.getTitle());
             //转发的动态会重复解析，因此需要避免
             if (!data.getDesc().isRepost()) {
-                message.add(voteInfo.toString());
+                voteInfo.getContent(message);
             }
         }
         //移除多余的特殊字符

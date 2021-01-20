@@ -3,7 +3,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.data.bilibili.response.user.UserProfile;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 
 public class MiniVideoAdapter implements IAdapter {
@@ -12,7 +12,7 @@ public class MiniVideoAdapter implements IAdapter {
     AuthorProfile user;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         return out.add(item.description).newLine().add(ImageManager.getImageData(item.cover.originImgURL));
     }
 

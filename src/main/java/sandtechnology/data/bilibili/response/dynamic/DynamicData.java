@@ -5,7 +5,7 @@ import sandtechnology.data.bilibili.response.dynamic.display.DisplayHolder;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.AdapterSelector;
 import sandtechnology.data.bilibili.response.dynamic.extension.ExtensionHolder;
 import sandtechnology.data.bilibili.response.dynamic.rich.RichMessageInfo;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.JsonHelper;
 
 public class DynamicData {
@@ -59,7 +59,7 @@ public class DynamicData {
         return desc;
     }
 
-    public WriteOnlyMessage getMessage() {
+    public IWriteOnlyMessage getMessage() {
         return AdapterSelector.getString(this);
     }
 }

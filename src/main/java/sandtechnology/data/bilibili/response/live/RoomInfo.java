@@ -1,6 +1,7 @@
 package sandtechnology.data.bilibili.response.live;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.utils.CacheImage;
 import sandtechnology.utils.ImageManager;
 
 public class RoomInfo implements IRoomInfo {
@@ -43,7 +44,7 @@ public class RoomInfo implements IRoomInfo {
     }
 
     @Override
-    public ImageManager.CacheImage getPreview() {
+    public CacheImage getPreview() {
         return coverURL.isEmpty() ? (keyframeURL == null || keyframeURL.isEmpty() ? ImageManager.emptyImage : ImageManager.getImageData(keyframeURL)) : ImageManager.getImageData(coverURL);
     }
 

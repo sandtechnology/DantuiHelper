@@ -2,7 +2,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 
 import java.util.List;
@@ -19,7 +19,7 @@ public class ArticleAdapter implements IAdapter {
     String text;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         return out.add(text).newLine().add("https://www.bilibili.com/read/cv").add(Long.toString(id)).newLine().add(title).newLine().add(imageURL != null && !imageURL.isEmpty() ? ImageManager.getImageData(imageURL.get(0)) : ImageManager.emptyImage);
     }
 

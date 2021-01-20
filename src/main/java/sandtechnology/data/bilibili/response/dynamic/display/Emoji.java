@@ -1,7 +1,9 @@
 package sandtechnology.data.bilibili.response.dynamic.display;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.CacheImage;
 import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.Pair;
 
@@ -12,7 +14,7 @@ public class Emoji {
     private final String url;
     @SerializedName("text")
     private final String text;
-    private ImageManager.CacheImage cacheImage;
+    private CacheImage cacheImage;
 
     public Emoji(String text, String url) {
         this.text = text;
@@ -27,12 +29,12 @@ public class Emoji {
         return url;
     }
 
-    public WriteOnlyMessage format(WriteOnlyMessage out) {
+    public IWriteOnlyMessage format(IWriteOnlyMessage out) {
         if (url != null && cacheImage == null) {
             cacheImage = ImageManager.getImageData(url + "@50w_50h_1e_1c.png");
         }
-        WriteOnlyMessage result = new WriteOnlyMessage();
-        for (Pair<StringBuilder, List<ImageManager.CacheImage>> pair : out.getContent()) {
+        IWriteOnlyMessage result = new WriteOnlyMessage();
+        for (Pair<StringBuilder, List<CacheImage>> pair : out.getContent()) {
             StringBuilder str = pair.getFirst();
             //末尾表情的识别
             int addLastCounter = 0;

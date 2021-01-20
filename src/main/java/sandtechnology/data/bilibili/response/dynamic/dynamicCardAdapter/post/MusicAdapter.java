@@ -2,7 +2,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 
 public class MusicAdapter implements IAdapter {
@@ -14,7 +14,7 @@ public class MusicAdapter implements IAdapter {
     String dynamic;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         return out.add(dynamic).newLine().add("\nhttps://www.bilibili.com/audio/au").add(id + "\n").add(ImageManager.getImageData(coverURL));
     }
 

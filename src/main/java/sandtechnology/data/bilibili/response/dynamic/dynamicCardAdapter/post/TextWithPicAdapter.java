@@ -3,7 +3,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.data.bilibili.response.dynamic.element.Picture;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,7 +14,7 @@ public class TextWithPicAdapter implements IAdapter {
     private CommonItem item;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         return out.add(item.text).newLine()
                 .add(item.pictures.stream().map(Picture::getCacheImage).collect(Collectors.toList()));
     }

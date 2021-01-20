@@ -1,12 +1,15 @@
 package sandtechnology.data.bilibili.response.dynamic.extension;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.data.bilibili.response.dynamic.Decodable;
+import sandtechnology.holder.IWriteOnlyMessage;
+import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.utils.ImageManager;
 import sandtechnology.utils.TimeUtil;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-public class VoteInfo {
+public class VoteInfo implements Decodable {
     @SerializedName("desc")
     String text;
     @SerializedName("endtime")
@@ -36,23 +39,48 @@ public class VoteInfo {
 
     @Override
     public String toString() {
-        return "\n===\n投票信息：" +
-                "\n名称：" + text +
-                "\n状态：" + (endTime >= TimeUtil.nowSec() ? "进行中，剩余" + TimeUtil.getFormattedTimeSec(TimeUtil.offsetFromNowSec(endTime)) : "已结束")
-                + "\n总投票人数：" + count
-                + "\n投票选项：\n" +
-                optionList.stream().map(Option::toString).collect(Collectors.joining("\n"));
+        return "VoteInfo{" +
+                "text='" + text + '\'' +
+                ", endTime=" + endTime +
+                ", voteID=" + voteID +
+                ", authorUID=" + authorUID +
+                ", type=" + type +
+                ", count=" + count +
+                ", optionList=" + optionList +
+                ", status=" + status +
+                '}';
     }
 
-    public static class Option {
+    @Override
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
+        return message.add("\n===\n投票信息：").add(
+                "\n名称：").add(text).add(
+                "\n状态：").add(endTime >= TimeUtil.nowSec() ? "进行中，剩余" + TimeUtil.getFormattedTimeSec(TimeUtil.offsetFromNowSec(endTime)) : "已结束")
+                .add("\n总投票人数：").add(count)
+                .add("\n投票选项：\n").add(optionList.stream().map(Option::getContent).reduce(((writeOnlyMessage, writeOnlyMessage2) -> writeOnlyMessage.newLine().add(writeOnlyMessage2))).orElse(WriteOnlyMessage.emptyMessage()));
+
+    }
+
+    public static class Option implements Decodable {
         @SerializedName("desc")
         String text;
         @SerializedName("idx")
         int index;
+        @SerializedName("img_url")
+        String imageUrl;
 
         @Override
         public String toString() {
-            return index + "." + text;
+            return "VoteOption{" +
+                    "text='" + text + '\'' +
+                    ", index=" + index +
+                    ", imageUrl='" + imageUrl + '\'' +
+                    '}';
+        }
+
+        @Override
+        public IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
+            return message.add(index).add(".").add(text).newLine().add(imageUrl == null ? "" : ImageManager.getImageData(imageUrl));
         }
     }
 }

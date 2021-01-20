@@ -1,13 +1,13 @@
 package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter;
 
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 
 public interface IRepostAdapter extends IAdapter {
-    WriteOnlyMessage getContent(WriteOnlyMessage out, DynamicData dynamicData);
+    IWriteOnlyMessage getContent(IWriteOnlyMessage out, DynamicData dynamicData);
 
     @Override
-    default WriteOnlyMessage getContent(WriteOnlyMessage message) {
+    default IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
         throw new UnsupportedOperationException("RepostAdapter Must Input DynamicData");
     }
 

@@ -1,6 +1,7 @@
 package sandtechnology.data.bilibili.response.dynamic.lottery;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.StringUtil;
 import sandtechnology.utils.TimeUtil;
@@ -87,7 +88,7 @@ public class LotteryData {
         return Status.fromID(status);
     }
 
-    public WriteOnlyMessage toWriteOnlyMessage() {
+    public IWriteOnlyMessage toWriteOnlyMessage() {
         return new WriteOnlyMessage("\n===\n互动抽奖信息：").newLine()
                 .add("状态：").add(getStatus().getName()).newLine()
                 .add("条件：").add(getJoinLotteryCondition()).newLine()

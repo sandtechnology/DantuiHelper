@@ -1,6 +1,7 @@
 package sandtechnology.data.bilibili.response.dynamic.display;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 
 import java.util.LinkedList;
@@ -9,7 +10,7 @@ import java.util.List;
 public class EmojiChain {
     public static final EmojiChain emptyEmojiChain = new EmojiChain(new LinkedList<>()) {
         @Override
-        public WriteOnlyMessage format(WriteOnlyMessage out) {
+        public IWriteOnlyMessage format(IWriteOnlyMessage out) {
             return out;
         }
     };
@@ -20,12 +21,12 @@ public class EmojiChain {
         this.emojiList = emojiList;
     }
 
-    public WriteOnlyMessage format(String str) {
+    public IWriteOnlyMessage format(String str) {
         return format(new WriteOnlyMessage(str));
     }
 
-    public WriteOnlyMessage format(WriteOnlyMessage out) {
-        WriteOnlyMessage result = out;
+    public IWriteOnlyMessage format(IWriteOnlyMessage out) {
+        IWriteOnlyMessage result = out;
         for (Emoji emoji : emojiList) {
             result = emoji.format(result);
         }

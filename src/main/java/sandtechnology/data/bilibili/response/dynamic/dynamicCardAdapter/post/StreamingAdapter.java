@@ -3,7 +3,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
 import sandtechnology.data.bilibili.response.live.RoomInfo;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 
 public class StreamingAdapter implements IAdapter {
     @SerializedName("live_play_info")
@@ -11,7 +11,7 @@ public class StreamingAdapter implements IAdapter {
 
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage message) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
         return message.add(roomInfo.getRoomURL()).newLine().add(roomInfo.getTitle()).add("[").add(roomInfo.getStatus().getName()).add("]").newLine().add(roomInfo.getPreview());
     }
 

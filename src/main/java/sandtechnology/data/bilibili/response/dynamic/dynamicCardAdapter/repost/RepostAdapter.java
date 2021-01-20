@@ -6,6 +6,7 @@ import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.AdapterS
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IRepostAdapter;
 import sandtechnology.data.bilibili.response.dynamic.extension.ExtensionHolder;
 import sandtechnology.data.bilibili.response.user.UserProfile;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 
 public class RepostAdapter implements IRepostAdapter {
@@ -24,10 +25,10 @@ public class RepostAdapter implements IRepostAdapter {
     private UserProfile.Info profile;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out, DynamicData dynamicData) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out, DynamicData dynamicData) {
 
         //解析原动态部分
-        WriteOnlyMessage originMessage;
+        IWriteOnlyMessage originMessage;
         //判断是否已被删除
         if (repostDynamic.isOriginDeleted()) {
             originMessage = new WriteOnlyMessage(" ❗ ").add(repostDynamic.tips);

@@ -1,13 +1,13 @@
 package sandtechnology.data.bilibili.response.live;
 
-import sandtechnology.utils.ImageManager;
+import sandtechnology.utils.CacheImage;
 
 public interface IRoomInfo {
     long getRoomID();
 
     long getStartTime();
 
-    ImageManager.CacheImage getPreview();
+    CacheImage getPreview();
 
     String getUserName();
 

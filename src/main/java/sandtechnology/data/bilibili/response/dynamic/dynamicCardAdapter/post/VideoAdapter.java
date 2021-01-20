@@ -2,7 +2,7 @@ package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
-import sandtechnology.holder.WriteOnlyMessage;
+import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.ImageManager;
 
 public class VideoAdapter implements IAdapter {
@@ -17,7 +17,7 @@ public class VideoAdapter implements IAdapter {
     String title;
 
     @Override
-    public WriteOnlyMessage getContent(WriteOnlyMessage out) {
+    public IWriteOnlyMessage getContent(IWriteOnlyMessage out) {
         if (!dynamic.isEmpty()) {
             out.add(dynamic).newLine();
         }
