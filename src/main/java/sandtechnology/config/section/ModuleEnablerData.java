@@ -2,6 +2,7 @@ package sandtechnology.config.section;
 
 import sandtechnology.config.ConfigLoader;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -17,11 +18,14 @@ public class ModuleEnablerData {
     }
 
     public boolean isEnable(ModuleType module, long groupID) {
-        return moduleEnablerMap.get(module).contains(groupID);
+        return moduleEnablerMap.getOrDefault(module, Collections.emptySet()).contains(groupID);
     }
 
     public void add(ModuleType moduleType, long groupID) {
-        moduleEnablerMap.get(moduleType).add(groupID);
+        moduleEnablerMap.merge(moduleType, Collections.singleton(groupID), (oldSet, newSet) -> {
+            oldSet.addAll(newSet);
+            return oldSet;
+        });
         ConfigLoader.save();
     }
 

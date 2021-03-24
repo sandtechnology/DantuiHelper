@@ -65,7 +65,7 @@ public class LotteryData {
     private IWriteOnlyMessage getPrizeInfo() {
         WriteOnlyMessage writeOnlyMessage = new WriteOnlyMessage();
         if (firstPrizeCount != 0) {
-            if (firstPrizePicURL != null) {
+            if (firstPrizePicURL != null && !firstPrizePicURL.isEmpty()) {
                 writeOnlyMessage.add(ImageManager.getImageData(firstPrizePicURL));
             }
             writeOnlyMessage.add(" 一等奖：").add(firstPrizeName).add(" x").add(firstPrizeCount);
@@ -74,7 +74,7 @@ public class LotteryData {
             }
         }
         if (secondPrizeCount != 0) {
-            if (secondPrizePicURL != null) {
+            if (secondPrizePicURL != null && !secondPrizePicURL.isEmpty()) {
                 writeOnlyMessage.add(ImageManager.getImageData(secondPrizePicURL));
             }
             writeOnlyMessage.add("\n 二等奖：").add(secondPrizeName).add(" x").add(secondPrizeCount);
@@ -83,7 +83,7 @@ public class LotteryData {
             }
         }
         if (thirdPrizeCount != 0) {
-            if (thirdPrizePicURL != null) {
+            if (thirdPrizePicURL != null && !thirdPrizePicURL.isEmpty()) {
                 writeOnlyMessage.add(ImageManager.getImageData(thirdPrizePicURL));
             }
             writeOnlyMessage.add("\n 三等奖：").add(thirdPrizeName).add(" x").add(thirdPrizeCount);

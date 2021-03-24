@@ -81,7 +81,7 @@ public class VoteInfo implements Decodable {
         @Override
         public IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
             message.add(index).add(".").add(text);
-            if (imageUrl != null) {
+            if (imageUrl != null && !imageUrl.isEmpty()) {
                 message.newLine().add(ImageManager.getImageData(imageUrl));
             }
             return message;
