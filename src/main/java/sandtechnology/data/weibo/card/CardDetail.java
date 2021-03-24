@@ -66,6 +66,7 @@ public class CardDetail {
                 longTextCardDataGetter.query(Long.toString(getID()));
                 if (longTextCardDataGetter.getData().isOk()) {
                     htmlText = longTextCardDataGetter.getData().getLongTextContent();
+                    isLongText = false;
                 } else {
                     htmlText = "长文本获取失败，原文本：" + htmlText;
                 }
