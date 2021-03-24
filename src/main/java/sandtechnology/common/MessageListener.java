@@ -251,7 +251,12 @@ public class MessageListener implements ListenerHost {
                 repatingMap.put(fromGroup, pairData);
             }
             //消息判断
-            if (!readOnlyMessage.get().isEmpty() && readOnlyMessage.equals(pairData.getLast())) {
+
+            //是否为空
+            if (readOnlyMessage.isEmpty()) {
+                return;
+            }
+            if (readOnlyMessage.equals(pairData.getLast())) {
                 if (pairData.getFirst().seenAgain().now() == 2) {
                     messageHelper.sendingGroupMessage(fromGroup, pairData.getLast());
                 }

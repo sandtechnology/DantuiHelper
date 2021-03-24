@@ -25,6 +25,10 @@ public class ReadOnlyMessage {
         return chain;
     }
 
+    public boolean isEmpty() {
+        return get().contentEquals("", false);
+    }
+
     public String toString(boolean miraiCode) {
         if (miraiCode) {
             StringBuilder stringBuilder = new StringBuilder();
