@@ -21,7 +21,7 @@ public class ImageManager {
         ImageManager.noImageMode = noImageMode;
     }
 
-    //删除缓存文件
+    //重建缓存文件索引
     static {
         try {
             Files.walkFileTree(Paths.get("data", "image"), new SimpleFileVisitor<Path>() {

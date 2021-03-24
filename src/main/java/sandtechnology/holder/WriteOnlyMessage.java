@@ -286,7 +286,7 @@ public class WriteOnlyMessage implements IWriteOnlyMessage {
             return null;
         }
         try {
-            externalImage = ExternalResource.Companion.create(file);
+            externalImage = ExternalResource.create(file);
         } catch (Exception e) {
             DataContainer.getMessageHelper().sendingErrorMessage(e, "在转换图片为ExternalImage时出错");
             return null;
