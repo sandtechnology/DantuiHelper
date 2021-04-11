@@ -41,7 +41,9 @@ public abstract class AbstractMessageHelper {
         for (StackTraceElement stackTraceElement : e.getStackTrace()) {
             joiner.add(stackTraceElement.toString());
         }
-        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(ERROR, new WriteOnlyMessage(joiner.toString())));
+        WriteOnlyMessage message=new WriteOnlyMessage(joiner.toString());
+        message.setErrorMessage(true);
+        sendGroupMsg(DataContainer.getMasterGroup(), sendWithPrefix(ERROR, message));
     }
 
     public void sendingErrorMessage(Throwable e, IWriteOnlyMessage msg) {

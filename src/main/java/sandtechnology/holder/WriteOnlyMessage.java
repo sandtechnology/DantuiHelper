@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  */
 public class WriteOnlyMessage implements IWriteOnlyMessage {
 
+
     private static final IWriteOnlyMessage EMPTY_MESSAGE = new IWriteOnlyMessage() {
 
         @Override
@@ -173,6 +174,17 @@ public class WriteOnlyMessage implements IWriteOnlyMessage {
         return this;
     }
 
+    private volatile boolean isErrorMessage=false;
+    @Override
+    public boolean isErrorMessage() {
+        return isErrorMessage;
+    }
+
+    @Override
+    public void setErrorMessage(boolean isError) {
+        isErrorMessage=isError;
+    }
+
     @Override
     public IWriteOnlyMessage add(String str) {
         if (str == null || str.isEmpty()) {
@@ -189,6 +201,7 @@ public class WriteOnlyMessage implements IWriteOnlyMessage {
 
     @Override
     public IWriteOnlyMessage add(IWriteOnlyMessage msg) {
+        setErrorMessage(msg.isErrorMessage());
         list.addAll(msg.getContent());
         return this;
     }
@@ -343,7 +356,9 @@ public class WriteOnlyMessage implements IWriteOnlyMessage {
         for (Pair<StringBuilder, List<CacheImage>> pair : list) {
             tempList.add(new Pair<>(new StringBuilder(pair.getFirst()), new ArrayList<>(pair.getLast())));
         }
-        return new WriteOnlyMessage(tempList);
+        IWriteOnlyMessage cloneMessage=new WriteOnlyMessage(tempList);
+        cloneMessage.setErrorMessage(isErrorMessage);
+        return cloneMessage;
     }
 
     public static class ExtraData {

@@ -1,9 +1,17 @@
 package sandtechnology.utils.message;
 
+import net.mamoe.mirai.Bot;
+import net.mamoe.mirai.event.events.BotOnlineEvent;
 import net.mamoe.mirai.message.data.MessageChain;
 import sandtechnology.Mirai;
 import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import static sandtechnology.utils.DataContainer.sendMessageStat;
 
@@ -21,6 +29,10 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
             sendMessageStat();
             Mirai.getBot().getFriendOrFail(qq).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(qq).build()));
         } catch (Exception e) {
+            if(message.isErrorMessage()){
+                new RuntimeException("错误发送失败，原消息内容："+message.toString(),e).printStackTrace();
+                return;
+            }
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");
                 sendPrivateMsg(qq, message, ++times);
@@ -45,6 +57,10 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
             Mirai.getBot().getGroup(fromGroup).getOrFail(fromQQ).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(fromQQ).fromGroup(fromGroup).type(WriteOnlyMessage.Type.Temp).build()));
 
         } catch (Exception e) {
+            if(message.isErrorMessage()){
+                new RuntimeException("错误发送失败，原消息内容："+message.toString(),e).printStackTrace();
+                return;
+            }
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");
                 sendTempMsg(fromGroup, fromQQ, message, ++times);
@@ -58,6 +74,8 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
         sendGroupMsg(group, message, 1);
     }
 
+    private static final Map<String, Map<Long, List<MessageChain>>> pendingMessage = new ConcurrentHashMap<>();
+    private static volatile boolean waitingOnline = false;
 
     public void sendGroupMsg(long group, IWriteOnlyMessage message, int times) {
         try {
@@ -69,8 +87,41 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
                 return;
             }
             sendMessageStat();
-            Mirai.getBot().getGroup(group).sendMessage(messageChain);
+            Bot bot = Mirai.getBot();
+            if (bot.isOnline()) {
+                bot.getGroupOrFail(group).sendMessage(messageChain);
+            } else {
+                pendingMessage.merge("group",
+                        Collections.singletonMap(group, Collections.singletonList(messageChain))
+                        ,
+                        (old, current) -> {
+                            current.forEach((groupCode, list) -> old.merge(groupCode, list, (oldList, currentList) -> {
+                                oldList.addAll(currentList);
+                                return oldList;
+                            }));
+                            return old;
+                        });
+                if (!waitingOnline) {
+                    bot.getEventChannel().subscribeOnce(BotOnlineEvent.class, botOnlineEvent -> {
+                                Iterator<Map.Entry<Long, List<MessageChain>>> iterator = pendingMessage.get("group").entrySet().iterator();
+                                while (iterator.hasNext()){
+                                    Map.Entry<Long, List<MessageChain>> listEntry= iterator.next();
+                                    listEntry.getValue().forEach(
+                                      messageChain1 -> bot.getGroupOrFail(listEntry.getKey()).sendMessage(messageChain1));
+                                    iterator.remove();
+
+                                }
+                        waitingOnline = false;
+                            }
+                    );
+                    waitingOnline = true;
+                }
+            }
         } catch (Exception e) {
+            if(message.isErrorMessage()){
+               new RuntimeException("错误发送失败，原消息内容："+message.toString(),e).printStackTrace();
+                return;
+            }
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");
                 sendGroupMsg(group, message, ++times);

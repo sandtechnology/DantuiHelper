@@ -25,7 +25,12 @@ public interface IWriteOnlyMessage {
         }
         return add(obj.toString());
     }
+   default boolean isErrorMessage(){
+        return false;
+   }
+    default void setErrorMessage(boolean isError){
 
+    }
     IWriteOnlyMessage add(String str);
 
     IWriteOnlyMessage add(IWriteOnlyMessage msg);
