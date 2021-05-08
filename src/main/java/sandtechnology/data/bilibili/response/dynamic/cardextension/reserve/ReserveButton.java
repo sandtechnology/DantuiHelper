@@ -29,8 +29,4 @@ public class ReserveButton {
         }
         return buttonInfo == null ? "已删除" : buttonInfo.getText();
     }
-
-    public boolean isValid() {
-        return status == 1;
-    }
 }

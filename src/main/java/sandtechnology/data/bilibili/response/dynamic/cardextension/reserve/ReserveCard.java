@@ -84,6 +84,13 @@ public class ReserveCard implements Decodable {
         return originState;
     }
 
+    public boolean isValid() {
+        //150 直播已结束
+        //-100 已撤销
+        //100 正常
+        return originState == 100;
+    }
+
     @Override
     public IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
         switch (subType) {
@@ -91,12 +98,12 @@ public class ReserveCard implements Decodable {
             case 1:
                 return message.add(descTitle.getText()).add("：").newLine()
                         .add("预约内容：").add(title).newLine()
-                        .add("预约情况：").add(reserveButton.isValid() ? reserveTotal + "人已预约" : reserveButton.getStatusText());
+                        .add("预约情况：").add(isValid() ? reserveTotal + "人已预约" : reserveButton.getStatusText());
             //直播预约
             case 2:
                 return message.add(title).newLine()
                         .add("预定直播时间：").add(TimeUtil.getFormattedUTC8TimeSec(livePlanStartTime)).newLine()
-                        .add("预约情况：").add(reserveButton.isValid() ? reserveTotal + "人已预约" : reserveButton.getStatusText());
+                        .add("预约情况：").add(isValid() ? reserveTotal + "人已预约" : reserveButton.getStatusText());
         }
         return message.add("未知预约内容ID" + subType + "，请打开动态查看");
     }
