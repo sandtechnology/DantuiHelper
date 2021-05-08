@@ -1,4 +1,4 @@
-package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter;
+package sandtechnology.data.bilibili.response.dynamic.adapter;
 
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
 import sandtechnology.holder.IWriteOnlyMessage;

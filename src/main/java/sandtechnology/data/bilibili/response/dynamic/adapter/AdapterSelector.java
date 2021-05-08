@@ -1,10 +1,12 @@
-package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter;
+package sandtechnology.data.bilibili.response.dynamic.adapter;
 
 import com.google.gson.reflect.TypeToken;
 import sandtechnology.data.bilibili.NormalResponse;
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post.*;
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.repost.RepostAdapter;
+import sandtechnology.data.bilibili.response.dynamic.adapter.post.*;
+import sandtechnology.data.bilibili.response.dynamic.adapter.repost.RepostAdapter;
+import sandtechnology.data.bilibili.response.dynamic.cardextension.CardExtension;
+import sandtechnology.data.bilibili.response.dynamic.display.contentLink.ContentLinkList;
 import sandtechnology.data.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.data.bilibili.response.dynamic.lottery.LotteryData;
 import sandtechnology.data.bilibili.response.dynamic.rich.DisputeInfo;
@@ -12,6 +14,9 @@ import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.holder.WriteOnlyMessage;
 import sandtechnology.utils.http.BiliBiliHTTPHelper;
 import sandtechnology.utils.http.DataGetter;
+
+import java.util.List;
+import java.util.Map;
 
 import static sandtechnology.utils.JsonHelper.getGsonInstance;
 
@@ -58,26 +63,50 @@ public class AdapterSelector {
         } else {
             message = adapter.getContent(message);
         }
+
         //解析表情
         message = data.getDisplayContent().getEmojiInfo().format(message);
 
+        //解析需要替换的文本
+        ContentLinkList contentLinkList = data.getDisplayContent().getContentLinkList();
+        if (contentLinkList != null) {
+            Map<String, String> replaceStrMap = contentLinkList.getReplaceStrMap();
+            if (!replaceStrMap.isEmpty()) {
+                message.getContent().forEach(
+                        stringBuilderListPair ->
+                                replaceStrMap.forEach(
+                                        (oldStr, newStr) -> stringBuilderListPair.setFirst(
+                                                new StringBuilder(stringBuilderListPair.getFirst().toString().replace(oldStr, newStr)
+                                                )
+                                        )
+                                )
+                );
+            }
+        }
+
+        //解析扩展卡片
+        List<CardExtension> cardExtensionList = data.getDisplayContent().getCardExtensionList();
+        if (cardExtensionList != null && !cardExtensionList.isEmpty()) {
+            for (CardExtension cardExtension : cardExtensionList) {
+                cardExtension.getContent(message);
+            }
+        }
+
+
         if (data.getRichMessageInfo().getLotteryInfo() != null) {
-            //解析阿B的特殊字符
+            //解析阿B的特殊字符——互动抽奖
             message.replace("\u200B互动抽奖", "\uD83C\uDF81互动抽奖");
+            //添加互动抽奖信息
             lotteryInfoGetter.query(data.getDesc().getDynamicID());
             message.add(lotteryInfoGetter.getData().toWriteOnlyMessage());
         }
 
-        //解析投票信息
+        //解析阿B的特殊字符——投票
         VoteInfo voteInfo = data.getExtension().getVoteInfo();
         if (voteInfo != null) {
-            //解析阿B的特殊字符
             message.replace("\u200B" + voteInfo.getTitle(), "\ud83d\udcca" + voteInfo.getTitle());
-            //转发的动态会重复解析，因此需要避免
-            if (!data.getDesc().isRepost()) {
-                voteInfo.getContent(message);
-            }
         }
+
         //移除多余的特殊字符
         message.replace("\u200B", "").replace("\u200D", "");
         return message;
@@ -120,6 +149,9 @@ public class AdapterSelector {
                 break;
             case 4200:
                 adapterClass = LiveRoomAdapter.class;
+                break;
+            case 4300:
+                adapterClass = FavoriteAdapter.class;
                 break;
         }
         return adapterClass;

@@ -1,9 +1,9 @@
-package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.repost;
+package sandtechnology.data.bilibili.response.dynamic.adapter.repost;
 
 import com.google.gson.annotations.SerializedName;
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.AdapterSelector;
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IRepostAdapter;
+import sandtechnology.data.bilibili.response.dynamic.adapter.AdapterSelector;
+import sandtechnology.data.bilibili.response.dynamic.adapter.IRepostAdapter;
 import sandtechnology.data.bilibili.response.dynamic.extension.ExtensionHolder;
 import sandtechnology.data.bilibili.response.user.UserProfile;
 import sandtechnology.holder.IWriteOnlyMessage;

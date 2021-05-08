@@ -2,6 +2,7 @@ package sandtechnology.utils;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 
 /**
  * 处理时间相关的工具类
@@ -11,6 +12,7 @@ import java.time.ZoneId;
  */
 public class TimeUtil {
     private static final ZoneId zoneId = ZoneId.of("UTC+8");
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(zoneId);
     private static final String[] format = {"天", "时", "分", "秒", "毫秒"};
 
     private TimeUtil() {
@@ -22,6 +24,10 @@ public class TimeUtil {
 
     public static long nowSec() {
         return Instant.now().atZone(zoneId).toEpochSecond();
+    }
+
+    public static String getFormattedUTC8TimeSec(long sec) {
+        return Instant.ofEpochSecond(sec).atZone(zoneId).format(formatter).replace("T", " ");
     }
 
     public static String getFormattedTimeSec(long sec) {

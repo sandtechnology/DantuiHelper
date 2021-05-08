@@ -1,7 +1,7 @@
-package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
+package sandtechnology.data.bilibili.response.dynamic.adapter.post;
 
 import com.google.gson.annotations.SerializedName;
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
+import sandtechnology.data.bilibili.response.dynamic.adapter.IAdapter;
 import sandtechnology.data.bilibili.response.user.UserProfile;
 import sandtechnology.holder.IWriteOnlyMessage;
 import sandtechnology.utils.ImageManager;

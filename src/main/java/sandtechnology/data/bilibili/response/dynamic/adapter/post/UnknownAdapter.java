@@ -1,6 +1,6 @@
-package sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.post;
+package sandtechnology.data.bilibili.response.dynamic.adapter.post;
 
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.IAdapter;
+import sandtechnology.data.bilibili.response.dynamic.adapter.IAdapter;
 import sandtechnology.holder.IWriteOnlyMessage;
 
 public class UnknownAdapter implements IAdapter {

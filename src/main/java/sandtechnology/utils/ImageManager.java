@@ -55,6 +55,9 @@ public class ImageManager {
     }
 
     public static CacheImage getImageData(String imgURL) {
+        if (imgURL == null || imgURL.isEmpty()) {
+            return emptyImage;
+        }
         return getImageData(imgURL, 0);
     }
 

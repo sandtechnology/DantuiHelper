@@ -1,8 +1,8 @@
 package sandtechnology.data.bilibili.response.dynamic;
 
 import com.google.gson.annotations.SerializedName;
+import sandtechnology.data.bilibili.response.dynamic.adapter.AdapterSelector;
 import sandtechnology.data.bilibili.response.dynamic.display.DisplayHolder;
-import sandtechnology.data.bilibili.response.dynamic.dynamicCardAdapter.AdapterSelector;
 import sandtechnology.data.bilibili.response.dynamic.extension.ExtensionHolder;
 import sandtechnology.data.bilibili.response.dynamic.rich.RichMessageInfo;
 import sandtechnology.holder.IWriteOnlyMessage;

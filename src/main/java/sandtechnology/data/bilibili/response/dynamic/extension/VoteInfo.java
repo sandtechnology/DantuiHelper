@@ -9,6 +9,7 @@ import sandtechnology.utils.TimeUtil;
 
 import java.util.List;
 
+
 public class VoteInfo implements Decodable {
     @SerializedName("desc")
     String text;
