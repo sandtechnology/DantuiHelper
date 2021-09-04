@@ -44,7 +44,8 @@ public class ImageManager {
         Files.createDirectories(absolutePath.getParent());
         connection.setConnectTimeout(30000);
         connection.setReadTimeout(30000);
-        try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false); BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
+        try (FileOutputStream writer = new FileOutputStream(absolutePath.toFile(), false);
+             BufferedInputStream inputStream = new BufferedInputStream(connection.getInputStream())) {
             int code;
             byte[] buff = new byte[1024];
             while ((code = inputStream.read(buff)) != -1) {

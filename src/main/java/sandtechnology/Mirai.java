@@ -22,7 +22,7 @@ public class Mirai {
         return Bot.getInstance(ConfigLoader.getHolder().getQQ());
     }
 
-    private static final MiraiLogger logger = MiraiLogger.create("Mirai");
+    private static final MiraiLogger logger = MiraiLogger.Factory.INSTANCE.create(Mirai.class);
 
     public static void main(String[] args) {
 

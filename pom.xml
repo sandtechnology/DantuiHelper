@@ -6,7 +6,7 @@
 
     <groupId>sandtechnology</groupId>
     <artifactId>dantui</artifactId>
-    <version>2.8.3</version>
+    <version>2.8.5</version>
     <repositories>
         <repository>
             <id>jcenter-ali</id>
@@ -24,7 +24,7 @@
 
     <properties>
 
-        <kotlin.version>1.4.30</kotlin.version>
+        <kotlin.version>1.5.20</kotlin.version>
         <kotlin.compiler.jvmTarget>1.8</kotlin.compiler.jvmTarget>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -34,7 +34,7 @@
         <dependency>
             <groupId>net.mamoe</groupId>
             <artifactId>mirai-core-jvm</artifactId>
-            <version>2.6.4</version>
+            <version>2.7.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.jetbrains.kotlin</groupId>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib</artifactId>
-            <version>1.4.30</version>
+            <version>1.5.21</version>
         </dependency>
         <dependency>
             <groupId>com.vdurmont</groupId>
@@ -60,12 +60,12 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.13.1</version>
+            <version>1.14.2</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.8.6</version>
+            <version>2.8.8</version>
         </dependency>
         <dependency>
             <groupId>com.sobte.cqp</groupId>
@@ -76,14 +76,14 @@
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>5.7.1</version>
+            <version>5.7.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-launcher</artifactId>
             <scope>test</scope>
-            <version>1.7.1</version>
+            <version>1.7.2</version>
         </dependency>
     </dependencies>
 
@@ -125,7 +125,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.5.1</version>
                 <executions>
                     <!-- 替换会被 maven 特别处理的 default-compile -->
                     <execution>

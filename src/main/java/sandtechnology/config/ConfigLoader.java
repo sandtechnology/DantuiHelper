@@ -57,7 +57,7 @@ public class ConfigLoader {
                             continue;
                         }
                         if (field.get(holder).toString().equals(askAnnotation.defaultValue())) {
-                            System.out.print(String.format(askAnnotation.text(), field.getName()));
+                            System.out.printf(askAnnotation.text(), field.getName());
                             Class<?> type = field.getType();
 
                             if (!type.isArray()) {

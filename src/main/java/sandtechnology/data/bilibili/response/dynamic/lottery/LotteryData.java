@@ -132,8 +132,8 @@ public class LotteryData {
         Ended(2, "已开奖"),
         Unknown(-1, "未知");
 
-        int id;
-        String name;
+        final int id;
+        final String name;
 
         Status(int id, String name) {
             this.id = id;

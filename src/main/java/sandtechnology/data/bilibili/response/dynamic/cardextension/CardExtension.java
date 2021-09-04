@@ -72,7 +72,7 @@ public class CardExtension implements Decodable {
         VOTE(3),
         UGC(5),
         Unknown(-1);
-        int id;
+        final int id;
 
         ExtensionType(int id) {
             this.id = id;

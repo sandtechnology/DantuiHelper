@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static sandtechnology.utils.DataContainer.sendMessageStat;
 
@@ -30,14 +31,14 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
             Mirai.getBot().getFriendOrFail(qq).sendMessage(message.toMessageChain(new WriteOnlyMessage.ExtraData.ExtraDataBuilder().fromQQ(qq).build()));
         } catch (Exception e) {
             if(message.isErrorMessage()){
-                new RuntimeException("错误发送失败，原消息内容："+message.toString(),e).printStackTrace();
+                new RuntimeException("错误发送失败，原消息内容：" + message, e).printStackTrace();
                 return;
             }
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");
                 sendPrivateMsg(qq, message, ++times);
             } else {
-                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toString());
+                sendingErrorMessage(e, "sending message failed, giving up, content" + message);
             }
         }
     }
@@ -58,14 +59,14 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
 
         } catch (Exception e) {
             if(message.isErrorMessage()){
-                new RuntimeException("错误发送失败，原消息内容："+message.toString(),e).printStackTrace();
+                new RuntimeException("错误发送失败，原消息内容：" + message, e).printStackTrace();
                 return;
             }
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");
                 sendTempMsg(fromGroup, fromQQ, message, ++times);
             } else {
-                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toString());
+                sendingErrorMessage(e, "sending message failed, giving up, content" + message);
             }
         }
     }
@@ -92,7 +93,7 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
                 bot.getGroupOrFail(group).sendMessage(messageChain);
             } else {
                 pendingMessage.merge("group",
-                        Collections.singletonMap(group, Collections.singletonList(messageChain))
+                        Collections.singletonMap(group, new CopyOnWriteArrayList<>(Collections.singletonList(messageChain)))
                         ,
                         (old, current) -> {
                             current.forEach((groupCode, list) -> old.merge(groupCode, list, (oldList, currentList) -> {
@@ -119,14 +120,14 @@ public class MiraiMessageHelper extends AbstractMessageHelper {
             }
         } catch (Exception e) {
             if(message.isErrorMessage()){
-               new RuntimeException("错误发送失败，原消息内容："+message.toString(),e).printStackTrace();
+                new RuntimeException("错误发送失败，原消息内容：" + message, e).printStackTrace();
                 return;
             }
             if (times < 3) {
                 sendingErrorMessage(e, "Error when sending message");
                 sendGroupMsg(group, message, ++times);
             } else {
-                sendingErrorMessage(e, "sending message failed, giving up, content" + message.toString());
+                sendingErrorMessage(e, "sending message failed, giving up, content" + message);
             }
         }
     }

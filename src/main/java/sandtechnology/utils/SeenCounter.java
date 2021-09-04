@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class SeenCounter {
 
-    private AtomicInteger now = new AtomicInteger(0);
+    private final AtomicInteger now = new AtomicInteger(0);
 
 
     public SeenCounter firstSeen() {

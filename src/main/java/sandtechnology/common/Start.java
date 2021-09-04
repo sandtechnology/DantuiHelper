@@ -38,8 +38,8 @@ public class Start {
         CookieManager.setDefault(new CookieManager());
         CookieStore cookieStore = ((CookieManager) CookieManager.getDefault()).getCookieStore();
         try {
-            cookieStore.add(new URI("http://api.vc.bilibili.com"), new HttpCookie("_UUID", UUID.randomUUID().toString().toUpperCase() + "infoc"));
-            cookieStore.add(new URI("http://api.vc.bilibili.com"), new HttpCookie("buvid3", UUID.randomUUID().toString().toUpperCase() + "infoc"));
+            cookieStore.add(new URI("https://api.vc.bilibili.com"), new HttpCookie("_UUID", UUID.randomUUID().toString().toUpperCase() + "infoc"));
+            cookieStore.add(new URI("https://api.vc.bilibili.com"), new HttpCookie("buvid3", UUID.randomUUID().toString().toUpperCase() + "infoc"));
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }

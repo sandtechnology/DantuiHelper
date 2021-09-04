@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class LiveCheckerData {
 
-    private Map<Long, Long> liveStatus = new ConcurrentHashMap<>();
+    private final Map<Long, Long> liveStatus = new ConcurrentHashMap<>();
 
     public void updateLastLive(long roomID, long lastLive) {
         liveStatus.put(roomID, lastLive);

@@ -10,7 +10,7 @@ import java.net.URLEncoder;
 public class DataGetter<R extends IResponse, T> {
 
 
-    AbstractHTTPHelper<R> httpHelper;
+    final AbstractHTTPHelper<R> httpHelper;
     private final String[] perms;
     private final String originURL;
     private T data;

@@ -1,5 +1,6 @@
 package sandtechnology.utils;
 
+import net.mamoe.mirai.contact.Group;
 import sandtechnology.Mirai;
 import sandtechnology.config.ConfigLoader;
 import sandtechnology.holder.IWriteOnlyMessage;
@@ -38,7 +39,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.8.3";
+        return "v2.8.5";
     }
 
     public static AtomicLong getProcessDataFailedCount() {
@@ -112,18 +113,23 @@ public class DataContainer {
         list.sort(Comparator.comparingLong(e -> e.getValue().getLast().get()));
         Collections.reverse(list);
         for (Map.Entry<Long, Pair<AtomicLong, AtomicLong>> entry : list) {
-            Long group = entry.getKey();
+            Long groupId = entry.getKey();
+            Group group = Mirai.getBot().getGroup(groupId);
+            if (group == null) {
+                continue;
+            }
             AtomicLong member = entry.getValue().getFirst();
             AtomicLong chat = entry.getValue().getLast();
-            stringBuilder.append(Mirai.getBot().getGroup(group).getName());
+            int groupMemberSize = group.getMembers().size();
+            stringBuilder.append(group.getName());
             stringBuilder.append("（");
             stringBuilder.append(group);
-            stringBuilder.append("-").append(Mirai.getBot().getGroup(group).getMembers().size()).append("）：");
+            stringBuilder.append("-").append(groupMemberSize).append("）：");
             stringBuilder.append(member);
             stringBuilder.append("->");
             stringBuilder.append(chat);
             stringBuilder.append("（");
-            stringBuilder.append(String.format("%.2f%%", (double) member.get() * 100 / Mirai.getBot().getGroup(group).getMembers().size()));
+            stringBuilder.append(String.format("%.2f%%", (double) member.get() * 100 / groupMemberSize));
             stringBuilder.append("）\n");
         }
         return stringBuilder.toString();
@@ -149,7 +155,7 @@ public class DataContainer {
 
 
     public enum BotType {
-        Mirai("（Mirai内核，版本2.6.4）", "Mirai项目地址：https://github.com/mamoe/mirai"),
+        Mirai("（Mirai内核，版本2.7.0）", "Mirai项目地址：https://github.com/mamoe/mirai"),
         JCQ("（JCQ内核，版本1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ"),
         Debug("null", "null");
         private final String coreDesc;
