@@ -281,6 +281,7 @@ public class WriteOnlyMessage implements IWriteOnlyMessage {
                                     throw new IllegalArgumentException("类型不存在");
                             }
                         } catch (Exception e) {
+                            e.printStackTrace();
                             return failedText;
                         }
                     }).collect(Collectors.toList()));
