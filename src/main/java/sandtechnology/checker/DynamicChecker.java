@@ -4,8 +4,10 @@ import sandtechnology.data.bilibili.NormalResponse;
 import sandtechnology.data.bilibili.response.dynamic.DynamicData;
 import sandtechnology.utils.DataContainer;
 import sandtechnology.utils.ThreadHelper;
+import sandtechnology.utils.TimeUtil;
 import sandtechnology.utils.http.BiliBiliHTTPHelper;
 
+import java.lang.management.ManagementFactory;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -65,6 +67,10 @@ public class DynamicChecker implements IChecker {
                 DataContainer.getMessageHelper().sendingInfoMessage(firstCard.getMessage());
                 //记录最晚的动态时间
                 mostLateTimeStamp = dynamicDataList.get(dynamicDataList.size() - 1).getDesc().getTimestamp();
+                //同时发出启动后发出的动态
+                long startedTimeStamp = TimeUtil.nowSec() - (ManagementFactory.getRuntimeMXBean().getUptime() / 1000);
+                dynamicDataList.stream().filter(data -> startedTimeStamp <= data.getDesc().getTimestamp()).forEach(d ->
+                        DataContainer.getMessageHelper().sendingGroupMessage(groups, d.getMessage()));
                 //记录当前的动态ID以便检测新动态
                 sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> dynamicData.getDesc().getDynamicIdentifyNumber()).collect(Collectors.toList()));
                 init = true;
