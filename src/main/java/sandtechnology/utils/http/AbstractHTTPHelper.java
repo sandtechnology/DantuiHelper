@@ -29,6 +29,10 @@ public abstract class AbstractHTTPHelper<T> {
         return url;
     }
 
+    public Map<String, String> getHeader() {
+        return header;
+    }
+
     public AbstractHTTPHelper(String url, Consumer<T> handler) {
         this.url = url;
         try {
