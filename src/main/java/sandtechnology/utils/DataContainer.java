@@ -39,7 +39,7 @@ public class DataContainer {
     }
 
     public static String getVersion() {
-        return "v2.8.5";
+        return "v2.8.6";
     }
 
     public static AtomicLong getProcessDataFailedCount() {
@@ -155,7 +155,7 @@ public class DataContainer {
 
 
     public enum BotType {
-        Mirai("（Mirai内核，版本2.7.0）", "Mirai项目地址：https://github.com/mamoe/mirai"),
+        Mirai("（Mirai内核，版本2.9.0-M1）", "Mirai项目地址：https://github.com/mamoe/mirai"),
         JCQ("（JCQ内核，版本1.2.7）", "JCQ项目地址：https://github.com/Meowya/JCQ-CoolQ"),
         Debug("null", "null");
         private final String coreDesc;
