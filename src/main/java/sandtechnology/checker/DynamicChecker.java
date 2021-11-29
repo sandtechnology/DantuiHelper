@@ -69,8 +69,10 @@ public class DynamicChecker implements IChecker {
                 mostLateTimeStamp = dynamicDataList.get(dynamicDataList.size() - 1).getDesc().getTimestamp();
                 //同时发出启动后发出的动态
                 long startedTimeStamp = TimeUtil.nowSec() - (ManagementFactory.getRuntimeMXBean().getUptime() / 1000);
-                dynamicDataList.stream().filter(data -> startedTimeStamp <= data.getDesc().getTimestamp()).forEach(d ->
-                        DataContainer.getMessageHelper().sendingGroupMessage(groups, d.getMessage()));
+                List<DynamicData> list = dynamicDataList.stream().filter(data -> startedTimeStamp <= data.getDesc().getTimestamp()).collect(Collectors.toList());
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    DataContainer.getMessageHelper().sendingGroupMessage(groups, list.get(i).getMessage());
+                }
                 //记录当前的动态ID以便检测新动态
                 sendDynamicIDSet.addAll(dynamicDataList.stream().map(dynamicData -> dynamicData.getDesc().getDynamicIdentifyNumber()).collect(Collectors.toList()));
                 init = true;
@@ -108,8 +110,9 @@ public class DynamicChecker implements IChecker {
                     //添加新动态ID
                     sendDynamicIDSet.addAll(list.stream().map(data -> data.getDesc().getDynamicIdentifyNumber()).collect(Collectors.toList()));
                 }
-                for (DynamicData d : list) {
-                    DataContainer.getMessageHelper().sendingGroupMessage(groups, d.getMessage());
+                //因为获取到的动态列表是时间倒序排序，所以需要反向遍历以正序发出
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    DataContainer.getMessageHelper().sendingGroupMessage(groups, list.get(i).getMessage());
                 }
             }
         };
