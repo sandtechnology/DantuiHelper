@@ -69,7 +69,14 @@ public class DynamicChecker implements IChecker {
                 mostLateTimeStamp = dynamicDataList.get(dynamicDataList.size() - 1).getDesc().getTimestamp();
                 //同时发出启动后发出的动态
                 long startedTimeStamp = TimeUtil.nowSec() - (ManagementFactory.getRuntimeMXBean().getUptime() / 1000);
-                List<DynamicData> list = dynamicDataList.stream().filter(data -> startedTimeStamp <= data.getDesc().getTimestamp()).collect(Collectors.toList());
+                if (!isTimestampValid(startedTimeStamp)) {
+                    return;
+                }
+                List<DynamicData> list = dynamicDataList.stream().filter(
+                        dynamicData -> isTimestampValid(dynamicData.getDesc().getTimestamp())
+                ).filter(data -> startedTimeStamp <=
+                        data.getDesc().getTimestamp()
+                ).collect(Collectors.toList());
                 for (int i = list.size() - 1; i >= 0; i--) {
                     DataContainer.getMessageHelper().sendingGroupMessage(groups, list.get(i).getMessage());
                 }
@@ -119,6 +126,15 @@ public class DynamicChecker implements IChecker {
         httpHelper = new BiliBiliHTTPHelper(apiUrl, handler);
         httpHelper.setOriginURL("https://space.bilibili.com");
         httpHelper.setReferer("https://space.bilibili.com/" + uid + "/dynamic");
+    }
+
+    private boolean isTimestampValid(long timeStampSec) {
+        //避免时间戳突然变换单位 限制在2020-09-13 20:26:40和2160-02-18 18:40:00之间
+        boolean result = 6000000000L > timeStampSec && timeStampSec > 1600000000L;
+        if (!result) {
+            DataContainer.getMessageHelper().sendingErrorMessage(new RuntimeException("时间戳不对！当前时间戳为" + timeStampSec + ", 相当于" + TimeUtil.getFormattedTimeSec(timeStampSec)));
+        }
+        return result;
     }
 
     public DynamicChecker(long uid, Consumer<NormalResponse> handler) {
