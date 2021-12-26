@@ -40,6 +40,9 @@ public class ReserveCard implements Decodable {
     @SerializedName("origin_state")
     private int originState;
 
+    @SerializedName("reserve_lottery")
+    private ReserveLottery reserveLottery;
+
     public int getReserveTotal() {
         return reserveTotal;
     }
@@ -93,18 +96,24 @@ public class ReserveCard implements Decodable {
 
     @Override
     public IWriteOnlyMessage getContent(IWriteOnlyMessage message) {
+
         switch (subType) {
             //视频预约
             case 1:
-                return message.add(descTitle.getText()).add("：").newLine()
+                message.add(descTitle.getText()).add("：").newLine()
                         .add("预约内容：").add(title).newLine()
                         .add("预约情况：").add(isValid() ? reserveTotal + "人已预约" : reserveButton.getStatusText());
+                break;
             //直播预约
             case 2:
-                return message.add(title).newLine()
+                message.add(title).newLine()
                         .add("预定直播时间：").add(TimeUtil.getFormattedUTC8TimeSec(livePlanStartTime)).newLine()
                         .add("预约情况：").add(isValid() ? reserveTotal + "人已预约" : reserveButton.getStatusText());
+                break;
+            default:
+                message.add("未知预约内容ID" + subType + "，请打开动态查看");
         }
-        return message.add("未知预约内容ID" + subType + "，请打开动态查看");
+        //预约抽奖解析
+        return reserveLottery == null ? message : reserveLottery.getContent(message);
     }
 }
