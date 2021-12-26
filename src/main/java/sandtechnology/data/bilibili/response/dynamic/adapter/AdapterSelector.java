@@ -6,6 +6,7 @@ import sandtechnology.data.bilibili.response.dynamic.DynamicData;
 import sandtechnology.data.bilibili.response.dynamic.adapter.post.*;
 import sandtechnology.data.bilibili.response.dynamic.adapter.repost.RepostAdapter;
 import sandtechnology.data.bilibili.response.dynamic.cardextension.CardExtension;
+import sandtechnology.data.bilibili.response.dynamic.display.TopicInfo;
 import sandtechnology.data.bilibili.response.dynamic.display.contentLink.ContentLinkList;
 import sandtechnology.data.bilibili.response.dynamic.extension.VoteInfo;
 import sandtechnology.data.bilibili.response.dynamic.lottery.LotteryData;
@@ -46,7 +47,7 @@ public class AdapterSelector {
         //获取动态解析器
         IAdapter adapter = getGsonInstance().fromJson(data.getCard(), getAdapter(data.getDesc().getType()));
         //添加用户名
-        message.add(data.getDesc().getUserProfile().getInfo().getUserName());
+        message.add("【").add(data.getDesc().getUserProfile().getInfo().getUserName()).add("】");
         //添加操作的文本
         String actionText = data.getDisplayContent().getActionText();
         message.add(actionText == null || actionText.isEmpty() ? adapter.getActionText() : actionText).add("：").newLine().add(String.join("", additionWord));

@@ -50,7 +50,7 @@ public class RepostAdapter implements IRepostAdapter {
         }
 
         return out.add(repostDynamic.content)
-                .add("\n原动态信息：\n")
+                .add("\n===\n原动态信息：\n")
                 .add(originMessage);
     }
 
