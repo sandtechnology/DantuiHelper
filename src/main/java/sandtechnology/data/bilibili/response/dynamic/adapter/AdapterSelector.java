@@ -58,6 +58,12 @@ public class AdapterSelector {
             message.add("⚠").add(disputeInfo.getContent()).newLine();
         }
 
+        //解析新版话题 手动添加话题名称
+        TopicInfo.NewTopic newTopic = data.getDisplayContent().getNewTopicInfo();
+        if (newTopic != null) {
+            message.add("#").add(newTopic.getName()).add("#").newLine();
+        }
+
         //解析详细内容
         if (adapter instanceof IRepostAdapter) {
             message = ((IRepostAdapter) adapter).getContent(message, data);

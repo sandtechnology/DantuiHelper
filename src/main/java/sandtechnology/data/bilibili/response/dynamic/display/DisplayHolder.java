@@ -17,8 +17,14 @@ public class DisplayHolder {
     private String actionText;
     @SerializedName("rich_text")
     private ContentLinkList contentLinkList;
+    @SerializedName("topic_info")
+    private TopicInfo topicInfo;
     @SerializedName("add_on_card_info")
     private List<CardExtension> cardExtensionList;
+
+    public TopicInfo.NewTopic getNewTopicInfo() {
+        return topicInfo == null ? null : topicInfo.getNewTopic();
+    }
 
     public DisplayHolder getOriginDisplayHolder() {
         return originDisplayHolder == null ? new DisplayHolder() : originDisplayHolder;
