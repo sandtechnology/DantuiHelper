@@ -15,7 +15,13 @@ public class ReserveButton {
 
     @SerializedName("status")
     private int status;
+    //正常进行时会出现的样式 START
+    @SerializedName("jump_style")
+    private JumpStyle jumpStyle;
+    @SerializedName("jump_url")
+    private String jumpURL;
 
+    //正常进行时会出现的样式 End
     public int getType() {
         return type;
     }
@@ -27,6 +33,16 @@ public class ReserveButton {
         } else {
             buttonInfo = uncheckedButtonInfo;
         }
-        return buttonInfo == null ? "已删除" : buttonInfo.getText();
+        if (buttonInfo != null) {
+            return buttonInfo.getText();
+        } else {
+            //正常进行时，会出现相关样式，否则预约已被删除
+            return jumpStyle != null ? jumpStyle.text + "（" + jumpURL + "）" : "已删除";
+        }
+    }
+
+    private static class JumpStyle {
+        @SerializedName("text")
+        String text;
     }
 }
