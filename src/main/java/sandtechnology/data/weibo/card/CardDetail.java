@@ -69,7 +69,7 @@ public class CardDetail {
     CardTitle title;
 
 
-    public boolean isOnTop() {
+    boolean isOnTop() {
         return title != null && title.text != null && title.text.equals("置顶");
     }
 

@@ -23,7 +23,7 @@ public class WeiboChecker implements IChecker {
             if (responseData != null && !responseData.getCardList().isEmpty()) {
                 List<CardDetail> cardDetails = responseData.getCardList().stream().filter(resp -> {
                             CardDetail cardDetail = resp.getCardDetail();
-                            return cardDetail != null && !sendWeiboIDSet.contains(cardDetail.getID()) && !cardDetail.isOnTop();
+                            return cardDetail != null && !sendWeiboIDSet.contains(cardDetail.getID()) && !resp.isOnTop();
                         }
                 ).map(Card::getCardDetail).collect(Collectors.toList());
 
