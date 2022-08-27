@@ -33,6 +33,15 @@ public class DataContainer {
     private final static AtomicLong sendMessageCount = new AtomicLong();
     private static DataContainer dataContainer;
     private final BotType botType;
+    private volatile static boolean isReloading;
+
+    public boolean isReloading() {
+        return isReloading;
+    }
+
+    public void setReloading(boolean reloading) {
+        isReloading = reloading;
+    }
 
     public static long getMasterGroup() {
         return ConfigLoader.getHolder().getMasterGroup();
