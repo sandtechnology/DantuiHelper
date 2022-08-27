@@ -15,6 +15,8 @@ public class WeiboChecker implements IChecker {
     private final Set<Long> sendWeiboIDSet = new LinkedHashSet<>();
     private WeiboHTTPHelper weiboHTTPHelper = null;
 
+    private long mostLateTime = -1L;
+
     public WeiboChecker(long containerID, Set<Long> groupIDs) {
         weiboHTTPHelper = new WeiboHTTPHelper("https://m.weibo.cn/api/container/getIndex?is_all[]=1&containerid=" + containerID, response -> {
             ResponseData responseData = response.getData();
@@ -32,18 +34,23 @@ public class WeiboChecker implements IChecker {
                 if (sendWeiboIDSet.isEmpty()) {
                     sendWeiboIDSet.addAll(cardDetails.stream().map(CardDetail::getID).collect(Collectors.toList()));
                         CardDetail firstDetail = cardDetails.get(0);
+                    mostLateTime = firstDetail.getTimeSec();
                         if (weiboHTTPHelper != null) {
                             weiboHTTPHelper.setReferer("https://m.weibo.cn/u/" + firstDetail.getUserInfo().getId() + "?is_all=1");
                         }
+
                         DataContainer.getMessageHelper().sendGroupMsg(DataContainer.getMasterGroup(), firstDetail.toWriteOnlyMessage());
                     return;
                 } else {
                     for (CardDetail cardDetail : cardDetails) {
                         sendWeiboIDSet.add(cardDetail.getID());
-                        for (long groupID : groupIDs) {
-                            DataContainer.getMessageHelper().sendGroupMsg(groupID, cardDetail.toWriteOnlyMessage());
+                        if (mostLateTime <= cardDetail.getTimeSec()) {
+                            for (long groupID : groupIDs) {
+                                DataContainer.getMessageHelper().sendGroupMsg(groupID, cardDetail.toWriteOnlyMessage());
+                            }
                         }
                     }
+                    mostLateTime = Math.max(mostLateTime, cardDetails.stream().mapToLong(CardDetail::getTimeSec).sorted().findFirst().orElse(0L));
                 }
 
                 if (sendWeiboIDSet.size() > 200) {

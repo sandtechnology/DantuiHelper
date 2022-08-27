@@ -81,7 +81,7 @@ public class MessageListener implements ListenerHost {
 
     @EventHandler
     public void onTempMsg(GroupTempMessageEvent event) {
-        onTempMsg(event.getGroup().getId(), event.getSender().getId(), new ReadOnlyMessage(event.getMessage()));
+        //onTempMsg(event.getGroup().getId(), event.getSender().getId(), new ReadOnlyMessage(event.getMessage()));
     }
 
     public void onTempMsg(long fromGroup, long fromQQ, ReadOnlyMessage message) {
@@ -168,8 +168,10 @@ public class MessageListener implements ListenerHost {
                 }
                 if (command[0].equals("reload")) {
                     Start.exit();
+                    DataContainer.getDataContainer().setReloading(true);
                     ConfigLoader.load();
                     Start.start();
+                    DataContainer.getDataContainer().setReloading(false);
                     messageHelper.sendPrivateMsg(fromQQ, "重载完成！");
                 }
                 if (command[0].equals("fetch")) {
