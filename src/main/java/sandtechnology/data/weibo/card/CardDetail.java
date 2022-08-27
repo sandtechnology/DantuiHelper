@@ -100,8 +100,9 @@ public class CardDetail {
             synchronized (longTextCardDataGetter) {
                 longTextCardDataGetter.getHttpHelper().setReferer(getUrl());
                 longTextCardDataGetter.query(Long.toString(getID()));
-                if (longTextCardDataGetter.getData().isOk()) {
-                    htmlText = longTextCardDataGetter.getData().getLongTextContent();
+                LongTextCard longTextCard = longTextCardDataGetter.getData();
+                if (longTextCard != null && longTextCard.isOk()) {
+                    htmlText = longTextCard.getLongTextContent();
                     isLongText = false;
                 } else {
                     htmlText = "长文本获取失败，原文本：" + htmlText;

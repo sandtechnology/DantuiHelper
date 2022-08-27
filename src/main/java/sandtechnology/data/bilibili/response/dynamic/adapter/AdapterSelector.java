@@ -105,7 +105,8 @@ public class AdapterSelector {
             message.replace("\u200B互动抽奖", "\uD83C\uDF81互动抽奖");
             //添加互动抽奖信息
             lotteryInfoGetter.query(data.getDesc().getDynamicID());
-            message.add(lotteryInfoGetter.getData().toWriteOnlyMessage());
+            LotteryData lotteryData = lotteryInfoGetter.getData();
+            message.add(lotteryData != null ? lotteryData.toWriteOnlyMessage() : "\n获取失败，请自行前往链接查看");
         }
 
         //解析阿B的特殊字符——投票

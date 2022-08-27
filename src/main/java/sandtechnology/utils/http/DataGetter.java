@@ -1,6 +1,7 @@
 package sandtechnology.utils.http;
 
 import com.google.gson.reflect.TypeToken;
+import org.jetbrains.annotations.Nullable;
 import sandtechnology.data.IResponse;
 import sandtechnology.utils.JsonHelper;
 
@@ -26,8 +27,13 @@ public class DataGetter<R extends IResponse, T> {
         return httpHelper;
     }
 
+    @Nullable
     public T getData() {
-        return data;
+        if (httpHelper.getState() == AbstractHTTPHelper.State.DecodeSuccess) {
+            return data;
+        } else {
+            return null;
+        }
     }
 
     public void query(String... values) {
