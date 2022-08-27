@@ -105,7 +105,7 @@ public class CardDetail {
                     htmlText = longTextCard.getLongTextContent();
                     isLongText = false;
                 } else {
-                    htmlText = "长文本获取失败，原文本：" + htmlText;
+                    htmlText = "【长文本获取失败，完整信息请点击链接查看】\n" + htmlText;
                 }
             }
         }
